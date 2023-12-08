@@ -7,7 +7,7 @@ import java_cup.runtime.*;
 
 
 @SuppressWarnings("fallthrough")
-class Lexer implements java_cup.runtime.Scanner {
+public class Lexer implements java_cup.runtime.Scanner {
 
   /** This character denotes the end of file. */
   public static final int YYEOF = -1;
@@ -34,7 +34,7 @@ class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_CMAP_TOP = zzUnpackcmap_top();
 
   private static final String ZZ_CMAP_TOP_PACKED_0 =
-    "\1\0\37\u0100\1\u0200\267\u0100\10\u0300\u1020\u0100";
+    "\1\0\37\u0100\1\u0200\u10df\u0100";
 
   private static int [] zzUnpackcmap_top() {
     int [] result = new int[4352];
@@ -62,12 +62,13 @@ class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_CMAP_BLOCKS = zzUnpackcmap_blocks();
 
   private static final String ZZ_CMAP_BLOCKS_PACKED_0 =
-    "\12\0\4\1\27\0\1\2\4\0\1\3\1\4\1\0"+
-    "\1\5\1\0\1\6\12\7\113\0\1\1\u01a2\0\2\1"+
-    "\326\0\u0100\1";
+    "\11\0\1\1\1\2\1\0\1\1\1\2\22\0\1\1"+
+    "\11\0\1\3\1\4\1\0\1\5\1\6\1\7\1\10"+
+    "\11\11\6\0\1\12\36\0\1\13\36\0\1\14\u01a9\0"+
+    "\2\2\326\0";
 
   private static int [] zzUnpackcmap_blocks() {
-    int [] result = new int[1024];
+    int [] result = new int[768];
     int offset = 0;
     offset = zzUnpackcmap_blocks(ZZ_CMAP_BLOCKS_PACKED_0, offset, result);
     return result;
@@ -91,11 +92,11 @@ class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7"+
-    "\1\10\1\11";
+    "\1\0\1\1\1\2\1\3\1\4\1\5\1\6\2\7"+
+    "\1\2\1\10\1\11\1\12\4\0\1\13\1\0\1\2";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[10];
+    int [] result = new int[20];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -120,11 +121,12 @@ class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\10\0\10\0\20\0\10\0\10\0\30\0\40"+
-    "\0\10\0\10";
+    "\0\0\0\15\0\15\0\32\0\15\0\47\0\64\0\15"+
+    "\0\101\0\116\0\15\0\15\0\15\0\133\0\150\0\165"+
+    "\0\202\0\150\0\217\0\165";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[10];
+    int [] result = new int[20];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -147,11 +149,15 @@ class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_TRANS = zzUnpacktrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\2\1\0\1\3\1\4\1\5\1\6\1\7\1\10"+
-    "\13\0\1\11\12\0\1\12\10\0\1\10";
+    "\1\2\2\3\1\4\1\5\1\6\1\2\1\7\1\10"+
+    "\1\11\1\12\1\2\1\13\20\0\1\14\22\0\1\11"+
+    "\12\0\1\15\3\0\1\16\7\0\1\17\1\0\2\11"+
+    "\3\0\2\12\1\3\12\12\13\20\1\21\1\20\10\0"+
+    "\2\22\3\0\13\20\1\23\10\20\1\24\3\20\1\23"+
+    "\10\20\1\3\3\20\1\23\1\20";
 
   private static int [] zzUnpacktrans() {
-    int [] result = new int[40];
+    int [] result = new int[156];
     int offset = 0;
     offset = zzUnpacktrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -194,10 +200,11 @@ class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\2\11\1\1\2\11\2\1\2\11";
+    "\1\0\2\11\1\1\1\11\2\1\1\11\2\1\3\11"+
+    "\4\0\1\1\1\0\1\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[10];
+    int [] result = new int[20];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -257,11 +264,9 @@ class Lexer implements java_cup.runtime.Scanner {
   private int zzFinalHighSurrogate = 0;
 
   /** Number of newlines encountered up to the start of the matched text. */
-  @SuppressWarnings("unused")
   private int yyline;
 
   /** Number of characters from the last newline up to the start of the matched text. */
-  @SuppressWarnings("unused")
   private int yycolumn;
 
   /** Number of characters up to the start of the matched text. */
@@ -275,13 +280,23 @@ class Lexer implements java_cup.runtime.Scanner {
   /** Whether the user-EOF-code has already been executed. */
   private boolean zzEOFDone;
 
+  /* user code: */
+    StringBuffer sb = new StringBuffer();
+
+    private Symbol symbol(int type) {
+        return new Symbol(type, yyline, yycolumn);
+    }
+    private Symbol symbol(int type, Object value) {
+        return new Symbol(type, yyline, yycolumn, value);
+    }
+
 
   /**
    * Creates a new scanner
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  Lexer(java.io.Reader in) {
+  public Lexer(java.io.Reader in) {
     this.zzReader = in;
   }
 
@@ -575,6 +590,63 @@ class Lexer implements java_cup.runtime.Scanner {
     while (true) {
       zzMarkedPosL = zzMarkedPos;
 
+      boolean zzR = false;
+      int zzCh;
+      int zzCharCount;
+      for (zzCurrentPosL = zzStartRead  ;
+           zzCurrentPosL < zzMarkedPosL ;
+           zzCurrentPosL += zzCharCount ) {
+        zzCh = Character.codePointAt(zzBufferL, zzCurrentPosL, zzMarkedPosL);
+        zzCharCount = Character.charCount(zzCh);
+        switch (zzCh) {
+        case '\u000B':  // fall through
+        case '\u000C':  // fall through
+        case '\u0085':  // fall through
+        case '\u2028':  // fall through
+        case '\u2029':
+          yyline++;
+          yycolumn = 0;
+          zzR = false;
+          break;
+        case '\r':
+          yyline++;
+          yycolumn = 0;
+          zzR = true;
+          break;
+        case '\n':
+          if (zzR)
+            zzR = false;
+          else {
+            yyline++;
+            yycolumn = 0;
+          }
+          break;
+        default:
+          zzR = false;
+          yycolumn += zzCharCount;
+        }
+      }
+
+      if (zzR) {
+        // peek one character ahead if it is
+        // (if we have counted one line too much)
+        boolean zzPeek;
+        if (zzMarkedPosL < zzEndReadL)
+          zzPeek = zzBufferL[zzMarkedPosL] == '\n';
+        else if (zzAtEOF)
+          zzPeek = false;
+        else {
+          boolean eof = zzRefill();
+          zzEndReadL = zzEndRead;
+          zzMarkedPosL = zzMarkedPos;
+          zzBufferL = zzBuffer;
+          if (eof)
+            zzPeek = false;
+          else
+            zzPeek = zzBufferL[zzMarkedPosL] == '\n';
+        }
+        if (zzPeek) yyline--;
+      }
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
@@ -643,50 +715,60 @@ class Lexer implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { /* Ignore unrecognized characters */
-            }
-          // fall through
-          case 10: break;
-          case 2:
-            { return new Symbol(sym.SALTARIN, yyline, yycolumn, yytext());
-            }
-          // fall through
-          case 11: break;
-          case 3:
-            { return new Symbol(sym.DANZARIN, yyline, yycolumn, yytext());
+            { throw new Error("Caracter illegal <"+yytext()+">" + " en la linea " + yyline + " y columna " + yycolumn);
             }
           // fall through
           case 12: break;
-          case 4:
-            { return new Symbol(sym.RODOLFO, yyline, yycolumn, yytext());
+          case 2:
+            { /* ignore */
             }
           // fall through
           case 13: break;
-          case 5:
-            { return new Symbol(sym.TRUENO, yyline, yycolumn, yytext());
+          case 3:
+            { return symbol(sym.DANZARIN, yytext());
             }
           // fall through
           case 14: break;
-          case 6:
-            { return new Symbol(sym.RAYO, yyline, yycolumn, yytext());
+          case 4:
+            { return symbol(sym.RODOLFO, yytext());
             }
           // fall through
           case 15: break;
-          case 7:
-            { return new Symbol(sym.NUMBER, yyline, yycolumn, new Integer(yytext()));
+          case 5:
+            { return symbol(sym.TRUENO, yytext());
             }
           // fall through
           case 16: break;
-          case 8:
-            { return new Symbol(sym.COMETA, yyline, yycolumn, yytext());
+          case 6:
+            { return symbol(sym.RAYO, yytext());
             }
           // fall through
           case 17: break;
-          case 9:
-            { return new Symbol(sym.RELAMPAGO, yyline, yycolumn, yytext());
+          case 7:
+            { return symbol(sym.NUMBER, new Integer(yytext()));
             }
           // fall through
           case 18: break;
+          case 8:
+            { return symbol(sym.SALTARIN, yytext());
+            }
+          // fall through
+          case 19: break;
+          case 9:
+            { return symbol(sym.COMETA, yytext());
+            }
+          // fall through
+          case 20: break;
+          case 10:
+            { return symbol(sym.RELAMPAGO, yytext());
+            }
+          // fall through
+          case 21: break;
+          case 11:
+            { return symbol(sym.SALTARIN, new Float(yytext()));
+            }
+          // fall through
+          case 22: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }
