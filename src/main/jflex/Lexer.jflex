@@ -1,28 +1,22 @@
 package com.wanderariel;
-import java_cup.runtime.Symbol;
-import java.io.*;
+import java_cup.runtime.*;
+
 %%
 
 %class Lexer
 %cup
-%line
-%column
 
-// Define the symbols
-SYMBOL = [+\-*/=()]
-
+// Regular Expressions
+PLUS = \+
+MINUS = \-
+DIGIT = [0-9]
+NUMBER = {DIGIT}+
 
 %%
 
-// Rules section
 <YYINITIAL> {
-  {SYMBOL} {
-    Symbol sym = new Symbol(sym.SYMBOL, yyline, yycolumn, yytext());
-    return sym;
-  }
-
-  // You can add more rules for other tokens here
-
-  \n { /* Handle new line */ }
-  [ \t\r]+ { /* Ignore whitespaces */ }
+  {PLUS} { return new Symbol(sym.PLUS, yyline, yycolumn); }
+  {MINUS} { return new Symbol(sym.MINUS, yyline, yycolumn); }
+  {NUMBER} { return new Symbol(sym.NUMBER, yyline, yycolumn, new Integer(yytext())); }
+  . { /* Ignore unrecognized characters */ }
 }
