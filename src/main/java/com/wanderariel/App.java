@@ -1,7 +1,7 @@
 package com.wanderariel;
 import java.io.Reader;
 import java.io.StringReader;
-
+import java_cup.runtime.Symbol;
 
 /**
  * Hello world!
@@ -14,17 +14,6 @@ public class App
     {
         // new string reader
         Reader reader = new StringReader("5 a = 5;");
-        Lexer lexer = new Lexer(reader);
-        try {
-            while(true){
-                Tokens token = lexer.yylex();
-                if (token == null) {
-                    break;
-                }
-                System.out.println(token);
-            }
-        } catch (Exception e) {
-            System.out.println("Revise parametros");
-        }
+        Lexer lexer = new Lexer(reader); 
     }
 }
