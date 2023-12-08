@@ -1,8 +1,8 @@
 %%
-
 %class MyLexer
 %unicode
 %public
+%standalone
 
 // Regular Expressions
 DIGIT = [0-9]

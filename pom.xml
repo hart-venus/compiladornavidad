@@ -67,6 +67,14 @@
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <mainClass>com.wanderariel.App</mainClass> <!-- replace with your main class -->
+              </manifest>
+            </archive>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -90,7 +98,7 @@
             <artifactId>exec-maven-plugin</artifactId>
             <version>3.0.0</version> <!-- Use the latest version available -->
             <configuration>
-              <mainClass>com.wanderariel.App</mainClass>
+              <mainClass>App</mainClass>
             </configuration>
         </plugin>
         <plugin>
@@ -106,7 +114,29 @@
               </goals>
             </execution>
           </executions>
+          <configuration>
+          </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
+          <executions>
+            <execution>
+              <id>add-source</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>add-source</goal>
+              </goals>
+              <configuration>
+                <sources>
+                  <source>${project.build.directory}/generated-sources/jflex</source>
+                </sources>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
       </plugins>
     </pluginManagement>
   </build>
