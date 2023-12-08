@@ -644,12 +644,12 @@ class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 5: break;
           case 2:
-            { return new Symbol(sym.PLUS, yyline, yycolumn);
+            { return new Symbol(sym.PLUS, yyline, yycolumn, yytext());
             }
           // fall through
           case 6: break;
           case 3:
-            { return new Symbol(sym.MINUS, yyline, yycolumn);
+            { return new Symbol(sym.MINUS, yyline, yycolumn, yytext());
             }
           // fall through
           case 7: break;

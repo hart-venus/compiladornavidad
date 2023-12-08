@@ -15,8 +15,8 @@ NUMBER = {DIGIT}+
 %%
 
 <YYINITIAL> {
-  {PLUS} { return new Symbol(sym.PLUS, yyline, yycolumn); }
-  {MINUS} { return new Symbol(sym.MINUS, yyline, yycolumn); }
+  {PLUS} { return new Symbol(sym.PLUS, yyline, yycolumn, yytext()); }
+  {MINUS} { return new Symbol(sym.MINUS, yyline, yycolumn, yytext()); }
   {NUMBER} { return new Symbol(sym.NUMBER, yyline, yycolumn, new Integer(yytext())); }
   . { /* Ignore unrecognized characters */ }
 }

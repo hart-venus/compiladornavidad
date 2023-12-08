@@ -26,11 +26,7 @@ public class App
 
     private static String tokenToString(Symbol token) {
         switch (token.sym) {
-            case sym.PLUS: return "PLUS (+)";
-            case sym.MINUS: return "MINUS (-)";
-            case sym.NUMBER: return "NUMBER (" + token.value + ")";
-            // Add other cases for different tokens
-            default: return "UNKNOWN";
+            default: return token.value.toString();
         }
     }
 }
