@@ -25,6 +25,22 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- CUP -->
+    <dependency>
+      <groupId>com.github.vbmacher</groupId>
+      <artifactId>java-cup</artifactId>
+      <version>11b</version>
+    </dependency>
+
+
+    <!-- JFlex -->
+    <dependency>
+        <groupId>de.jflex</groupId>
+        <artifactId>jflex</artifactId>
+        <version>1.9.1</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -68,6 +84,18 @@
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>de.jflex</groupId>
+          <artifactId>jflex-maven-plugin</artifactId>
+          <version>1.9.1</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>generate</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
