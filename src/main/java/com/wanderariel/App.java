@@ -13,7 +13,7 @@ public class App
     public static void main( String[] args )
     {
         // new string reader
-        Lexer lexer = new Lexer(new StringReader("1 + 2 - 3")); 
+        Lexer lexer = new Lexer(new StringReader("1 / 2 // 3 ** 5")); 
         Symbol token; 
         try {
             while ((token = lexer.next_token()).sym != sym.EOF) {
@@ -25,8 +25,7 @@ public class App
     }
 
     private static String tokenToString(Symbol token) {
-        switch (token.sym) {
-            default: return token.value.toString();
-        }
+        return sym.terminalNames[token.sym] + " " + token.value;
+
     }
 }

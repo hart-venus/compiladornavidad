@@ -2,7 +2,9 @@ parser code {:
   // Any Java code to be added to the parser class should go here.
 :}
 
+// terminales de renos de Santa 🦌🦌🦌🦌🦌🦌🦌🦌
 terminal PLUS, MINUS, NUMBER;
+terminal RODOLFO, TRUENO, RELAMPAGO, RAYO, DANZARIN, SALTARIN, COMETA;
 non terminal S;
 
 precedence left PLUS, MINUS;
