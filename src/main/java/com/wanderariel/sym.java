@@ -8,35 +8,113 @@ package com.wanderariel;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int MINUS = 3;
-  public static final int GOATED = 5;
-  public static final int DANZARIN = 11;
-  public static final int NUMBER = 4;
-  public static final int RAYO = 10;
-  public static final int COMETA = 13;
-  public static final int SALTARIN = 12;
+  public static final int for_envuelve = 42;
+  public static final int op_not_baltasar = 19;
+  public static final int op_pow_travieso = 8;
+  public static final int op_geq_feliz = 14;
+  public static final int main_navidad = 52;
+  public static final int t_bool_noel = 23;
+  public static final int op_eq_astuto = 11;
+  public static final int elif_hada = 40;
+  public static final int assign_entregar = 50;
+  public static final int op_sum_cupido = 3;
+  public static final int return_envia = 45;
+  public static final int t_int_colacho = 21;
+  public static final int t_string_kris = 25;
+  public static final int else_duende = 41;
+  public static final int op_g_alegre = 13;
+  public static final int op_dec_grinch = 10;
+  public static final int t_arr_gordo = 26;
+  public static final int cb_abre_regalo = 37;
+  public static final int cb_cierra_regalo = 38;
+  public static final int if_elfo = 39;
+  public static final int t_char_pascuero = 24;
+  public static final int t_float_santa = 22;
+  public static final int op_neq_chispa = 16;
+  public static final int op_l_nevado = 12;
   public static final int EOF = 0;
-  public static final int PLUS = 2;
-  public static final int RELAMPAGO = 9;
+  public static final int id_persona = 20;
+  public static final int until_revisa = 44;
+  public static final int p_cierra_empaque = 36;
+  public static final int l_char_pascuero = 31;
   public static final int error = 1;
-  public static final int IDENTIFIER = 6;
-  public static final int RODOLFO = 7;
-  public static final int TRUENO = 8;
+  public static final int op_mod_rayo = 7;
+  public static final int l_f_noel = 30;
+  public static final int fin_regalo = 49;
+  public static final int do_hace = 43;
+  public static final int op_div_bailarin = 4;
+  public static final int op_res_rodolfo = 2;
+  public static final int l_int_colacho = 27;
+  public static final int l_string_kris = 32;
+  public static final int op_leq_copito = 15;
+  public static final int op_mul_cometa = 6;
+  public static final int p_cierra_cuento = 34;
+  public static final int sep_regalo = 51;
+  public static final int op_dve_trueno = 5;
+  public static final int l_t_noel = 29;
+  public static final int break_corta = 46;
+  public static final int l_float_santa = 28;
+  public static final int read_escucha = 48;
+  public static final int p_abre_empaque = 35;
+  public static final int p_abre_cuento = 33;
+  public static final int op_inc_quien = 9;
+  public static final int op_or_gaspar = 18;
+  public static final int op_and_melchor = 17;
+  public static final int print_habla = 47;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "PLUS",
-  "MINUS",
-  "NUMBER",
-  "GOATED",
-  "IDENTIFIER",
-  "RODOLFO",
-  "TRUENO",
-  "RELAMPAGO",
-  "RAYO",
-  "DANZARIN",
-  "SALTARIN",
-  "COMETA"
+  "op_res_rodolfo",
+  "op_sum_cupido",
+  "op_div_bailarin",
+  "op_dve_trueno",
+  "op_mul_cometa",
+  "op_mod_rayo",
+  "op_pow_travieso",
+  "op_inc_quien",
+  "op_dec_grinch",
+  "op_eq_astuto",
+  "op_l_nevado",
+  "op_g_alegre",
+  "op_geq_feliz",
+  "op_leq_copito",
+  "op_neq_chispa",
+  "op_and_melchor",
+  "op_or_gaspar",
+  "op_not_baltasar",
+  "id_persona",
+  "t_int_colacho",
+  "t_float_santa",
+  "t_bool_noel",
+  "t_char_pascuero",
+  "t_string_kris",
+  "t_arr_gordo",
+  "l_int_colacho",
+  "l_float_santa",
+  "l_t_noel",
+  "l_f_noel",
+  "l_char_pascuero",
+  "l_string_kris",
+  "p_abre_cuento",
+  "p_cierra_cuento",
+  "p_abre_empaque",
+  "p_cierra_empaque",
+  "cb_abre_regalo",
+  "cb_cierra_regalo",
+  "if_elfo",
+  "elif_hada",
+  "else_duende",
+  "for_envuelve",
+  "do_hace",
+  "until_revisa",
+  "return_envia",
+  "break_corta",
+  "print_habla",
+  "read_escucha",
+  "fin_regalo",
+  "assign_entregar",
+  "sep_regalo",
+  "main_navidad"
   };
 }
 

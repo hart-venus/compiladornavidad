@@ -1,7 +1,21 @@
 "Josafat" @ Soy un comentario
 
-31 - 3.4 + -40 
+int josafat <= 10 |
 
+@ Verificacion de que no me atrapa una palabra reservada
+@ en medio de una variable
+
+int josaintfat
+
+do {
+    ++josafat
+} until {
+    josafat => 10
+}
+
+
+31 - 3.4 + -40 
 /_ 
     Soy un comentario multilinea
 _/
+++josafat

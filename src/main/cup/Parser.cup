@@ -47,7 +47,7 @@ terminal t_string_kris, t_arr_gordo;
 
 // literales, nombres de papá noel 🎅🎅🎅🎅🎅🎅
 terminal l_int_colacho, l_float_santa, l_t_noel, l_f_noel;
-terminal l_char_pascuero, l_string_kris, l_arr_gordo;
+terminal l_char_pascuero, l_string_kris;
 
 // parentesis, cuento de navidad 🎄
 terminal p_abre_cuento, p_cierra_cuento;
@@ -77,10 +77,6 @@ terminal sep_regalo;
 // main, navidad 🎄
 terminal main_navidad;
 
-terminal PLUS, MINUS, NUMBER, GOATED, IDENTIFIER;
-terminal RODOLFO, TRUENO, RELAMPAGO, RAYO, DANZARIN, SALTARIN, COMETA;
 non terminal merryC;
-
 start with merryC;
-
-navidad ::= {: hola(); :} IDENTIFIER {: adios(); :};
+merryC ::= {: hola(); :} id_persona {: adios(); :};

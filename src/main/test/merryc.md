@@ -1,8 +1,28 @@
-| Lexema  | Token   | Codigo de Token | Linea | Columna |
-| ------- | ------- | --------------- | ----- | ------- |
-| Josafat | RODOLFO | 7               | 0     | 8       |
-| 31      | NUMBER  | 4               | 2     | 0       |
-| -       | RODOLFO | 7               | 2     | 3       |
-| 3.4     | GOATED  | 5               | 2     | 5       |
-| +       | RODOLFO | 7               | 2     | 9       |
-| -40     | NUMBER  | 4               | 2     | 11      |
+| Lexema     | Token            | Codigo de Token | Linea | Columna |
+| ---------- | ---------------- | --------------- | ----- | ------- |
+| Josafat    | l_string_kris    | 32              | 0     | 8       |
+| int        | t_int_colacho    | 21              | 2     | 0       |
+| josafat    | id_persona       | 20              | 2     | 4       |
+| <=         | assign_entregar  | 50              | 2     | 12      |
+| 10         | l_int_colacho    | 27              | 2     | 15      |
+| |          | fin_regalo       | 49              | 2     | 18      |
+| int        | t_int_colacho    | 21              | 7     | 0       |
+| josaintfat | id_persona       | 20              | 7     | 4       |
+| do         | do_hace          | 43              | 9     | 0       |
+| {          | cb_abre_regalo   | 37              | 9     | 3       |
+| ++         | op_inc_quien     | 9               | 10    | 4       |
+| josafat    | id_persona       | 20              | 10    | 6       |
+| }          | cb_cierra_regalo | 38              | 11    | 0       |
+| until      | until_revisa     | 44              | 11    | 2       |
+| {          | cb_abre_regalo   | 37              | 11    | 8       |
+| josafat    | id_persona       | 20              | 12    | 4       |
+| =>         | op_geq_feliz     | 14              | 12    | 12      |
+| 10         | l_int_colacho    | 27              | 12    | 15      |
+| }          | cb_cierra_regalo | 38              | 13    | 0       |
+| 31         | l_int_colacho    | 27              | 16    | 0       |
+| -          | op_res_rodolfo   | 2               | 16    | 3       |
+| 3.4        | l_float_santa    | 28              | 16    | 5       |
+| +          | op_sum_cupido    | 3               | 16    | 9       |
+| -40        | l_int_colacho    | 27              | 16    | 11      |
+| ++         | op_inc_quien     | 9               | 20    | 0       |
+| josafat    | id_persona       | 20              | 20    | 2       |
