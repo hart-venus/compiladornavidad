@@ -1,7 +1,10 @@
 package com.wanderariel;
 
+import java.io.BufferedReader;
 import java.io.StringReader;
-import java.util.Hashtable;
+
+import java.io.FileReader;
+import java.io.IOException;
 
 import java_cup.runtime.Symbol;
 
@@ -16,17 +19,28 @@ public class App {
    * la entrada del archivo de prueba.
    */
   public static void main(String[] args) {
-    // new string reader
-    Lexer lexer = new Lexer(new StringReader("1 / 2 // 3 ** 5 ")); 
-
-    for (Symbol token : lexer.getTokens()) {
-      System.out.println(tokenToString(token));
+    // Conseguir primer argumento
+    String fileName; 
+    if (args.length > 0) {
+      fileName = args[0];
+    } else {
+      fileName = "src/main/test/merryc.txt";
     }
-    
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+      Lexer lexer = new Lexer(reader);
+
+      for (Symbol token : lexer.getTokens()) {
+        System.out.println(tokenToString(token));
+      }
+    } catch (IOException e){
+        e.printStackTrace();
+    }
   }
+  
 
-    private static String tokenToString(Symbol token) {
-        return sym.terminalNames[token.sym] + " " + token.value + " Line: "
-                + token.left + " Column: " + token.right + "\n";
-    }
+  private static String tokenToString(Symbol token) {
+      return sym.terminalNames[token.sym] + " " + token.value + " Line: "
+              + token.left + " Column: " + token.right + "\n";
+  }
 }
