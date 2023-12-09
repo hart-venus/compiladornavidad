@@ -7,7 +7,7 @@ int josafat <= 10 |
 
 int josaintfat
 
-. @ esto deberia picar error
+@ esto deberia picar error
 
 do {
     ++josafat|
@@ -21,6 +21,4 @@ do {
 _/
 ++josafat
 
-" 
-Soy un string multilinea
-"
+"Soy un string multilinea"

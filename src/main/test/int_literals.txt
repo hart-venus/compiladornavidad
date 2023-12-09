@@ -1,0 +1,4 @@
+@ Prueba de literales de int.
+
+12        @ Deberia ser el primer token revisado tipo l_int
+23 - -123 @ Hace match de 23, "-" y -123
