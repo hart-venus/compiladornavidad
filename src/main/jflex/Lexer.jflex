@@ -46,19 +46,35 @@ IDENTIFIER = [:jletter:] [:jletterdigit:]*
 NUMBER = 0 | -?[1-9] {DIGIT}*
 FLOATING_POINT_LITERAL = 0 | -?[1-9] {DIGIT}* "." {DIGIT}+
 
+%state STRING
 
 %%
 
+/* palabras reservadas */
+<YYINITIAL> "programa" { return symbol(sym.RODOLFO); }
+
 <YYINITIAL> {
-  {COMMENT} { /* ignore */ }
-  {PLUS} { return symbol(sym.RODOLFO, yytext()); }
-  {MINUS} { return symbol(sym.TRUENO, yytext()); }
-  {WHOLEDIVISION} { return symbol(sym.RELAMPAGO, yytext()); }
-  {DIVISION} { return symbol(sym.RAYO, yytext()); }
-  {POWER} { return symbol(sym.COMETA, yytext()); }
-  {MULTIPLICATION} { return symbol(sym.DANZARIN, yytext()); }
-  {MOD} { return symbol(sym.SALTARIN, yytext()); }
-  {NUMBER} { return symbol(sym.NUMBER, new Integer(yytext())); }
-  {WHITE_SPACE} { /* ignore */ }
-  [^] { throw new Error("Caracter illegal <"+yytext()+">" + " en la linea " + yyline + " y columna " + yycolumn); }
+    {COMMENT} { /* ignore */ }
+    \" { sb.setLength(0); yybegin(STRING); } // Inicia un literal de cadena
+    {PLUS} { return symbol(sym.RODOLFO, yytext()); }
+    {MINUS} { return symbol(sym.RODOLFO, yytext()); }
+    {WHOLEDIVISION} { return symbol(sym.RELAMPAGO, yytext()); }
+    {DIVISION} { return symbol(sym.RAYO, yytext()); }
+    {POWER} { return symbol(sym.COMETA, yytext()); }
+    {MULTIPLICATION} { return symbol(sym.DANZARIN, yytext()); }
+    {MOD} { return symbol(sym.SALTARIN, yytext()); }
+    {FLOATING_POINT_LITERAL} { return symbol(sym.GOATED, new Double(yytext())); }
+    {NUMBER} { return symbol(sym.NUMBER, new Integer(yytext())); }
+    {WHITE_SPACE} { /* ignore */ }
+    . { throw new Error("Caracter illegal <"+yytext()+">" + " en la linea " + yyline + " y columna " + yycolumn); }
+}
+
+<STRING> {
+    \" { yybegin(YYINITIAL); return symbol(sym.RODOLFO, sb.toString()); }
+    [^\n\r\"\\] { sb.append(yytext()); }
+    \\n { sb.append("\n"); }
+    \\r { sb.append("\r"); }
+    \\t { sb.append("\t"); }
+    \\\" { sb.append("\""); }
+    \\ { sb.append("\\"); }
 }

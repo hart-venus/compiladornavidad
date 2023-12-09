@@ -13,7 +13,7 @@ public class App
     public static void main( String[] args )
     {
         // new string reader
-        Lexer lexer = new Lexer(new StringReader("1 / 2 // 3 ** 5 /_ ! _/ * 10 + -3.7 @ Hola, soy un comentario.")); 
+        Lexer lexer = new Lexer(new StringReader("1 / 2 // 3 ** 5 /_ ! _/ * 10 + -3.7 - 3 \"Mario barboza \\n\" + 1 @ Hola, soy un comentario.")); 
         Symbol token; 
         try {
             while ((token = lexer.next_token()).sym != sym.EOF) {

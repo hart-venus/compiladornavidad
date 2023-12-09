@@ -3,7 +3,7 @@ parser code {:
 :}
 
 // terminales de renos de Santa 🦌🦌🦌🦌🦌🦌🦌🦌
-terminal PLUS, MINUS, NUMBER;
+terminal PLUS, MINUS, NUMBER, GOATED;
 terminal RODOLFO, TRUENO, RELAMPAGO, RAYO, DANZARIN, SALTARIN, COMETA;
 non terminal S;
 
