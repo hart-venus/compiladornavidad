@@ -1,11 +1,8 @@
 package com.wanderariel;
 
 import java.io.BufferedReader;
-import java.io.StringReader;
-
 import java.io.FileReader;
 import java.io.IOException;
-
 import java_cup.runtime.Symbol;
 
 /**
@@ -33,14 +30,14 @@ public class App {
       for (Symbol token : lexer.getTokens()) {
         System.out.println(tokenToString(token));
       }
-    } catch (IOException e){
-        e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
   
 
   private static String tokenToString(Symbol token) {
-      return sym.terminalNames[token.sym] + " " + token.value + " Line: "
-              + token.left + " Column: " + token.right + "\n";
+    return sym.terminalNames[token.sym] + " " + token.value + " Line: "
+            + token.left + " Column: " + token.right + "\n";
   }
 }
