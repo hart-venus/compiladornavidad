@@ -30,6 +30,10 @@ import java.util.Hashtable;
         do {
             try {
                 token = next_token();
+                if (token.sym == sym.error_carbon) {
+                    System.err.println("Error en la linea " + token.left + ", columna " + token.right + ": " + token.value + " no es un token valido.");
+                    continue;
+                }
             } catch (IOException e) {
                 System.err.println(e.getMessage());
                 return null;
@@ -47,6 +51,10 @@ import java.util.Hashtable;
         do {
             try {
                 token = next_token();
+                if (token.sym == sym.error_carbon) {
+                    System.err.println("Error en la linea " + token.left + ", columna " + token.right + ": " + token.value + " no es un token valido.");
+                    continue;
+                }
             } catch (IOException e) {
                 System.err.println(e.getMessage());
                 return null;
@@ -191,4 +199,4 @@ SEPARATOR = \,
 }
 
 // Fallback
-[^] { throw new Error("Caracter illegal <"+yytext()+">" + " en la linea " + yyline + " y columna " + yycolumn); }
+[^] { return symbol(sym.error_carbon, yytext()); }

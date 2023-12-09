@@ -60,6 +60,7 @@ public interface sym {
   public static final int op_inc_quien = 9;
   public static final int op_or_gaspar = 18;
   public static final int op_and_melchor = 17;
+  public static final int error_carbon = 53;
   public static final int print_habla = 47;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -114,7 +115,8 @@ public interface sym {
   "fin_regalo",
   "assign_entregar",
   "sep_regalo",
-  "main_navidad"
+  "main_navidad",
+  "error_carbon"
   };
 }
 
