@@ -26,8 +26,8 @@ init with {: :};
 // terminales de renos de Santa 🦌🦌🦌🦌🦌🦌🦌🦌
 terminal PLUS, MINUS, NUMBER, GOATED, IDENTIFIER;
 terminal RODOLFO, TRUENO, RELAMPAGO, RAYO, DANZARIN, SALTARIN, COMETA;
-non terminal navidad;
+non terminal merryC;
 
-start with navidad;
+start with merryC;
 
-navidad ::= {: hola(); :} IDENTIFIER {: adios(); :};
+merryC ::= {: hola(); :} IDENTIFIER {: adios(); :};
