@@ -66,7 +66,6 @@ FLOATING_POINT_LITERAL = 0 | -?[1-9] {DIGIT}* "." {DIGIT}+
     {FLOATING_POINT_LITERAL} { return symbol(sym.GOATED, new Double(yytext())); }
     {NUMBER} { return symbol(sym.NUMBER, new Integer(yytext())); }
     {WHITE_SPACE} { /* ignore */ }
-    . { throw new Error("Caracter illegal <"+yytext()+">" + " en la linea " + yyline + " y columna " + yycolumn); }
 }
 
 <STRING> {
@@ -78,3 +77,6 @@ FLOATING_POINT_LITERAL = 0 | -?[1-9] {DIGIT}* "." {DIGIT}+
     \\\" { sb.append("\""); }
     \\ { sb.append("\\"); }
 }
+
+// Fallback
+[^] { throw new Error("Caracter illegal <"+yytext()+">" + " en la linea " + yyline + " y columna " + yycolumn); }

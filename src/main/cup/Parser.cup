@@ -1,14 +1,33 @@
-parser code {:
-  // Any Java code to be added to the parser class should go here.
+import java_cup.runtime.*;
+
+action code {:
+  // Any Java code to be added to the action class should go here.
+  public void hola() {
+    System.out.println("Hola");
+  }
+  public void adios() {
+    System.out.println("Adios");
+  }
 :}
 
+parser code {:
+  Lexer lex;
+
+  public parser(Lexer lex) {
+    this.lex = lex;
+    this.symbolFactory = new DefaultSymbolFactory();
+  }
+
+:}
+
+scan with {: return lex.next_token(); :};
+init with {: :};
+
 // terminales de renos de Santa 🦌🦌🦌🦌🦌🦌🦌🦌
-terminal PLUS, MINUS, NUMBER, GOATED;
+terminal PLUS, MINUS, NUMBER, GOATED, IDENTIFIER;
 terminal RODOLFO, TRUENO, RELAMPAGO, RAYO, DANZARIN, SALTARIN, COMETA;
-non terminal S;
+non terminal navidad;
 
-precedence left PLUS, MINUS;
+start with navidad;
 
-S ::= S PLUS S
-    | S MINUS S
-    | NUMBER;
+navidad ::= {: hola(); :} IDENTIFIER {: adios(); :};
