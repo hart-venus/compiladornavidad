@@ -1,15 +1,20 @@
 package com.wanderariel;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java_cup.runtime.Symbol;
+import org.junit.Test;
 
-// AppTest.java
+/** Función de pruebas unitarias.
+
+* @param args argumentos de la función.
+* @return void
+*/
+
 public class AppTest {
-    @Test
-    public void testCupDependency() {
-        Symbol symbol = new Symbol(0);
-        assertNotNull(symbol);
-    }
+  @Test
+  public void testCupDependency() {
+    Symbol symbol = new Symbol(0);
+    assertNotNull(symbol);
+  }
 }
