@@ -23,7 +23,60 @@ parser code {:
 scan with {: return lex.next_token(); :};
 init with {: :};
 
-// terminales de renos de Santa 🦌🦌🦌🦌🦌🦌🦌🦌
+// Definición de terminales (tokens) a usar
+// operaciones aritméticas binarias, renos de Santa 🦌🦌🦌🦌🦌🦌🦌
+terminal op_res_rodolfo, op_sum_cupido, op_div_bailarin;
+terminal op_dve_trueno,  op_mul_cometa, op_mod_rayo, op_pow_travieso;
+
+// operaciones aritméticas unarias, grinch-quien 🎄😈🎅💚
+terminal op_inc_quien, op_dec_grinch;
+
+// operadores relacionales, elfos 🧝
+terminal op_eq_astuto, op_l_nevado, op_g_alegre, op_geq_feliz;
+terminal op_leq_copito, op_neq_chispa; 
+
+// expresiones logicas, reyes magos 👑👑👑
+terminal op_and_melchor, op_or_gaspar, op_not_baltasar;
+
+// identificador, persona 🧑
+terminal id_persona;
+
+// tipos de datos, nombres de papá noel 🎅🎅🎅🎅🎅🎅
+terminal t_int_colacho, t_float_santa, t_bool_noel, t_char_pascuero;
+terminal t_string_kris, t_arr_gordo;
+
+// literales, nombres de papá noel 🎅🎅🎅🎅🎅🎅
+terminal l_int_colacho, l_float_santa, l_t_noel, l_f_noel;
+terminal l_char_pascuero, l_string_kris, l_arr_gordo;
+
+// parentesis, cuento de navidad 🎄
+terminal p_abre_cuento, p_cierra_cuento;
+
+// parentesis cuadrados, abrir empaque 🎁
+terminal p_abre_empaque, p_cierra_empaque;
+
+// llaves, abrir regalo 🎁
+terminal cb_abre_regalo, cb_cierra_regalo;
+
+// flujo de control, folklore navideño
+terminal if_elfo, elif_hada, else_duende, for_envuelve;
+terminal do_hace, until_revisa, return_envia, break_corta;
+
+// print-read, habla y escucha 🗣️👂
+terminal print_habla, read_escucha;
+
+// fin de expresion, fin regalo 🎁
+terminal fin_regalo;
+
+// asignar, entregar 🎁
+terminal assign_entregar;
+
+// separador, separador de regalos 🎁
+terminal sep_regalo;
+
+// main, navidad 🎄
+terminal main_navidad;
+
 terminal PLUS, MINUS, NUMBER, GOATED, IDENTIFIER;
 terminal RODOLFO, TRUENO, RELAMPAGO, RAYO, DANZARIN, SALTARIN, COMETA;
 non terminal merryC;
