@@ -10,10 +10,9 @@ int josaintfat
 . @ esto deberia picar error
 
 do {
-    ++josafat
-} until {
-    josafat => 10
-}
+    ++josafat|
+    print(josafat)|
+} until (josafat == 10)
 
 
 31 - 3.4 + -40 
@@ -21,3 +20,7 @@ do {
     Soy un comentario multilinea
 _/
 ++josafat
+
+" 
+Soy un string multilinea
+"
