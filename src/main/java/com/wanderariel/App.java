@@ -3,6 +3,8 @@ package com.wanderariel;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java_cup.runtime.Symbol;
 
 /**
@@ -31,26 +33,25 @@ public class App {
       outputPath = "src/main/test/merryc.md";
     }
 
+    List<String[]> rows = new ArrayList<String[]>();    
+    rows.add(new String[] {"Lexema", "Token", "Codigo de Token", "Linea", "Columna"});
     try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
       Lexer lexer = new Lexer(reader);
 
       for (Symbol token : lexer.getTokens()) {
-        System.out.println(tokenToString(token));
+        String[] row = new String[5];
+        row[0] = token.value.toString();
+        row[1] = sym.terminalNames[token.sym];
+        row[2] = Integer.toString(token.sym);
+        row[3] = Integer.toString(token.left);
+        row[4] = Integer.toString(token.right);
+        rows.add(row);
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    String[][] rows = {{"ad", "bd", "cd"}, {"dd", "ed", "fd"}};
-    MarkdownTablePrinter printer = new MarkdownTablePrinter(rows, "test.md");
+    MarkdownTablePrinter printer = new MarkdownTablePrinter(rows, outputPath);
     printer.print();
-
-
-  }
-  
-
-  private static String tokenToString(Symbol token) {
-    return sym.terminalNames[token.sym] + " " + token.value + " Line: "
-            + token.left + " Column: " + token.right + "\n";
   }
 }

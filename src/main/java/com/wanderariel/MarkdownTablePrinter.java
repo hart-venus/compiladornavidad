@@ -25,6 +25,11 @@ public class MarkdownTablePrinter {
     }
   }
 
+  public MarkdownTablePrinter(List<String[]> rows, String fileName) {
+    this.rowsList = rows;
+    this.fileName = fileName;
+  }
+
   /**
    * Main method that writes a markdown table to a file.
    */
