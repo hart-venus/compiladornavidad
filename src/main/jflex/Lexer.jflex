@@ -3,6 +3,7 @@ import java_cup.runtime.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
+import java.util.Hashtable;
 
 %%
 
@@ -38,6 +39,25 @@ import java.io.IOException;
         // quitar el token EOF
         tokens.remove(tokens.size()-1);
         return tokens;
+    }
+
+    public Hashtable<Integer, Integer> getSymbolCount() {
+        Hashtable<Integer, Integer> symbolCount = new Hashtable<Integer, Integer>();
+        Symbol token;
+        do {
+            try {
+                token = next_token();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+                return null;
+            }
+            if (symbolCount.containsKey(token.sym)) {
+                symbolCount.put(token.sym, symbolCount.get(token.sym)+1);
+            } else {
+                symbolCount.put(token.sym, 1);
+            }
+        } while (token.sym != sym.EOF);
+        return symbolCount;
     }
 %}
 

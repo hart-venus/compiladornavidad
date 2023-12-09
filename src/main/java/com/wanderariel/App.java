@@ -1,6 +1,8 @@
 package com.wanderariel;
 
 import java.io.StringReader;
+import java.util.Hashtable;
+
 import java_cup.runtime.Symbol;
 
 /**
