@@ -24,6 +24,13 @@ public class App {
       fileName = "src/main/test/merryc.txt";
     }
 
+    String outputPath;
+    if (args.length > 1) {
+      outputPath = args[1];
+    } else {
+      outputPath = "src/main/test/merryc.md";
+    }
+
     try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
       Lexer lexer = new Lexer(reader);
 
@@ -33,6 +40,12 @@ public class App {
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    String[][] rows = {{"ad", "bd", "cd"}, {"dd", "ed", "fd"}};
+    MarkdownTablePrinter printer = new MarkdownTablePrinter(rows, "test.md");
+    printer.print();
+
+
   }
   
 
