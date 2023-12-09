@@ -30,4 +30,4 @@ non terminal merryC;
 
 start with merryC;
 
-merryC ::= {: hola(); :} IDENTIFIER {: adios(); :};
+navidad ::= {: hola(); :} IDENTIFIER {: adios(); :};

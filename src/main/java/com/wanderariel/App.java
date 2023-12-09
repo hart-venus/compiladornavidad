@@ -23,9 +23,8 @@ public class App {
     
   }
 
-  private static String tokenToString(Symbol token) {
-    return sym.terminalNames[token.sym] + " " + token.value + " Line: " 
-      + token.left + " Column: " + token.right + "\n";
-
-  }
+    private static String tokenToString(Symbol token) {
+        return sym.terminalNames[token.sym] + " " + token.value + " Line: "
+                + token.left + " Column: " + token.right + "\n";
+    }
 }
