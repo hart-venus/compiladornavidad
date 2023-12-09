@@ -14,7 +14,7 @@ public class App {
      * la entrada del archivo de prueba.
      */
     public static void main(String[] args) {
-        StringReader stringReader = new StringReader("1 / 2 // 3 ** 5 ");
+        StringReader stringReader = new StringReader("1 / 2 // 3 ** 5 / 4 - 1");
         Lexer lexer = new Lexer(stringReader);
         Symbol token;
 
