@@ -1,5 +1,8 @@
 package com.wanderariel;
 import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.IOException;
 
 %%
 
@@ -18,6 +21,23 @@ import java_cup.runtime.*;
     }
     private Symbol symbol(int type, Object value) {
         return new Symbol(type, yyline, yycolumn, value);
+    }
+
+    public List<Symbol> getTokens() {
+        List<Symbol> tokens = new ArrayList<Symbol>();
+        Symbol token;
+        do {
+            try {
+                token = next_token();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+                return null;
+            }
+            tokens.add(token);
+        } while (token.sym != sym.EOF);
+        // quitar el token EOF
+        tokens.remove(tokens.size()-1);
+        return tokens;
     }
 %}
 

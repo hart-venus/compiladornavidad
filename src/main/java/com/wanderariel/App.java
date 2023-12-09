@@ -16,14 +16,11 @@ public class App {
   public static void main(String[] args) {
     // new string reader
     Lexer lexer = new Lexer(new StringReader("1 / 2 // 3 ** 5 ")); 
-    Symbol token; 
-    try {
-      while ((token = lexer.next_token()).sym != sym.EOF) {
-        System.out.println(tokenToString(token));
-      }
-    } catch (Exception e) {
-      System.out.println(e);
+
+    for (Symbol token : lexer.getTokens()) {
+      System.out.println(tokenToString(token));
     }
+    
   }
 
   private static String tokenToString(Symbol token) {
