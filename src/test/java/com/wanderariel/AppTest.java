@@ -27,6 +27,12 @@ public class AppTest {
   }
 
   @Test
+  public void testSingleFloatToken() throws IOException {
+    Lexer lexer = new Lexer(new StringReader("3.14"));
+    assertEquals(sym.l_float_santa, lexer.next_token().sym);
+  }
+
+  @Test
   public void testCupDependency() {
     Symbol symbol = new Symbol(0);
     assertNotNull(symbol);
