@@ -53,6 +53,12 @@ public class AppTest {
   }
 
   @Test
+  public void testStringLiteral() throws IOException {
+    Lexer lexer = new Lexer(new StringReader("\"Hello, World!\""));
+    assertEquals(sym.l_string_kris, lexer.next_token().sym);
+  }
+
+  @Test
   public void testCupDependency() {
     Symbol symbol = new Symbol(0);
     assertNotNull(symbol);
