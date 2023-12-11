@@ -39,6 +39,20 @@ public class AppTest {
   }
 
   @Test
+  public void testArithmeticExpression() throws IOException {
+    Lexer lexer = new Lexer(new StringReader("a + b * (c - 2)"));
+    assertEquals(sym.id_persona, lexer.next_token().sym);
+    assertEquals(sym.op_sum_cupido, lexer.next_token().sym);
+    assertEquals(sym.id_persona, lexer.next_token().sym);
+    assertEquals(sym.op_mul_cometa, lexer.next_token().sym);
+    assertEquals(sym.p_abre_cuento, lexer.next_token().sym);
+    assertEquals(sym.id_persona, lexer.next_token().sym);
+    assertEquals(sym.op_res_rodolfo, lexer.next_token().sym);
+    assertEquals(sym.l_int_colacho, lexer.next_token().sym);
+    assertEquals(sym.p_cierra_cuento, lexer.next_token().sym);
+  }
+
+  @Test
   public void testCupDependency() {
     Symbol symbol = new Symbol(0);
     assertNotNull(symbol);
