@@ -43,7 +43,8 @@ terminal id_persona;
 
 // tipos de datos, nombres de papá noel 🎅🎅🎅🎅🎅🎅
 terminal t_int_colacho, t_float_santa, t_bool_noel, t_char_pascuero;
-terminal t_string_kris, t_arr_gordo;
+terminal t_string_kris, t_arr_gordo, t_null_reno, t_void_frosty;
+terminal t_struct_snowman;
 
 // literales, nombres de papá noel 🎅🎅🎅🎅🎅🎅
 terminal l_int_colacho, l_float_santa, l_t_noel, l_f_noel;
@@ -61,6 +62,8 @@ terminal cb_abre_regalo, cb_cierra_regalo;
 // flujo de control, folklore navideño
 terminal if_elfo, elif_hada, else_duende, for_envuelve;
 terminal do_hace, until_revisa, return_envia, break_corta;
+terminal while_repite, switch_regalo, case_juguete, default_copo;
+terminal in_envuelto_en; 
 
 // print-read, habla y escucha 🗣️👂
 terminal print_habla, read_escucha;

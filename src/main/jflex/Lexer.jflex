@@ -125,6 +125,9 @@ SEPARATOR = \,
 %%
 
 /* palabras reservadas */
+<YYINITIAL> "null" { return symbol(sym.t_null_reno, "null"); }
+<YYINITIAL> "void" { return symbol(sym.t_void_frosty, "func"); }
+<YYINITIAL> "struct" { return symbol(sym.t_struct_snowman, "struct"); }
 <YYINITIAL> "int" { return symbol(sym.t_int_colacho, "int"); }
 <YYINITIAL> "float" { return symbol(sym.t_float_santa, "float"); }
 <YYINITIAL> "string" { return symbol(sym.t_string_kris, "string"); }
@@ -144,6 +147,12 @@ SEPARATOR = \,
 <YYINITIAL> "print" { return symbol(sym.print_habla, "print"); }
 <YYINITIAL> "read" { return symbol(sym.read_escucha, "read"); }
 <YYINITIAL> "main" { return symbol(sym.main_navidad, "main"); }
+<YYINITIAL> "while" { return symbol(sym.while_repite, "while"); }
+<YYINITIAL> "switch" { return symbol(sym.switch_regalo, "switch"); }
+<YYINITIAL> "case" { return symbol(sym.case_juguete, "case"); }
+<YYINITIAL> "default" { return symbol(sym.default_copo, "default"); }
+<YYINITIAL> "in" { return symbol(sym.in_envuelto_en, "in"); }
+
 
 <YYINITIAL> {
     {COMMENT} { /* ignore */ }
