@@ -33,6 +33,12 @@ public class AppTest {
   }
 
   @Test
+  public void testSingleIdentifierToken() throws IOException {
+    Lexer lexer = new Lexer(new StringReader("variable"));
+    assertEquals(sym.id_persona, lexer.next_token().sym);
+  }
+
+  @Test
   public void testCupDependency() {
     Symbol symbol = new Symbol(0);
     assertNotNull(symbol);
