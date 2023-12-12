@@ -678,13 +678,34 @@ public class Lexer implements java_cup.runtime.Scanner {
   /* user code: */
     StringBuffer sb = new StringBuffer();
 
+    /**
+    * Método auxiliar para generar un símbolo con datos adicionales.
+    * entrada: tipo de símbolo
+    * salida: símbolo con datos adicionales
+    * restricción: ninguna
+    * objetivo: generar un símbolo con datos adicionales
+    */  
     private Symbol symbol(int type) {
         return new Symbol(type, yyline, yycolumn);
     }
+    /**
+    * Método auxiliar para generar un símbolo con datos adicionales.
+    * entrada: tipo de símbolo, valor del símbolo
+    * salida: símbolo con datos adicionales
+    * restricción: ninguna
+    * objetivo: generar un símbolo con datos adicionales
+    */
     private Symbol symbol(int type, Object value) {
         return new Symbol(type, yyline, yycolumn, value);
     }
 
+    /**
+    * Método publico para conseguir los tokens de un archivo.
+    * entrada: ninguno
+    * salida: lista de tokens
+    * restricción: ninguna
+    * objetivo: conseguir los tokens de un archivo
+    */
     public List<Symbol> getTokens() {
         List<Symbol> tokens = new ArrayList<Symbol>();
         Symbol token;
@@ -706,6 +727,13 @@ public class Lexer implements java_cup.runtime.Scanner {
         return tokens;
     }
 
+    /**
+    * Método publico para conseguir la cantidad de tokens de cada tipo de un archivo.
+    * entrada: ninguno
+    * salida: tabla de hash con la cantidad de tokens de cada tipo
+    * restricción: ninguna
+    * objetivo: conseguir la cantidad de tokens de cada tipo de un archivo
+    */
     public Hashtable<Integer, Integer> getSymbolCount() {
         Hashtable<Integer, Integer> symbolCount = new Hashtable<Integer, Integer>();
         Symbol token;

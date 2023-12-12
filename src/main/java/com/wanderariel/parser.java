@@ -106,6 +106,13 @@ public class parser extends java_cup.runtime.lr_parser {
 
   Lexer lex;
 
+  /**
+  * Constructor de la clase parser
+  * entrada: un lexer
+  * salida: ninguna
+  * restricciones: ninguna
+  * objetivo: inicializar el lexer y el symbolFactory
+  */
   public parser(Lexer lex) {
     this.lex = lex;
     this.symbolFactory = new DefaultSymbolFactory();
@@ -118,7 +125,14 @@ public class parser extends java_cup.runtime.lr_parser {
 class CUP$parser$actions {
 
 
-  // Any Java code to be added to the action class should go here.
+  /** 
+  * funciones públicas de pruebas para el lexer, por ahora
+  * solo imprimen en consola
+  * entrada: ninguna
+  * salida: ninguna
+  * restricciones: ninguna
+  * objetivo: imprimir en consola
+  */
   public void hola() {
     System.out.println("Hola");
   }

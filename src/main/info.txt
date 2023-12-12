@@ -1,4 +1,4 @@
-Nombre del Curso: Compilador E Interpretes 
+Nombre del Curso: Compiladores E Intérpretes 
 
 Numero de Semestre: Verano 2023
 
@@ -12,6 +12,6 @@ Numero de Proyecto Programado: #1
 
 Fecha de Entrega: Sabado 16 de Diciembre
 
-Estatus de la Entrega: Superior
+Estatus de la Entrega: Excelente 
 
 

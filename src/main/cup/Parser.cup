@@ -1,7 +1,14 @@
 import java_cup.runtime.*;
 
 action code {:
-  // Any Java code to be added to the action class should go here.
+  /** 
+  * funciones públicas de pruebas para el lexer, por ahora
+  * solo imprimen en consola
+  * entrada: ninguna
+  * salida: ninguna
+  * restricciones: ninguna
+  * objetivo: imprimir en consola
+  */
   public void hola() {
     System.out.println("Hola");
   }
@@ -13,6 +20,13 @@ action code {:
 parser code {:
   Lexer lex;
 
+  /**
+  * Constructor de la clase parser
+  * entrada: un lexer
+  * salida: ninguna
+  * restricciones: ninguna
+  * objetivo: inicializar el lexer y el symbolFactory
+  */
   public parser(Lexer lex) {
     this.lex = lex;
     this.symbolFactory = new DefaultSymbolFactory();
@@ -20,6 +34,7 @@ parser code {:
 
 :}
 
+// como se escanean e inicializan los tokens
 scan with {: return lex.next_token(); :};
 init with {: :};
 
@@ -83,6 +98,9 @@ terminal main_navidad;
 // error, carbón 🎁
 terminal error_carbon;
 
+// Esta parte define la estructura de la gramática
+// de acuerdo a la especificación de CUP
+// por ahora solo se define la regla inicial
 non terminal merryC;
 start with merryC;
 merryC ::= {: hola(); :} id_persona {: adios(); :};
