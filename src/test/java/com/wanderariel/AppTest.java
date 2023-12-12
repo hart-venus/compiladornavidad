@@ -12,10 +12,12 @@ import java_cup.runtime.Symbol;
 import org.junit.Test;
 
 /**
- * Función de pruebas unitarias.
+ * Clase de pruebas unitarias.
+ * Entrada: ninguna.
+ * Restricciones: ninguna.
+ * Objetivo: probar el Lexer y el Parser.
+ * Salida: ninguna.
  * 
- * @param args argumentos de la función.
- * @return void
  */
 
 public class AppTest {

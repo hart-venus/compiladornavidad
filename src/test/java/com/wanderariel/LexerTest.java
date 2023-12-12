@@ -10,10 +10,12 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Función de pruebas unitarias.
-
- * @param args argumentos de la función.
- * @return void
+ * Clase de pruebas unitarias.
+ * Entrada: ninguna.
+ * Restricciones: ninguna.
+ * Objetivo: probar el Lexer y el Parser.
+ * Salida: ninguna.
+ * 
  */
 public class LexerTest {
 
