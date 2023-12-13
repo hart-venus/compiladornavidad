@@ -1,13 +1,11 @@
-"Josafat" @ Soy un comentario
+string miNombre <= "Josafat"| @ Soy un comentario
 
-int josafat <= 10 |
+int josafat <= 2 |
 
 @ Verificacion de que no me atrapa una palabra reservada
 @ en medio de una variable
 
-int josaintfat
-
-@ esto deberia picar error
+int josaintfat|
 
 do {
     ++josafat|
@@ -15,10 +13,9 @@ do {
 } until (josafat == 10)
 
 
-31 - 3.4 + -40 
+float miNumero <= 31 - 3.4 + -40| 
 /_ 
     Soy un comentario multilinea
 _/
-++josafat
-
-"Soy un string multilinea"
+++josafat|
+josafat <= 1 - -1| 

@@ -39,6 +39,8 @@ public class App {
       outputPath = "src/main/test/merryc.md";
     }
 
+    System.out.println("Leyendo archivo de entrada: " + fileName);
+
     // Crea una lista de arreglos de strings para la tabla de markdown
     List<String[]> rows = new ArrayList<String[]>();
     // Agrega el encabezado de la tabla como el primer elemento
@@ -63,5 +65,6 @@ public class App {
     // y el nombre del archivo de salida, para imprimir la tabla de markdown
     MarkdownTablePrinter printer = new MarkdownTablePrinter(rows, outputPath);
     printer.print();
+    System.out.println("Tabla de tokens generada en: " + outputPath);
   }
 }
