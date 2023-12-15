@@ -19,3 +19,8 @@ float miNumero <= 31 - 3.4 + -40|
 _/
 ++josafat|
 josafat <= 1 - -1| 
+
+@ Definición de funciones
+function int suma(int a, int b) {
+    return a + b|
+}

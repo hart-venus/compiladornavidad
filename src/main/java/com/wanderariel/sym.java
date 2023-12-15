@@ -13,8 +13,10 @@ public interface sym {
   public static final int op_pow_travieso = 8;
   public static final int op_geq_feliz = 14;
   public static final int switch_regalo = 51;
+  public static final int local_dulce = 63;
   public static final int main_navidad = 60;
   public static final int t_bool_noel = 23;
+  public static final int function_chimenea = 62;
   public static final int op_eq_astuto = 11;
   public static final int elif_hada = 43;
   public static final int assign_entregar = 58;
@@ -132,7 +134,9 @@ public interface sym {
   "assign_entregar",
   "sep_regalo",
   "main_navidad",
-  "error_carbon"
+  "error_carbon",
+  "function_chimenea",
+  "local_dulce"
   };
 }
 

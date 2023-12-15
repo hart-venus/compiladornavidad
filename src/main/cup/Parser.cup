@@ -98,6 +98,12 @@ terminal main_navidad;
 // error, carbón 🎁
 terminal error_carbon;
 
+// palabras clave de tarea 1
+// función, chimenea 🎅
+terminal function_chimenea;
+// definición de variable, dulce 🍬
+terminal local_dulce;
+
 // Esta parte define la estructura de la gramática
 // de acuerdo a la especificación de CUP
 // por ahora solo se define la regla inicial

@@ -153,8 +153,10 @@ SEPARATOR = \,
 %%
 
 /* palabras reservadas */
+<YYINITIAL> "function" { return symbol(sym.function_chimenea, "function"); }
+<YYINITIAL> "local" { return symbol(sym.local_dulce, "local"); }
 <YYINITIAL> "null" { return symbol(sym.t_null_reno, "null"); }
-<YYINITIAL> "void" { return symbol(sym.t_void_frosty, "func"); }
+<YYINITIAL> "void" { return symbol(sym.t_void_frosty, "void"); }
 <YYINITIAL> "struct" { return symbol(sym.t_struct_snowman, "struct"); }
 <YYINITIAL> "int" { return symbol(sym.t_int_colacho, "int"); }
 <YYINITIAL> "float" { return symbol(sym.t_float_santa, "float"); }
