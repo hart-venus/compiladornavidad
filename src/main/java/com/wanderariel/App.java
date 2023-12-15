@@ -66,5 +66,17 @@ public class App {
     MarkdownTablePrinter printer = new MarkdownTablePrinter(rows, outputPath);
     printer.print();
     System.out.println("Tabla de tokens generada en: " + outputPath);
+
+    // Parte 2: Análisis sintáctico
+    System.out.println("Analizando sintaxis del archivo de entrada: " + fileName);
+    try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+      Lexer lexer = new Lexer(reader);
+      parser p = new parser(lexer);
+      p.parse();
+      System.out.println("Analisis sintactico exitoso");
+    } catch (Exception e) {
+      e.printStackTrace();
+    } 
+
   }
 }

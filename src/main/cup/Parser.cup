@@ -31,7 +31,8 @@ parser code {:
     this.lex = lex;
     this.symbolFactory = new DefaultSymbolFactory();
   }
-
+  
+  
 :}
 
 // como se escanean e inicializan los tokens
@@ -104,9 +105,34 @@ terminal function_chimenea;
 // definición de variable, dulce 🍬
 terminal local_dulce;
 
-// Esta parte define la estructura de la gramática
-// de acuerdo a la especificación de CUP
-// por ahora solo se define la regla inicial
-non terminal merryC;
-start with merryC;
-merryC ::= {: hola(); :} id_persona {: adios(); :};
+/* Definición de gramática - TAREA 1 */
+non terminal navidad;
+// no terminales para literales y para tipos
+non terminal t_santa, l_santa;
+
+// no terminales para definiciones de funciones
+non terminal funciones_bolsa_navidena, funcion_ayudante_santa, def_funcion_trineo, cuerpo_funcion_villancico; 
+non terminal parametros_funcion_renos, parametro_funcion_reno;
+
+start with navidad;
+
+navidad ::= funciones_bolsa_navidena;
+
+
+t_santa ::= t_int_colacho | t_float_santa | t_bool_noel | t_char_pascuero | t_string_kris;
+l_santa ::= l_int_colacho | l_float_santa | l_t_noel | l_f_noel | l_char_pascuero | l_string_kris;
+
+funciones_bolsa_navidena ::= funcion_ayudante_santa | funciones_bolsa_navidena funcion_ayudante_santa;
+funcion_ayudante_santa ::= def_funcion_trineo cuerpo_funcion_villancico;
+
+def_funcion_trineo ::= 
+  function_chimenea t_santa id_persona p_abre_cuento p_cierra_cuento | // sin parametros
+  function_chimenea t_santa id_persona p_abre_cuento parametros_funcion_renos p_cierra_cuento; // con parametros
+
+parametros_funcion_renos ::= parametro_funcion_reno | parametros_funcion_renos sep_regalo parametro_funcion_reno;
+parametro_funcion_reno ::= t_santa id_persona;
+
+cuerpo_funcion_villancico ::= cb_abre_regalo cb_cierra_regalo;
+
+
+/*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*/
