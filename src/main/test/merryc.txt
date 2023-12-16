@@ -1,7 +1,8 @@
 function int miFuncion() {
-
+    local int a|
 }
 
 function float miOtraFuncion(float a, float b){
-    
+    local int a <= 1|
+    local float b <= 0.5|
 }

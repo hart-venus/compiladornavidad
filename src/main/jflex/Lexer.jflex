@@ -135,7 +135,7 @@ COMMENT_CONTENT = ([^\_] | \_+ [^/\_])*
 
 IDENTIFIER = [:jletter:] [:jletterdigit:]*
 NUMBER = 0 | -?[1-9] {DIGIT}*
-FLOATING_POINT_LITERAL = 0 | -?[1-9] {DIGIT}* "." {DIGIT}+
+FLOATING_POINT_LITERAL = 0 "." {DIGIT}+ | -?[1-9] {DIGIT}* "." {DIGIT}+
 CHAR_LITERAL = \' {INPUT_CHARACTER} \'
 
 BEGIN_PARENTHESIS = \(
