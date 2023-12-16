@@ -5,4 +5,7 @@ function int miFuncion() {
 function float miOtraFuncion(float a, float b){
     local int a <= 1|
     local float b <= 0.5|
+    b <= -0.77|
+    local int otroarreglo[3] <= {1,2,3}|
+    otroarreglo[0] <= (0)| @ 0, 2, 3
 }

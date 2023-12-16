@@ -31,16 +31,19 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\035\000\002\002\004\000\002\002\003\000\002\003" +
+    "\000\047\000\002\002\004\000\002\002\003\000\002\003" +
     "\003\000\002\003\003\000\002\003\003\000\002\003\003" +
     "\000\002\003\003\000\002\004\003\000\002\004\003\000" +
     "\002\004\003\000\002\004\003\000\002\004\003\000\002" +
-    "\004\003\000\002\005\003\000\002\005\004\000\002\006" +
-    "\004\000\002\007\007\000\002\007\010\000\002\011\003" +
-    "\000\002\011\005\000\002\012\004\000\002\010\005\000" +
-    "\002\013\004\000\002\014\004\000\002\014\003\000\002" +
-    "\015\005\000\002\015\007\000\002\016\003\000\002\016" +
-    "\003" });
+    "\004\003\000\002\005\003\000\002\005\005\000\002\006" +
+    "\003\000\002\006\004\000\002\007\004\000\002\010\007" +
+    "\000\002\010\010\000\002\012\003\000\002\012\005\000" +
+    "\002\013\004\000\002\020\006\000\002\011\005\000\002" +
+    "\014\004\000\002\015\004\000\002\015\003\000\002\021" +
+    "\005\000\002\016\005\000\002\016\005\000\002\016\007" +
+    "\000\002\016\007\000\002\016\005\000\002\016\005\000" +
+    "\002\017\003\000\002\017\003\000\002\017\003\000\002" +
+    "\017\005" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -48,33 +51,53 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\055\000\004\100\006\001\002\000\004\052\034\001" +
+    "\000\103\000\004\100\006\001\002\000\004\052\034\001" +
     "\002\000\004\002\032\001\002\000\014\027\016\030\012" +
-    "\031\014\032\015\033\013\001\002\000\006\002\ufff4\100" +
-    "\ufff4\001\002\000\006\002\000\100\006\001\002\000\006" +
-    "\002\ufff3\100\ufff3\001\002\000\004\026\ufffe\001\002\000" +
+    "\031\014\032\015\033\013\001\002\000\006\002\ufff2\100" +
+    "\ufff2\001\002\000\006\002\000\100\006\001\002\000\006" +
+    "\002\ufff1\100\ufff1\001\002\000\004\026\ufffe\001\002\000" +
     "\004\026\ufffb\001\002\000\004\026\ufffd\001\002\000\004" +
     "\026\ufffc\001\002\000\004\026\uffff\001\002\000\004\026" +
     "\020\001\002\000\004\046\021\001\002\000\016\027\016" +
     "\030\012\031\014\032\015\033\013\047\023\001\002\000" +
-    "\004\026\031\001\002\000\004\052\ufff1\001\002\000\006" +
-    "\047\026\075\027\001\002\000\006\047\uffef\075\uffef\001" +
-    "\002\000\004\052\ufff0\001\002\000\014\027\016\030\012" +
-    "\031\014\032\015\033\013\001\002\000\006\047\uffee\075" +
-    "\uffee\001\002\000\006\047\uffed\075\uffed\001\002\000\004" +
-    "\002\001\001\002\000\006\002\ufff2\100\ufff2\001\002\000" +
-    "\004\101\040\001\002\000\006\053\uffe9\101\040\001\002" +
-    "\000\004\053\056\001\002\000\004\073\055\001\002\000" +
-    "\014\027\016\030\012\031\014\032\015\033\013\001\002" +
-    "\000\004\026\042\001\002\000\006\073\uffe8\074\043\001" +
-    "\002\000\020\026\054\040\045\041\050\042\044\043\053" +
-    "\044\052\045\047\001\002\000\004\073\ufff8\001\002\000" +
-    "\004\073\ufffa\001\002\000\004\073\uffe7\001\002\000\004" +
-    "\073\ufff5\001\002\000\004\073\ufff9\001\002\000\004\073" +
-    "\uffe6\001\002\000\004\073\ufff6\001\002\000\004\073\ufff7" +
-    "\001\002\000\004\073\uffe5\001\002\000\006\053\uffeb\101" +
-    "\uffeb\001\002\000\006\002\uffec\100\uffec\001\002\000\004" +
-    "\053\uffea\001\002" });
+    "\004\026\031\001\002\000\004\052\uffef\001\002\000\006" +
+    "\047\026\075\027\001\002\000\006\047\uffed\075\uffed\001" +
+    "\002\000\004\052\uffee\001\002\000\014\027\016\030\012" +
+    "\031\014\032\015\033\013\001\002\000\006\047\uffec\075" +
+    "\uffec\001\002\000\006\047\uffeb\075\uffeb\001\002\000\004" +
+    "\002\001\001\002\000\006\002\ufff0\100\ufff0\001\002\000" +
+    "\006\026\041\101\042\001\002\000\010\026\041\053\uffe6" +
+    "\101\042\001\002\000\004\053\104\001\002\000\004\074" +
+    "\102\001\002\000\004\073\101\001\002\000\006\050\046" +
+    "\074\077\001\002\000\014\027\016\030\012\031\014\032" +
+    "\015\033\013\001\002\000\004\026\045\001\002\000\006" +
+    "\073\uffe3\074\067\001\002\000\010\050\046\073\uffe4\074" +
+    "\047\001\002\000\004\040\065\001\002\000\022\026\062" +
+    "\040\051\041\054\042\050\043\061\044\057\045\052\046" +
+    "\060\001\002\000\012\047\ufff8\053\ufff8\073\ufff8\075\ufff8" +
+    "\001\002\000\012\047\ufffa\053\ufffa\073\ufffa\075\ufffa\001" +
+    "\002\000\012\047\ufff5\053\ufff5\073\ufff5\075\ufff5\001\002" +
+    "\000\004\073\uffe2\001\002\000\012\047\ufff9\053\ufff9\073" +
+    "\ufff9\075\ufff9\001\002\000\006\047\uffde\073\uffde\001\002" +
+    "\000\006\047\uffdc\073\uffdc\001\002\000\012\047\ufff6\053" +
+    "\ufff6\073\ufff6\075\ufff6\001\002\000\022\026\062\040\051" +
+    "\041\054\042\050\043\061\044\057\045\052\046\060\001" +
+    "\002\000\012\047\ufff7\053\ufff7\073\ufff7\075\ufff7\001\002" +
+    "\000\010\047\uffdd\050\046\073\uffdd\001\002\000\004\047" +
+    "\064\001\002\000\006\047\uffdb\073\uffdb\001\002\000\004" +
+    "\051\066\001\002\000\010\047\uffea\073\uffea\074\uffea\001" +
+    "\002\000\004\052\071\001\002\000\004\073\uffe1\001\002" +
+    "\000\016\040\051\041\054\042\050\043\061\044\057\045" +
+    "\052\001\002\000\006\053\074\075\075\001\002\000\006" +
+    "\053\ufff4\075\ufff4\001\002\000\004\073\uffe5\001\002\000" +
+    "\016\040\051\041\054\042\050\043\061\044\057\045\052" +
+    "\001\002\000\006\053\ufff3\075\ufff3\001\002\000\022\026" +
+    "\062\040\051\041\054\042\050\043\061\044\057\045\052" +
+    "\046\060\001\002\000\004\073\uffe0\001\002\000\010\026" +
+    "\uffe8\053\uffe8\101\uffe8\001\002\000\022\026\062\040\051" +
+    "\041\054\042\050\043\061\044\057\045\052\046\060\001" +
+    "\002\000\004\073\uffdf\001\002\000\006\002\uffe9\100\uffe9" +
+    "\001\002\000\004\053\uffe7\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -82,24 +105,33 @@ public class parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\055\000\012\002\004\005\007\006\006\007\003\001" +
-    "\001\000\004\010\032\001\001\000\002\001\001\000\004" +
-    "\003\016\001\001\000\002\001\001\000\006\006\010\007" +
+    "\000\103\000\012\002\004\006\007\007\006\010\003\001" +
+    "\001\000\004\011\032\001\001\000\002\001\001\000\004" +
+    "\003\016\001\001\000\002\001\001\000\006\007\010\010" +
     "\003\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\010\003\021" +
-    "\011\023\012\024\001\001\000\002\001\001\000\002\001" +
+    "\012\023\013\024\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\006\003\021\012\027\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\010" +
-    "\013\034\014\035\015\036\001\001\000\010\013\034\014" +
-    "\056\015\036\001\001\000\002\001\001\000\002\001\001" +
-    "\000\004\003\040\001\001\000\002\001\001\000\002\001" +
-    "\001\000\006\004\050\016\045\001\001\000\002\001\001" +
+    "\000\006\003\021\013\027\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\012" +
+    "\014\034\015\035\016\037\020\036\001\001\000\012\014" +
+    "\034\015\104\016\037\020\036\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\004\003\042\001\001\000\004\020\043\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\010\004" +
+    "\054\017\052\020\055\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001" });
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\010\004\054\017\062\020\055\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\004\021\067\001" +
+    "\001\000\002\001\001\000\006\004\072\005\071\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\004\004\075\001\001\000\002\001\001\000\010\004\054" +
+    "\017\077\020\055\001\001\000\002\001\001\000\002\001" +
+    "\001\000\010\004\054\017\102\020\055\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -332,146 +364,236 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 13: // funciones_bolsa_navidena ::= funcion_ayudante_santa 
+          case 13: // args_santa ::= l_santa 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("funciones_bolsa_navidena",3, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("args_santa",3, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 14: // funciones_bolsa_navidena ::= funciones_bolsa_navidena funcion_ayudante_santa 
+          case 14: // args_santa ::= args_santa sep_regalo l_santa 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("funciones_bolsa_navidena",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("args_santa",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 15: // funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre 
+          case 15: // funciones_bolsa_navidena ::= funcion_ayudante_santa 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("funcion_ayudante_santa",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("funciones_bolsa_navidena",4, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 16: // def_funcion_trineo ::= function_chimenea t_santa id_persona p_abre_cuento p_cierra_cuento 
+          case 16: // funciones_bolsa_navidena ::= funciones_bolsa_navidena funcion_ayudante_santa 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",5, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("funciones_bolsa_navidena",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 17: // def_funcion_trineo ::= function_chimenea t_santa id_persona p_abre_cuento parametros_funcion_renos p_cierra_cuento 
+          case 17: // funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",5, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("funcion_ayudante_santa",5, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 18: // parametros_funcion_renos ::= parametro_funcion_reno 
+          case 18: // def_funcion_trineo ::= function_chimenea t_santa id_persona p_abre_cuento p_cierra_cuento 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("parametros_funcion_renos",7, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 19: // parametros_funcion_renos ::= parametros_funcion_renos sep_regalo parametro_funcion_reno 
+          case 19: // def_funcion_trineo ::= function_chimenea t_santa id_persona p_abre_cuento parametros_funcion_renos p_cierra_cuento 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("parametros_funcion_renos",7, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 20: // parametro_funcion_reno ::= t_santa id_persona 
+          case 20: // parametros_funcion_renos ::= parametro_funcion_reno 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("parametro_funcion_reno",8, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("parametros_funcion_renos",8, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 21: // bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo 
+          case 21: // parametros_funcion_renos ::= parametros_funcion_renos sep_regalo parametro_funcion_reno 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("bloque_codigo_casa_jengibre",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("parametros_funcion_renos",8, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 22: // linea_hombre_jengibre ::= asignacion_adorno fin_regalo 
+          case 22: // parametro_funcion_reno ::= t_santa id_persona 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("linea_hombre_jengibre",9, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("parametro_funcion_reno",9, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 23: // lineas_hombre_jengibre ::= linea_hombre_jengibre lineas_hombre_jengibre 
+          case 23: // elemento_arreglo_juguete ::= id_persona p_abre_empaque l_int_colacho p_cierra_empaque 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("lineas_hombre_jengibre",10, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("elemento_arreglo_juguete",14, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 24: // lineas_hombre_jengibre ::= linea_hombre_jengibre 
+          case 24: // bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("lineas_hombre_jengibre",10, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("bloque_codigo_casa_jengibre",7, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 25: // asignacion_adorno ::= local_dulce t_santa id_persona 
+          case 25: // linea_hombre_jengibre ::= asignacion_adorno fin_regalo 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",11, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("linea_hombre_jengibre",10, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 26: // asignacion_adorno ::= local_dulce t_santa id_persona assign_entregar expresion_regalo 
+          case 26: // lineas_hombre_jengibre ::= linea_hombre_jengibre lineas_hombre_jengibre 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",11, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("lineas_hombre_jengibre",11, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 27: // expresion_regalo ::= l_santa 
+          case 27: // lineas_hombre_jengibre ::= linea_hombre_jengibre 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",12, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("lineas_hombre_jengibre",11, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 28: // expresion_regalo ::= id_persona 
+          case 28: // l_arr_gordo ::= cb_abre_regalo args_santa cb_cierra_regalo 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",12, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("l_arr_gordo",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 29: // asignacion_adorno ::= local_dulce t_santa id_persona 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 30: // asignacion_adorno ::= local_dulce t_santa elemento_arreglo_juguete 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 31: // asignacion_adorno ::= local_dulce t_santa id_persona assign_entregar expresion_regalo 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 32: // asignacion_adorno ::= local_dulce t_santa elemento_arreglo_juguete assign_entregar l_arr_gordo 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 33: // asignacion_adorno ::= id_persona assign_entregar expresion_regalo 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 34: // asignacion_adorno ::= elemento_arreglo_juguete assign_entregar expresion_regalo 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 35: // expresion_regalo ::= l_santa 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 36: // expresion_regalo ::= id_persona 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 37: // expresion_regalo ::= elemento_arreglo_juguete 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 38: // expresion_regalo ::= p_abre_cuento expresion_regalo p_cierra_cuento 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
