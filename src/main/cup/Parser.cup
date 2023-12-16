@@ -119,7 +119,8 @@ non terminal linea_hombre_jengibre, lineas_hombre_jengibre;
 non terminal asignacion_adorno, expresion_regalo, elemento_arreglo_juguete, l_arr_gordo;
 non terminal expr_ar_regaloprin, expr_rel_regalocomprado, expr_log_regalomanual;
 // no terminales para flujo de control
-non terminal retorno_carta_santa, llamada_func_pino;
+non terminal retorno_carta_santa, llamada_func_pino, do_until_fabrica_juguetes;
+non terminal for_vispera, if_travieso, elif_ayudante_lista, elif_lista_santa, else_inocente;
 
 // Precedencia y asociatividad de operadores
 precedence left op_res_rodolfo, op_sum_cupido;
@@ -141,7 +142,7 @@ navidad ::= funciones_bolsa_navidena;
 
 t_santa ::= t_int_colacho | t_float_santa | t_bool_noel | t_char_pascuero | t_string_kris;
 l_santa ::= l_int_colacho | l_float_santa | l_t_noel | l_f_noel | l_char_pascuero | l_string_kris;
-args_santa ::= l_santa | args_santa sep_regalo l_santa;
+args_santa ::= expresion_regalo | args_santa sep_regalo expresion_regalo;
 
 funciones_bolsa_navidena ::= funcion_ayudante_santa | funciones_bolsa_navidena funcion_ayudante_santa;
 funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre;
@@ -163,7 +164,11 @@ retorno_carta_santa ::=
 linea_hombre_jengibre ::= 
   asignacion_adorno fin_regalo|
   retorno_carta_santa fin_regalo|
-  expresion_regalo fin_regalo;
+  expresion_regalo fin_regalo|
+  break_corta fin_regalo|
+  do_until_fabrica_juguetes fin_regalo|
+  for_vispera|
+  if_travieso;
 
 llamada_func_pino ::= 
   id_persona p_abre_cuento p_cierra_cuento | // a()
@@ -178,7 +183,26 @@ lineas_hombre_jengibre ::= linea_hombre_jengibre lineas_hombre_jengibre | linea_
 
 l_arr_gordo ::= cb_abre_regalo args_santa cb_cierra_regalo;
 
+do_until_fabrica_juguetes ::=
+  do_hace bloque_codigo_casa_jengibre until_revisa p_abre_cuento expresion_regalo p_cierra_cuento; // do {} until (a)|
 
+for_vispera ::=
+  for_envuelve p_abre_cuento asignacion_adorno fin_regalo expresion_regalo fin_regalo expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre; // for (a| b| c) {}
+
+if_travieso ::=
+  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre| // if (a) {}
+  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre elif_ayudante_lista| // if (a) {} elif (b) {} elif ...
+  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre else_inocente| // if (a) {} else {}
+  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre elif_ayudante_lista else_inocente; // if (a) {} elif (b) {} elif ... else {}
+
+elif_ayudante_lista ::=
+  elif_lista_santa | elif_lista_santa elif_ayudante_lista;
+
+elif_lista_santa ::=
+  elif_hada p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre;
+
+else_inocente ::=
+  else_duende bloque_codigo_casa_jengibre;
 
 asignacion_adorno ::= 
   local_dulce t_santa id_persona | // local int a|

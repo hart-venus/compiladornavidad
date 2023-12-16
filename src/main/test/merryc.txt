@@ -24,7 +24,57 @@ function main(){ @ Main es la única clase sin tipo de retorno
     local bool miOtroBooleano <= 1 => 2|
     local bool miOtroOtroBooleano <= !(miOtroBooleano ^ miBooleano)|
     local bool miOtroOtroOtroBooleano <= miOtroOtroBooleano # miOtroBooleano|
+    local float c <= 1.0|
 
     b <= miFuncion()|
-    miOtraFuncion(1.0, 2.0)|
+    miOtraFuncion(1.0, c)|
+
+    local int i <= 0|
+
+    do {
+        ++i|
+        print(i)|
+    } until (i => 10)|
+
+    for (i <= 0| i < 10| ++i){
+        print(i)|
+    }
+
+    print("El ciclo terminó")|
+    local string miString <= "Hola"|
+    read(miString)|
+
+    @ 1. if sin else ni elif 
+    if (miString == "Hola"){
+        print("El string es Hola")|
+    } 
+
+    @ 2. if con else
+
+    if (miString == "Hola"){
+        print("El string es Hola")|
+        break|
+    } else {
+        print("El string no es Hola")|
+    }
+
+    @ 3. if con elif
+
+    if (miString == "Hola"){
+        print("El string es Hola")|
+    } elif (miString == "Chao"){
+        print("El string es Chao")|
+    } elif (miString == "Adios"){
+        print("El string es Adios")|
+    } 
+
+    @ 4. if con elif y else
+
+    if (miString == "Hola"){
+        print("El string es Hola")|
+    } elif (miString == "Chao"){
+        print("El string es Chao")|
+    } else {
+        print("El string no es Hola, Chao ni Adios")|
+    }
 }
