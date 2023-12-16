@@ -8,4 +8,15 @@ function float miOtraFuncion(float a, float b){
     b <= -0.77|
     local int otroarreglo[3] <= {1,2,3}|
     otroarreglo[0] <= (0)| @ 0, 2, 3
+    return 0.0|
+}
+
+function main(){ @ Main es la única clase sin tipo de retorno
+    local string a <= "hola"|
+    local int b <= (10*1) ** 2|
+    --b|
+    local bool miBooleano <= true|
+    local bool miOtroBooleano <= 1 => 2|
+    local bool miOtroOtroBooleano <= !(miOtroBooleano ^ miBooleano)|
+    local bool miOtroOtroOtroBooleano <= miOtroOtroBooleano # miOtroBooleano|
 }

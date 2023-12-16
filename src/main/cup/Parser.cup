@@ -117,6 +117,22 @@ non terminal parametros_funcion_renos, parametro_funcion_reno;
 non terminal linea_hombre_jengibre, lineas_hombre_jengibre;
 // no terminales para asignacion de variables y expresiones
 non terminal asignacion_adorno, expresion_regalo, elemento_arreglo_juguete, l_arr_gordo;
+non terminal expr_ar_regaloprin, expr_rel_regalocomprado, expr_log_regalomanual;
+// no terminales para flujo de control
+non terminal retorno_carta_santa;
+
+// Precedencia y asociatividad de operadores
+precedence left op_res_rodolfo, op_sum_cupido;
+precedence left op_div_bailarin, op_dve_trueno, op_mul_cometa;
+precedence left op_mod_rayo, op_pow_travieso;
+precedence left op_inc_quien, op_dec_grinch;
+precedence left op_eq_astuto, op_l_nevado, op_g_alegre, op_geq_feliz;
+precedence left op_leq_copito, op_neq_chispa;
+precedence left op_and_melchor;
+precedence left op_or_gaspar;
+precedence left op_not_baltasar;
+
+
 
 start with navidad;
 
@@ -131,21 +147,29 @@ funciones_bolsa_navidena ::= funcion_ayudante_santa | funciones_bolsa_navidena f
 funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre;
 
 def_funcion_trineo ::= 
+  function_chimenea main_navidad p_abre_cuento p_cierra_cuento | // función main sin parámetros ni tipo de retorno
   function_chimenea t_santa id_persona p_abre_cuento p_cierra_cuento | // sin parametros
   function_chimenea t_santa id_persona p_abre_cuento parametros_funcion_renos p_cierra_cuento; // con parametros
 
 parametros_funcion_renos ::= parametro_funcion_reno | parametros_funcion_renos sep_regalo parametro_funcion_reno;
 parametro_funcion_reno ::= t_santa id_persona;
-elemento_arreglo_juguete ::= id_persona p_abre_empaque l_int_colacho p_cierra_empaque;
+elemento_arreglo_juguete ::= id_persona p_abre_empaque expresion_regalo p_cierra_empaque;
 
 bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo;
+
+retorno_carta_santa ::=
+  return_envia expresion_regalo; // return 1;
+
 linea_hombre_jengibre ::= 
-  asignacion_adorno fin_regalo;
+  asignacion_adorno fin_regalo|
+  retorno_carta_santa fin_regalo|
+  expresion_regalo fin_regalo;
 
 
 lineas_hombre_jengibre ::= linea_hombre_jengibre lineas_hombre_jengibre | linea_hombre_jengibre;
 
 l_arr_gordo ::= cb_abre_regalo args_santa cb_cierra_regalo;
+
 
 
 asignacion_adorno ::= 
@@ -157,6 +181,32 @@ asignacion_adorno ::=
   elemento_arreglo_juguete assign_entregar expresion_regalo; // a[1] <= 1|
 
 expresion_regalo ::=
-  l_santa | id_persona | elemento_arreglo_juguete | p_abre_cuento expresion_regalo p_cierra_cuento;
+  l_santa | id_persona | elemento_arreglo_juguete | p_abre_cuento expresion_regalo p_cierra_cuento | expr_ar_regaloprin
+  | expr_rel_regalocomprado | expr_log_regalomanual;
+
+expr_ar_regaloprin ::= 
+  expresion_regalo op_res_rodolfo expresion_regalo | // a - b
+  expresion_regalo op_sum_cupido expresion_regalo | // a + b
+  expresion_regalo op_div_bailarin expresion_regalo | // a / b
+  expresion_regalo op_mul_cometa expresion_regalo | // a * b
+  expresion_regalo op_mod_rayo expresion_regalo | // a ~ b
+  expresion_regalo op_pow_travieso expresion_regalo | // a ** b
+  op_inc_quien id_persona | // ++a
+  op_dec_grinch id_persona | // --a
+  op_dec_grinch elemento_arreglo_juguete | // --a[1]
+  op_inc_quien elemento_arreglo_juguete; // ++a[1]
+
+expr_rel_regalocomprado ::=
+  expresion_regalo op_eq_astuto expresion_regalo | // a == b
+  expresion_regalo op_l_nevado expresion_regalo | // a < b
+  expresion_regalo op_g_alegre expresion_regalo | // a > b
+  expresion_regalo op_geq_feliz expresion_regalo | // a => b
+  expresion_regalo op_leq_copito expresion_regalo | // a =< b
+  expresion_regalo op_neq_chispa expresion_regalo; // a != b
+
+expr_log_regalomanual ::=
+  expresion_regalo op_and_melchor expresion_regalo | // a ^ b
+  expresion_regalo op_or_gaspar expresion_regalo | // a # b
+  op_not_baltasar expresion_regalo; // !a
 
 /*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*/
