@@ -1,17 +1,14 @@
-Nombre del Curso: Compiladores E Intérpretes 
+  Compiladores E Intérpretes GR 60 
+  Prof. Allan Rodriguez Davila
+  Verano 2023
+  Martes 19 de Diciembre
 
-Numero de Semestre: Verano 2023
+	Wander Jimenez Calvo c.2020425905
+	Ariel Leyva Irigoyen c.2022175018
 
-Año Lectivo: 2023
+	Tarea #1
+	Estatus de la Entrega: Excelente 
+	Repositorio de GitHub: https://github.com/hart-venus/compiladornavidad
 
-Nombre de los Estudiantes: Wander Jimenez Calvo - Ariel Leyva Irigoyen
+---
 
-Numero de Carnet de los Estudiantes: 2020425905 - 2022175018
-
-Numero de Proyecto Programado: #1
-
-Fecha de Entrega: Sabado 16 de Diciembre
-
-Estatus de la Entrega: Excelente 
-
-Repositorio de GitHub con el Codigo Fuente: https://github.com/hart-venus/compiladornavidad
