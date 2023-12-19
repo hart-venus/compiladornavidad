@@ -8,7 +8,7 @@
 
 	Tarea #1
 	Estatus de la Entrega: Excelente 
-	Repositorio de GitHub: https://github.com/hart-venus/compiladornavidad
-
+	Repositorio de GitHub: https://github.com/hart-venus/compiladornavidad/tree/tarea-1
+	 
 ---
 
