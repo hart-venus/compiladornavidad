@@ -31,7 +31,8 @@ parser code {:
     this.lex = lex;
     this.symbolFactory = new DefaultSymbolFactory();
   }
-
+  
+  
 :}
 
 // como se escanean e inicializan los tokens
@@ -104,9 +105,140 @@ terminal function_chimenea;
 // definición de variable, dulce 🍬
 terminal local_dulce;
 
-// Esta parte define la estructura de la gramática
-// de acuerdo a la especificación de CUP
-// por ahora solo se define la regla inicial
-non terminal merryC;
-start with merryC;
-merryC ::= {: hola(); :} id_persona {: adios(); :};
+/* Definición de gramática - TAREA 1 */
+non terminal navidad;
+// no terminales para literales y para tipos
+non terminal t_santa, l_santa, args_santa;
+
+// no terminales para definiciones de funciones
+non terminal funciones_bolsa_navidena, funcion_ayudante_santa, def_funcion_trineo, bloque_codigo_casa_jengibre; 
+non terminal parametros_funcion_renos, parametro_funcion_reno;
+// no terminales para definiciones de lineas de código
+non terminal linea_hombre_jengibre, lineas_hombre_jengibre;
+// no terminales para asignacion de variables y expresiones
+non terminal asignacion_adorno, expresion_regalo, elemento_arreglo_juguete, l_arr_gordo;
+non terminal expr_ar_regaloprin, expr_rel_regalocomprado, expr_log_regalomanual;
+// no terminales para flujo de control
+non terminal retorno_carta_santa, llamada_func_pino, do_until_fabrica_juguetes;
+non terminal for_vispera, if_travieso, elif_ayudante_lista, elif_lista_santa, else_inocente;
+
+// Precedencia y asociatividad de operadores
+precedence left op_res_rodolfo, op_sum_cupido;
+precedence left op_div_bailarin, op_dve_trueno, op_mul_cometa;
+precedence left op_mod_rayo, op_pow_travieso;
+precedence left op_inc_quien, op_dec_grinch;
+precedence left op_eq_astuto, op_l_nevado, op_g_alegre, op_geq_feliz;
+precedence left op_leq_copito, op_neq_chispa;
+precedence left op_and_melchor;
+precedence left op_or_gaspar;
+precedence left op_not_baltasar;
+
+
+
+start with navidad;
+
+navidad ::= funciones_bolsa_navidena;
+
+
+t_santa ::= t_int_colacho | t_float_santa | t_bool_noel | t_char_pascuero | t_string_kris;
+l_santa ::= l_int_colacho | l_float_santa | l_t_noel | l_f_noel | l_char_pascuero | l_string_kris;
+args_santa ::= expresion_regalo | args_santa sep_regalo expresion_regalo;
+
+funciones_bolsa_navidena ::= funcion_ayudante_santa | funciones_bolsa_navidena funcion_ayudante_santa;
+funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre;
+
+def_funcion_trineo ::= 
+  function_chimenea main_navidad p_abre_cuento p_cierra_cuento | // función main sin parámetros ni tipo de retorno
+  function_chimenea t_santa id_persona p_abre_cuento p_cierra_cuento | // sin parametros
+  function_chimenea t_santa id_persona p_abre_cuento parametros_funcion_renos p_cierra_cuento; // con parametros
+
+parametros_funcion_renos ::= parametro_funcion_reno | parametros_funcion_renos sep_regalo parametro_funcion_reno;
+parametro_funcion_reno ::= t_santa id_persona;
+elemento_arreglo_juguete ::= id_persona p_abre_empaque expresion_regalo p_cierra_empaque;
+
+bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo;
+
+retorno_carta_santa ::=
+  return_envia expresion_regalo; // return 1;
+
+linea_hombre_jengibre ::= 
+  asignacion_adorno fin_regalo|
+  retorno_carta_santa fin_regalo|
+  expresion_regalo fin_regalo|
+  break_corta fin_regalo|
+  do_until_fabrica_juguetes fin_regalo|
+  for_vispera|
+  if_travieso;
+
+llamada_func_pino ::= 
+  id_persona p_abre_cuento p_cierra_cuento | // a()
+  id_persona p_abre_cuento args_santa p_cierra_cuento | 
+  print_habla p_abre_cuento args_santa p_cierra_cuento | // print(a)
+  print_habla p_abre_cuento p_cierra_cuento | // print()
+  read_escucha p_abre_cuento p_cierra_cuento | // read()
+  read_escucha p_abre_cuento args_santa p_cierra_cuento; // read(a)
+
+
+lineas_hombre_jengibre ::= linea_hombre_jengibre lineas_hombre_jengibre | linea_hombre_jengibre;
+
+l_arr_gordo ::= cb_abre_regalo args_santa cb_cierra_regalo;
+
+do_until_fabrica_juguetes ::=
+  do_hace bloque_codigo_casa_jengibre until_revisa p_abre_cuento expresion_regalo p_cierra_cuento; // do {} until (a)|
+
+for_vispera ::=
+  for_envuelve p_abre_cuento asignacion_adorno fin_regalo expresion_regalo fin_regalo expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre; // for (a| b| c) {}
+
+if_travieso ::=
+  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre| // if (a) {}
+  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre elif_ayudante_lista| // if (a) {} elif (b) {} elif ...
+  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre else_inocente| // if (a) {} else {}
+  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre elif_ayudante_lista else_inocente; // if (a) {} elif (b) {} elif ... else {}
+
+elif_ayudante_lista ::=
+  elif_lista_santa | elif_lista_santa elif_ayudante_lista;
+
+elif_lista_santa ::=
+  elif_hada p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre;
+
+else_inocente ::=
+  else_duende bloque_codigo_casa_jengibre;
+
+asignacion_adorno ::= 
+  local_dulce t_santa id_persona | // local int a|
+  local_dulce t_santa elemento_arreglo_juguete | // local int a[1]|
+  local_dulce t_santa id_persona assign_entregar expresion_regalo | // local int a <= 1|
+  local_dulce t_santa elemento_arreglo_juguete assign_entregar l_arr_gordo| // local int a[1] <= {1}
+  id_persona assign_entregar expresion_regalo| // a <= 1|
+  elemento_arreglo_juguete assign_entregar expresion_regalo; // a[1] <= 1|
+
+expresion_regalo ::=
+  l_santa | id_persona | elemento_arreglo_juguete | p_abre_cuento expresion_regalo p_cierra_cuento | expr_ar_regaloprin
+  | expr_rel_regalocomprado | expr_log_regalomanual | llamada_func_pino;
+
+expr_ar_regaloprin ::= 
+  expresion_regalo op_res_rodolfo expresion_regalo | // a - b
+  expresion_regalo op_sum_cupido expresion_regalo | // a + b
+  expresion_regalo op_div_bailarin expresion_regalo | // a / b
+  expresion_regalo op_mul_cometa expresion_regalo | // a * b
+  expresion_regalo op_mod_rayo expresion_regalo | // a ~ b
+  expresion_regalo op_pow_travieso expresion_regalo | // a ** b
+  op_inc_quien id_persona | // ++a
+  op_dec_grinch id_persona | // --a
+  op_dec_grinch elemento_arreglo_juguete | // --a[1]
+  op_inc_quien elemento_arreglo_juguete; // ++a[1]
+
+expr_rel_regalocomprado ::=
+  expresion_regalo op_eq_astuto expresion_regalo | // a == b
+  expresion_regalo op_l_nevado expresion_regalo | // a < b
+  expresion_regalo op_g_alegre expresion_regalo | // a > b
+  expresion_regalo op_geq_feliz expresion_regalo | // a => b
+  expresion_regalo op_leq_copito expresion_regalo | // a =< b
+  expresion_regalo op_neq_chispa expresion_regalo; // a != b
+
+expr_log_regalomanual ::=
+  expresion_regalo op_and_melchor expresion_regalo | // a ^ b
+  expresion_regalo op_or_gaspar expresion_regalo | // a # b
+  op_not_baltasar expresion_regalo; // !a
+
+/*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*/
