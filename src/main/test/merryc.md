@@ -1,3 +1,4 @@
+
 | Lexema                              | Token             | Codigo de Token | Linea | Columna |
 | ----------------------------------- | ----------------- | --------------- | ----- | ------- |
 | function                            | function_chimenea | 62              | 0     | 0       |
