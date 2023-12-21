@@ -173,7 +173,7 @@ parametros_funcion_renos ::= parametro_funcion_reno | parametros_funcion_renos s
 parametro_funcion_reno ::= t_santa id_persona;
 elemento_arreglo_juguete ::= id_persona p_abre_empaque expresion_regalo p_cierra_empaque;
 
-bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo;
+bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo | cb_abre_regalo error cb_cierra_regalo; // atrapa errores dentro de bloques
 
 retorno_carta_santa ::=
   return_envia expresion_regalo; // return 1;
@@ -225,7 +225,7 @@ else_inocente ::=
 
 asignacion_adorno ::= 
   local_dulce t_santa id_persona:id 
-  {: System.out.println("Declaración de variable: " + id); :} 
+  {: System.out.println("Declaracion de variable: " + id); :} 
   | // local int a|
   local_dulce t_santa elemento_arreglo_juguete | // local int a[1]|
   local_dulce t_santa id_persona assign_entregar expresion_regalo | // local int a <= 1|
