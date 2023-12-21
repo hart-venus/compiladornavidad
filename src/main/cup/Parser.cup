@@ -168,6 +168,7 @@ linea_hombre_jengibre ::=
   break_corta fin_regalo|
   do_until_fabrica_juguetes fin_regalo|
   for_vispera|
+  bloque_codigo_casa_jengibre| // permite bloques sueltos 
   if_travieso;
 
 llamada_func_pino ::= 
