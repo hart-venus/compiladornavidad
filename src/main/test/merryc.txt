@@ -1,3 +1,4 @@
+
 function int miFuncion() {
     local int a <= 2|
     return (a**a)|
