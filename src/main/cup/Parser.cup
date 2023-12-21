@@ -31,8 +31,24 @@ parser code {:
     this.lex = lex;
     this.symbolFactory = new DefaultSymbolFactory();
   }
-  
-  
+  /**
+  * Sobreescritura de métodos para el manejo de errores
+  * entrada: un entero y un símbolo
+  * salida: ninguna
+  * restricciones: ninguna
+  * objetivo: imprimir en consola el error
+  */
+  public void syntax_error(Symbol token) {
+    if (token.value == null){
+      return;
+    }
+    System.out.println("Error de sintaxis en la linea " + token.left + " columna " + token.right + ": " + token.value);
+    System.out.println("Continuando...");
+  }
+  public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
+    throw new Exception("Error de sintaxis irrecuperable en la linea " + token.left + " columna " + token.right + ": " + token.value);
+  }
+
 :}
 
 // como se escanean e inicializan los tokens
@@ -145,7 +161,8 @@ l_santa ::= l_int_colacho | l_float_santa | l_t_noel | l_f_noel | l_char_pascuer
 args_santa ::= expresion_regalo | args_santa sep_regalo expresion_regalo;
 
 funciones_bolsa_navidena ::= funcion_ayudante_santa | funciones_bolsa_navidena funcion_ayudante_santa;
-funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre;
+funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre | error def_funcion_trineo bloque_codigo_casa_jengibre;
+// atrapa el error de statements fuera de funciones
 
 def_funcion_trineo ::= 
   function_chimenea main_navidad p_abre_cuento p_cierra_cuento | // función main sin parámetros ni tipo de retorno
@@ -156,7 +173,7 @@ parametros_funcion_renos ::= parametro_funcion_reno | parametros_funcion_renos s
 parametro_funcion_reno ::= t_santa id_persona;
 elemento_arreglo_juguete ::= id_persona p_abre_empaque expresion_regalo p_cierra_empaque;
 
-bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo;
+bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo | cb_abre_regalo error cb_cierra_regalo; // atrapa errores dentro de bloques
 
 retorno_carta_santa ::=
   return_envia expresion_regalo; // return 1;
@@ -168,7 +185,9 @@ linea_hombre_jengibre ::=
   break_corta fin_regalo|
   do_until_fabrica_juguetes fin_regalo|
   for_vispera|
-  if_travieso;
+  bloque_codigo_casa_jengibre| // permite bloques sueltos 
+  if_travieso|
+  error fin_regalo; // recuperación de errores
 
 llamada_func_pino ::= 
   id_persona p_abre_cuento p_cierra_cuento | // a()
@@ -205,7 +224,9 @@ else_inocente ::=
   else_duende bloque_codigo_casa_jengibre;
 
 asignacion_adorno ::= 
-  local_dulce t_santa id_persona | // local int a|
+  local_dulce t_santa id_persona:id 
+  {: System.out.println("Declaracion de variable: " + id); :} 
+  | // local int a|
   local_dulce t_santa elemento_arreglo_juguete | // local int a[1]|
   local_dulce t_santa id_persona assign_entregar expresion_regalo | // local int a <= 1|
   local_dulce t_santa elemento_arreglo_juguete assign_entregar l_arr_gordo| // local int a[1] <= {1}
