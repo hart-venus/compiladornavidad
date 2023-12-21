@@ -616,11 +616,11 @@ public class parser extends java_cup.runtime.lr_parser {
       return;
     }
     System.out.println("Error de sintaxis en la linea " + token.left + " columna " + token.right + ": " + token.value);
+    System.out.println("Continuando...");
   }
-  public void unrecovered_syntax_error(Symbol token) {
-    System.out.println("Error de sintaxis encontrado. Continuando...");
+  public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
+    throw new Exception("Error de sintaxis irrecuperable en la linea " + token.left + " columna " + token.right + ": " + token.value);
   }
-
 
 
 

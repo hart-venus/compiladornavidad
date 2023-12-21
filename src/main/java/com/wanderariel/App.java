@@ -73,9 +73,10 @@ public class App {
       Lexer lexer = new Lexer(reader);
       parser p = new parser(lexer);
       p.parse();
-      System.out.println("Analisis sintactico exitoso");
+      System.out.println("Analisis sintactico exitoso. El archivo es generable por la gramatica.");
     } catch (Exception e) {
       e.printStackTrace();
+      System.out.println("Analisis sintactico fallido. El archivo no es generable por la gramatica.");
     } 
 
   }
