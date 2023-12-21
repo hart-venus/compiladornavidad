@@ -1,6 +1,14 @@
 
+local int c <= 5 @ No se puede declarar una variable local fuera de una función
+
+function ERROR malDeclarada(a, b, adios){
+    local int z|
+    return -1| 
+}
+
 function int miFuncion() {
     local int a <= 2|
+    local int b|
     return (a**a)|
 }
 
@@ -78,4 +86,9 @@ function main(){ @ Main es la única clase sin tipo de retorno
     } else {
         print("El string no es Hola, Chao ni Adios")|
     }
+
+    {}| @ Esto pica error porque no es un statement válido
+    @ El compilador debería mostrar un error de sintaxis y continuar
+
+    local int miVariable|
 }
