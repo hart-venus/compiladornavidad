@@ -627,6 +627,10 @@ public class parser extends java_cup.runtime.lr_parser {
     throw new Exception("Error de sintaxis irrecuperable en la linea " + token.left + " columna " + token.right + ": " + token.value);
   }
 
+  public void hola() {
+    System.out.println("Hola");
+  }
+
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -642,22 +646,15 @@ class CUP$parser$actions {
   * restricciones: ninguna
   * objetivo: imprimir en consola
   */
-  HashMap<String, ArrayList<String>> tablasSimbolos = new HashMap<String, ArrayList<String>>();
+  HashMap<String, ArrayList<SymbolTableObject>> tablasSimbolos = new HashMap<String, ArrayList<SymbolTableObject>>();
   String currentHash = "";
-
-  public void hola() {
-    System.out.println("Hola");
-  }
-  public void adios() {
-    System.out.println("Adios");
-  }
 
   public void imprimirTablaSimbolos() {
     for (String key : tablasSimbolos.keySet()) {
       System.out.println("Tabla de simbolo : " + key);
       System.out.println("Valores : ");
-      for (String value : tablasSimbolos.get(key)) {
-        System.out.println(value);
+      for (SymbolTableObject value : tablasSimbolos.get(key)) {
+        System.out.println(value.toString());
       }
       System.out.println();
     }
@@ -665,9 +662,9 @@ class CUP$parser$actions {
 
   public void setHash(String hash) {
     currentHash = hash;
-    tablasSimbolos.put(hash, new ArrayList<String>());
+    tablasSimbolos.put(hash, new ArrayList<SymbolTableObject>());
   }
-  public void addSymbol(String symbol) {
+  public void addSymbol(SymbolTableObject symbol) {
     tablasSimbolos.get(currentHash).add(symbol);
   }
 
@@ -905,9 +902,12 @@ class CUP$parser$actions {
           case 19: // def_funcion_trineo ::= function_chimenea t_int_colacho main_navidad p_abre_cuento p_cierra_cuento 
             {
               Object RESULT =null;
+		int fleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
+		Object f = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
 		
     setHash("main");
-    addSymbol("tipo:main:int");
+    addSymbol(new SymbolTableObject("funcion", "int", "main"));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -917,6 +917,9 @@ class CUP$parser$actions {
           case 20: // def_funcion_trineo ::= function_chimenea t_santa id_persona p_abre_cuento p_cierra_cuento 
             {
               Object RESULT =null;
+		int fleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
+		Object f = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
 		int tipoleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
 		int tiporight = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
 		Object tipo = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
@@ -925,7 +928,7 @@ class CUP$parser$actions {
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
     setHash(id.toString());
-    addSymbol("tipo:funcion:" + tipo.toString());
+    addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -935,6 +938,9 @@ class CUP$parser$actions {
           case 21: // NT$0 ::= 
             {
               Object RESULT =null;
+		int fleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
+		Object f = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
 		int tipoleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
 		int tiporight = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object tipo = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
@@ -943,7 +949,7 @@ class CUP$parser$actions {
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
  
     setHash(id.toString());
-    addSymbol("tipo:funcion:" + tipo.toString());
+    addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("NT$0",27, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -955,6 +961,9 @@ class CUP$parser$actions {
               Object RESULT =null;
               // propagate RESULT from NT$0
                 RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int fleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)).left;
+		int fright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)).right;
+		Object f = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-6)).value;
 		int tipoleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)).left;
 		int tiporight = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)).right;
 		Object tipo = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-5)).value;
@@ -995,7 +1004,7 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    addSymbol("tipo:param:" + id.toString() + ":" + t.toString());
+    addSymbol(new SymbolTableObject("parametro", t.toString(), id.toString()));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("parametro_funcion_reno",9, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1305,7 +1314,7 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    addSymbol("tipo:local:" + id.toString() + ":" + t.toString());
+    addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1315,6 +1324,9 @@ class CUP$parser$actions {
           case 59: // asignacion_adorno ::= local_dulce t_santa elemento_arreglo_juguete 
             {
               Object RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
@@ -1322,7 +1334,7 @@ class CUP$parser$actions {
 		int elright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object el = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    addSymbol("tipo:local:" + el.toString() + ":" + t.toString() + "[]");
+    addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1339,7 +1351,7 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
-    addSymbol("tipo:local:" + id.toString() + ":" + t.toString());
+    addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1349,6 +1361,9 @@ class CUP$parser$actions {
           case 61: // asignacion_adorno ::= local_dulce t_santa elemento_arreglo_juguete assign_entregar l_arr_gordo 
             {
               Object RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
+		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
 		int tleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
 		int tright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
 		Object t = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
@@ -1356,7 +1371,7 @@ class CUP$parser$actions {
 		int elright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object el = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
-    addSymbol("tipo:local:" + el.toString() + ":" + t.toString() + "[]");
+    addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

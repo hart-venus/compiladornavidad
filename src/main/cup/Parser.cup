@@ -10,22 +10,15 @@ action code {:
   * restricciones: ninguna
   * objetivo: imprimir en consola
   */
-  HashMap<String, ArrayList<String>> tablasSimbolos = new HashMap<String, ArrayList<String>>();
+  HashMap<String, ArrayList<SymbolTableObject>> tablasSimbolos = new HashMap<String, ArrayList<SymbolTableObject>>();
   String currentHash = "";
-
-  public void hola() {
-    System.out.println("Hola");
-  }
-  public void adios() {
-    System.out.println("Adios");
-  }
 
   public void imprimirTablaSimbolos() {
     for (String key : tablasSimbolos.keySet()) {
       System.out.println("Tabla de simbolo : " + key);
       System.out.println("Valores : ");
-      for (String value : tablasSimbolos.get(key)) {
-        System.out.println(value);
+      for (SymbolTableObject value : tablasSimbolos.get(key)) {
+        System.out.println(value.toString());
       }
       System.out.println();
     }
@@ -33,9 +26,9 @@ action code {:
 
   public void setHash(String hash) {
     currentHash = hash;
-    tablasSimbolos.put(hash, new ArrayList<String>());
+    tablasSimbolos.put(hash, new ArrayList<SymbolTableObject>());
   }
-  public void addSymbol(String symbol) {
+  public void addSymbol(SymbolTableObject symbol) {
     tablasSimbolos.get(currentHash).add(symbol);
   }
 :}
@@ -70,6 +63,10 @@ parser code {:
   }
   public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
     throw new Exception("Error de sintaxis irrecuperable en la linea " + token.left + " columna " + token.right + ": " + token.value);
+  }
+
+  public void hola() {
+    System.out.println("Hola");
   }
 
 :}
@@ -212,23 +209,23 @@ funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre | erro
 // atrapa el error de statements fuera de funciones
 
 def_funcion_trineo ::= 
-  function_chimenea t_int_colacho main_navidad p_abre_cuento p_cierra_cuento 
+  function_chimenea:f t_int_colacho main_navidad p_abre_cuento p_cierra_cuento 
   // función main sin parámetros que retorna un int
   {:
     setHash("main");
-    addSymbol("tipo:main:int");
+    addSymbol(new SymbolTableObject("funcion", "int", "main"));
   :}
   |
-  function_chimenea t_santa:tipo id_persona:id p_abre_cuento p_cierra_cuento 
+  function_chimenea:f t_santa:tipo id_persona:id p_abre_cuento p_cierra_cuento 
   {:
     setHash(id.toString());
-    addSymbol("tipo:funcion:" + tipo.toString());
+    addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
   :}
   | // sin parametros
-  function_chimenea t_santa:tipo id_persona:id p_abre_cuento
+  function_chimenea:f t_santa:tipo id_persona:id p_abre_cuento
   {: 
     setHash(id.toString());
-    addSymbol("tipo:funcion:" + tipo.toString());
+    addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
   :}
 
   parametros_funcion_renos p_cierra_cuento
@@ -238,7 +235,7 @@ parametros_funcion_renos ::= parametro_funcion_reno | parametros_funcion_renos s
 parametro_funcion_reno ::= 
   t_santa:t id_persona:id
   {:
-    addSymbol("tipo:param:" + id.toString() + ":" + t.toString());
+    addSymbol(new SymbolTableObject("parametro", t.toString(), id.toString()));
   :}
   ;
 elemento_arreglo_juguete ::= 
@@ -301,22 +298,22 @@ else_inocente ::=
 asignacion_adorno ::= 
   local_dulce t_santa:t id_persona:id 
   {:
-    addSymbol("tipo:local:" + id.toString() + ":" + t.toString());
+    addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
   :} 
   | // local int a|
-  local_dulce t_santa:t elemento_arreglo_juguete:el
+  local_dulce:l t_santa:t elemento_arreglo_juguete:el
   {:
-    addSymbol("tipo:local:" + el.toString() + ":" + t.toString() + "[]");
+    addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
   :}
   | // local int a[1]|
   local_dulce t_santa:t id_persona:id assign_entregar expresion_regalo 
   {:
-    addSymbol("tipo:local:" + id.toString() + ":" + t.toString());
+    addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
   :}
   | // local int a <= 1|
-  local_dulce t_santa:t elemento_arreglo_juguete:el assign_entregar l_arr_gordo
+  local_dulce:l t_santa:t elemento_arreglo_juguete:el assign_entregar l_arr_gordo
   {:
-    addSymbol("tipo:local:" + el.toString() + ":" + t.toString() + "[]");
+    addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
   :}
   | // local int a[1] <= {1}
   id_persona assign_entregar expresion_regalo| // a <= 1|
