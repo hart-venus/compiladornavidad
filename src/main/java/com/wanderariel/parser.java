@@ -627,9 +627,7 @@ public class parser extends java_cup.runtime.lr_parser {
     throw new Exception("Error de sintaxis irrecuperable en la linea " + token.left + " columna " + token.right + ": " + token.value);
   }
 
-  public void hola() {
-    System.out.println("Hola");
-  }
+
 
 
 
@@ -649,6 +647,13 @@ class CUP$parser$actions {
   HashMap<String, ArrayList<SymbolTableObject>> tablasSimbolos = new HashMap<String, ArrayList<SymbolTableObject>>();
   String currentHash = "";
 
+  /**
+  * función para imprimir la tabla de símbolos
+  * entrada: ninguna
+  * salida: ninguna
+  * restricciones: ninguna
+  * objetivo: imprimir en consola la tabla de símbolos
+  */
   public void imprimirTablaSimbolos() {
     for (String key : tablasSimbolos.keySet()) {
       System.out.println("Tabla de simbolo : " + key);
@@ -660,10 +665,37 @@ class CUP$parser$actions {
     }
   }
 
+  public void exportarTablaSimbolos() {
+    List<String[]> data = new ArrayList<String[]>();
+    data.add(new String[] {"Tabla", "TipoEntrada", "Nombre", "TipoDato"});
+    for (String key : tablasSimbolos.keySet()) {
+      for (SymbolTableObject value : tablasSimbolos.get(key)) {
+        data.add(new String[] {key, value.getTipoEntrada(), value.getNombre(), value.getTipoDato()});
+      }
+    }
+    MarkdownTablePrinter tablePrinter = new MarkdownTablePrinter(data, "src/main/test/tabla_sim.md");
+    tablePrinter.print();
+    System.out.println("Tabla de simbolos exportada a tabla_sim.md");
+  }
+
+  /**
+  * función para cambiar el hash actual al que se le asocian los símbolos
+  * entrada: un string
+  * salida: ninguna
+  * restricciones: ninguna
+  * objetivo: cambiar el hash actual
+  */
   public void setHash(String hash) {
     currentHash = hash;
     tablasSimbolos.put(hash, new ArrayList<SymbolTableObject>());
   }
+  /**
+  * función para agregar un símbolo a la tabla de símbolos
+  * entrada: un objeto de la clase SymbolTableObject
+  * salida: ninguna
+  * restricciones: ninguna
+  * objetivo: agregar un símbolo a la tabla de símbolos
+  */
   public void addSymbol(SymbolTableObject symbol) {
     tablasSimbolos.get(currentHash).add(symbol);
   }
@@ -707,7 +739,10 @@ class CUP$parser$actions {
           case 1: // navidad ::= funciones_bolsa_navidena 
             {
               Object RESULT =null;
-		 imprimirTablaSimbolos(); 
+		
+    exportarTablaSimbolos();
+    imprimirTablaSimbolos(); 
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("navidad",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
