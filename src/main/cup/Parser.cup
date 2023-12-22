@@ -1,4 +1,5 @@
 import java_cup.runtime.*;
+import java.util.*;
 
 action code {:
   /** 
@@ -9,11 +10,33 @@ action code {:
   * restricciones: ninguna
   * objetivo: imprimir en consola
   */
+  HashMap<String, ArrayList<String>> tablasSimbolos = new HashMap<String, ArrayList<String>>();
+  String currentHash = "";
+
   public void hola() {
     System.out.println("Hola");
   }
   public void adios() {
     System.out.println("Adios");
+  }
+
+  public void imprimirTablaSimbolos() {
+    for (String key : tablasSimbolos.keySet()) {
+      System.out.println("Tabla de simbolo : " + key);
+      System.out.println("Valores : ");
+      for (String value : tablasSimbolos.get(key)) {
+        System.out.println(value);
+      }
+      System.out.println();
+    }
+  }
+
+  public void setHash(String hash) {
+    currentHash = hash;
+    tablasSimbolos.put(hash, new ArrayList<String>());
+  }
+  public void addSymbol(String symbol) {
+    tablasSimbolos.get(currentHash).add(symbol);
   }
 :}
 
@@ -153,11 +176,35 @@ precedence left op_not_baltasar;
 
 start with navidad;
 
-navidad ::= funciones_bolsa_navidena;
+navidad ::= funciones_bolsa_navidena {: imprimirTablaSimbolos(); :};
 
 
-t_santa ::= t_int_colacho | t_float_santa | t_bool_noel | t_char_pascuero | t_string_kris;
-l_santa ::= l_int_colacho | l_float_santa | l_t_noel | l_f_noel | l_char_pascuero | l_string_kris;
+t_santa ::= 
+  t_int_colacho:t 
+  {: RESULT = t; :}
+  | t_float_santa:t
+  {: RESULT = t; :}
+  | t_bool_noel:t 
+  {: RESULT = t; :}
+  | t_char_pascuero:t
+  {: RESULT = t; :}
+  | t_string_kris:t 
+  {: RESULT = t; :}
+;
+l_santa ::= 
+  l_int_colacho:l
+  {: RESULT = l; :}
+  | l_float_santa:l
+  {: RESULT = l; :}
+  | l_t_noel:l
+  {: RESULT = l; :}
+  | l_f_noel:l
+  {: RESULT = l; :}
+  | l_char_pascuero:l
+  {: RESULT = l; :}
+  | l_string_kris:l
+  {: RESULT = l; :}
+  ;
 args_santa ::= expresion_regalo | args_santa sep_regalo expresion_regalo;
 
 funciones_bolsa_navidena ::= funcion_ayudante_santa | funciones_bolsa_navidena funcion_ayudante_santa;
@@ -165,13 +212,41 @@ funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre | erro
 // atrapa el error de statements fuera de funciones
 
 def_funcion_trineo ::= 
-  function_chimenea main_navidad p_abre_cuento p_cierra_cuento | // función main sin parámetros ni tipo de retorno
-  function_chimenea t_santa id_persona p_abre_cuento p_cierra_cuento | // sin parametros
-  function_chimenea t_santa id_persona p_abre_cuento parametros_funcion_renos p_cierra_cuento; // con parametros
+  function_chimenea t_int_colacho main_navidad p_abre_cuento p_cierra_cuento 
+  // función main sin parámetros que retorna un int
+  {:
+    setHash("main");
+    addSymbol("tipo:main:int");
+  :}
+  |
+  function_chimenea t_santa:tipo id_persona:id p_abre_cuento p_cierra_cuento 
+  {:
+    setHash(id.toString());
+    addSymbol("tipo:funcion:" + tipo.toString());
+  :}
+  | // sin parametros
+  function_chimenea t_santa:tipo id_persona:id p_abre_cuento
+  {: 
+    setHash(id.toString());
+    addSymbol("tipo:funcion:" + tipo.toString());
+  :}
+
+  parametros_funcion_renos p_cierra_cuento
+  ; // con parametros
 
 parametros_funcion_renos ::= parametro_funcion_reno | parametros_funcion_renos sep_regalo parametro_funcion_reno;
-parametro_funcion_reno ::= t_santa id_persona;
-elemento_arreglo_juguete ::= id_persona p_abre_empaque expresion_regalo p_cierra_empaque;
+parametro_funcion_reno ::= 
+  t_santa:t id_persona:id
+  {:
+    addSymbol("tipo:param:" + id.toString() + ":" + t.toString());
+  :}
+  ;
+elemento_arreglo_juguete ::= 
+  id_persona:id p_abre_empaque expresion_regalo p_cierra_empaque
+  {:
+    RESULT = id.toString();
+  :}  
+;
 
 bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo | cb_abre_regalo error cb_cierra_regalo; // atrapa errores dentro de bloques
 
@@ -224,12 +299,26 @@ else_inocente ::=
   else_duende bloque_codigo_casa_jengibre;
 
 asignacion_adorno ::= 
-  local_dulce t_santa id_persona:id 
-  {: System.out.println("Declaracion de variable: " + id); :} 
+  local_dulce t_santa:t id_persona:id 
+  {:
+    addSymbol("tipo:local:" + id.toString() + ":" + t.toString());
+  :} 
   | // local int a|
-  local_dulce t_santa elemento_arreglo_juguete | // local int a[1]|
-  local_dulce t_santa id_persona assign_entregar expresion_regalo | // local int a <= 1|
-  local_dulce t_santa elemento_arreglo_juguete assign_entregar l_arr_gordo| // local int a[1] <= {1}
+  local_dulce t_santa:t elemento_arreglo_juguete:el
+  {:
+    addSymbol("tipo:local:" + el.toString() + ":" + t.toString() + "[]");
+  :}
+  | // local int a[1]|
+  local_dulce t_santa:t id_persona:id assign_entregar expresion_regalo 
+  {:
+    addSymbol("tipo:local:" + id.toString() + ":" + t.toString());
+  :}
+  | // local int a <= 1|
+  local_dulce t_santa:t elemento_arreglo_juguete:el assign_entregar l_arr_gordo
+  {:
+    addSymbol("tipo:local:" + el.toString() + ":" + t.toString() + "[]");
+  :}
+  | // local int a[1] <= {1}
   id_persona assign_entregar expresion_regalo| // a <= 1|
   elemento_arreglo_juguete assign_entregar expresion_regalo; // a[1] <= 1|
 

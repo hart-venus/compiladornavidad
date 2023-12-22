@@ -107,10 +107,11 @@
 | Z                                   | id_persona        | 20              | 26    | 10      |
 | |                                   | fin_regalo        | 57              | 26    | 11      |
 | function                            | function_chimenea | 62              | 27    | 0       |
-| main                                | main_navidad      | 60              | 27    | 9       |
-| (                                   | p_abre_cuento     | 36              | 27    | 13      |
-| )                                   | p_cierra_cuento   | 37              | 27    | 14      |
-| {                                   | cb_abre_regalo    | 40              | 27    | 15      |
+| int                                 | t_int_colacho     | 21              | 27    | 9       |
+| main                                | main_navidad      | 60              | 27    | 13      |
+| (                                   | p_abre_cuento     | 36              | 27    | 17      |
+| )                                   | p_cierra_cuento   | 37              | 27    | 18      |
+| {                                   | cb_abre_regalo    | 40              | 27    | 19      |
 | local                               | local_dulce       | 63              | 28    | 4       |
 | string                              | t_string_kris     | 25              | 28    | 10      |
 | a                                   | id_persona        | 20              | 28    | 17      |
@@ -365,6 +366,6 @@
 | |                                   | fin_regalo        | 57              | 93    | 29      |
 | local                               | local_dulce       | 63              | 94    | 4       |
 | int                                 | t_int_colacho     | 21              | 94    | 10      |
-| miOtraVariable                      | id_persona        | 20              | 94    | 14      |
-| |                                   | fin_regalo        | 57              | 94    | 28      |
+| miVariable2                         | id_persona        | 20              | 94    | 14      |
+| |                                   | fin_regalo        | 57              | 94    | 25      |
 | }                                   | cb_cierra_regalo  | 41              | 95    | 0       |
