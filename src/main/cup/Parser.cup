@@ -110,7 +110,7 @@ init with {: :};
 // Definición de terminales (tokens) a usar
 // operaciones aritméticas binarias, renos de Santa 🦌🦌🦌🦌🦌🦌🦌
 terminal op_res_rodolfo, op_sum_cupido, op_div_bailarin;
-terminal op_dve_trueno,  op_mul_cometa, op_mod_rayo, op_pow_travieso;
+terminal op_mul_cometa, op_mod_rayo, op_pow_travieso;
 
 // operaciones aritméticas unarias, grinch-quien 🎄😈🎅💚
 terminal op_inc_quien, op_dec_grinch;
@@ -127,8 +127,7 @@ terminal id_persona;
 
 // tipos de datos, nombres de papá noel 🎅🎅🎅🎅🎅🎅
 terminal t_int_colacho, t_float_santa, t_bool_noel, t_char_pascuero;
-terminal t_string_kris, t_arr_gordo, t_null_reno, t_void_frosty;
-terminal t_struct_snowman;
+terminal t_string_kris, t_null_reno;
 
 // literales, nombres de papá noel 🎅🎅🎅🎅🎅🎅
 terminal l_int_colacho, l_float_santa, l_t_noel, l_f_noel;
@@ -146,8 +145,6 @@ terminal cb_abre_regalo, cb_cierra_regalo;
 // flujo de control, folklore navideño
 terminal if_elfo, elif_hada, else_duende, for_envuelve;
 terminal do_hace, until_revisa, return_envia, break_corta;
-terminal while_repite, switch_regalo, case_juguete, default_copo;
-terminal in_envuelto_en; 
 
 // print-read, habla y escucha 🗣️👂
 terminal print_habla, read_escucha;
@@ -192,7 +189,7 @@ non terminal for_vispera, if_travieso, elif_ayudante_lista, elif_lista_santa, el
 
 // Precedencia y asociatividad de operadores
 precedence left op_res_rodolfo, op_sum_cupido;
-precedence left op_div_bailarin, op_dve_trueno, op_mul_cometa;
+precedence left op_div_bailarin, op_mul_cometa;
 precedence left op_mod_rayo, op_pow_travieso;
 precedence left op_inc_quien, op_dec_grinch;
 precedence left op_eq_astuto, op_l_nevado, op_g_alegre, op_geq_feliz;

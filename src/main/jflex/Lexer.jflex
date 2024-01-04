@@ -156,14 +156,11 @@ SEPARATOR = \,
 <YYINITIAL> "function" { return symbol(sym.function_chimenea, "function"); }
 <YYINITIAL> "local" { return symbol(sym.local_dulce, "local"); }
 <YYINITIAL> "null" { return symbol(sym.t_null_reno, "null"); }
-<YYINITIAL> "void" { return symbol(sym.t_void_frosty, "void"); }
-<YYINITIAL> "struct" { return symbol(sym.t_struct_snowman, "struct"); }
 <YYINITIAL> "int" { return symbol(sym.t_int_colacho, "int"); }
 <YYINITIAL> "float" { return symbol(sym.t_float_santa, "float"); }
 <YYINITIAL> "string" { return symbol(sym.t_string_kris, "string"); }
 <YYINITIAL> "bool" { return symbol(sym.t_bool_noel, "bool"); }
 <YYINITIAL> "char" { return symbol(sym.t_char_pascuero, "char"); }
-<YYINITIAL> "arr" { return symbol(sym.t_arr_gordo, "arr"); }
 <YYINITIAL> "true" { return symbol(sym.l_t_noel, "true"); }
 <YYINITIAL> "false" { return symbol(sym.l_f_noel, "false"); }
 <YYINITIAL> "if" { return symbol(sym.if_elfo, "if"); }
@@ -177,11 +174,6 @@ SEPARATOR = \,
 <YYINITIAL> "print" { return symbol(sym.print_habla, "print"); }
 <YYINITIAL> "read" { return symbol(sym.read_escucha, "read"); }
 <YYINITIAL> "main" { return symbol(sym.main_navidad, "main"); }
-<YYINITIAL> "while" { return symbol(sym.while_repite, "while"); }
-<YYINITIAL> "switch" { return symbol(sym.switch_regalo, "switch"); }
-<YYINITIAL> "case" { return symbol(sym.case_juguete, "case"); }
-<YYINITIAL> "default" { return symbol(sym.default_copo, "default"); }
-<YYINITIAL> "in" { return symbol(sym.in_envuelto_en, "in"); }
 
 
 <YYINITIAL> {
@@ -202,7 +194,6 @@ SEPARATOR = \,
     {PLUS} { return symbol(sym.op_sum_cupido, yytext()); }
     {MINUSMINUS} { return symbol(sym.op_dec_grinch, yytext()); }
     {MINUS} { return symbol(sym.op_res_rodolfo, yytext()); }
-    {WHOLEDIVISION} { return symbol(sym.op_dve_trueno, yytext()); }
     {DIVISION} { return symbol(sym.op_div_bailarin, yytext()); }
     {POWER} { return symbol(sym.op_pow_travieso, yytext()); }
     {MULTIPLICATION} { return symbol(sym.op_mul_cometa, yytext()); }

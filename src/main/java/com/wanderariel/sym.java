@@ -8,77 +8,67 @@ package com.wanderariel;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int for_envuelve = 45;
-  public static final int op_not_baltasar = 19;
-  public static final int op_pow_travieso = 8;
-  public static final int op_geq_feliz = 14;
-  public static final int switch_regalo = 51;
-  public static final int local_dulce = 63;
-  public static final int main_navidad = 60;
-  public static final int t_bool_noel = 23;
-  public static final int function_chimenea = 62;
-  public static final int op_eq_astuto = 11;
-  public static final int elif_hada = 43;
-  public static final int assign_entregar = 58;
+  public static final int for_envuelve = 41;
+  public static final int op_not_baltasar = 18;
+  public static final int op_pow_travieso = 7;
+  public static final int op_geq_feliz = 13;
+  public static final int local_dulce = 54;
+  public static final int main_navidad = 51;
+  public static final int t_bool_noel = 22;
+  public static final int function_chimenea = 53;
+  public static final int op_eq_astuto = 10;
+  public static final int elif_hada = 39;
+  public static final int assign_entregar = 49;
   public static final int op_sum_cupido = 3;
-  public static final int return_envia = 48;
-  public static final int t_int_colacho = 21;
-  public static final int t_string_kris = 25;
-  public static final int else_duende = 44;
-  public static final int op_g_alegre = 13;
-  public static final int op_dec_grinch = 10;
-  public static final int t_arr_gordo = 26;
-  public static final int cb_abre_regalo = 40;
-  public static final int cb_cierra_regalo = 41;
-  public static final int if_elfo = 42;
-  public static final int t_char_pascuero = 24;
-  public static final int t_float_santa = 22;
-  public static final int op_neq_chispa = 16;
-  public static final int t_void_frosty = 28;
-  public static final int op_l_nevado = 12;
-  public static final int t_null_reno = 27;
+  public static final int return_envia = 44;
+  public static final int t_int_colacho = 20;
+  public static final int t_string_kris = 24;
+  public static final int else_duende = 40;
+  public static final int op_g_alegre = 12;
+  public static final int op_dec_grinch = 9;
+  public static final int cb_abre_regalo = 36;
+  public static final int cb_cierra_regalo = 37;
+  public static final int if_elfo = 38;
+  public static final int t_char_pascuero = 23;
+  public static final int t_float_santa = 21;
+  public static final int op_neq_chispa = 15;
+  public static final int op_l_nevado = 11;
+  public static final int t_null_reno = 25;
   public static final int EOF = 0;
-  public static final int id_persona = 20;
-  public static final int until_revisa = 47;
-  public static final int p_cierra_empaque = 39;
-  public static final int l_char_pascuero = 34;
+  public static final int id_persona = 19;
+  public static final int until_revisa = 43;
+  public static final int p_cierra_empaque = 35;
+  public static final int l_char_pascuero = 30;
   public static final int error = 1;
-  public static final int op_mod_rayo = 7;
-  public static final int l_f_noel = 33;
-  public static final int while_repite = 50;
-  public static final int fin_regalo = 57;
-  public static final int do_hace = 46;
+  public static final int op_mod_rayo = 6;
+  public static final int l_f_noel = 29;
+  public static final int fin_regalo = 48;
+  public static final int do_hace = 42;
   public static final int op_div_bailarin = 4;
   public static final int op_res_rodolfo = 2;
-  public static final int l_int_colacho = 30;
-  public static final int l_string_kris = 35;
-  public static final int op_leq_copito = 15;
-  public static final int op_mul_cometa = 6;
-  public static final int p_cierra_cuento = 37;
-  public static final int sep_regalo = 59;
-  public static final int op_dve_trueno = 5;
-  public static final int l_t_noel = 32;
-  public static final int break_corta = 49;
-  public static final int t_struct_snowman = 29;
-  public static final int l_float_santa = 31;
-  public static final int read_escucha = 56;
-  public static final int p_abre_empaque = 38;
-  public static final int default_copo = 53;
-  public static final int p_abre_cuento = 36;
-  public static final int op_inc_quien = 9;
-  public static final int op_or_gaspar = 18;
-  public static final int case_juguete = 52;
-  public static final int op_and_melchor = 17;
-  public static final int error_carbon = 61;
-  public static final int in_envuelto_en = 54;
-  public static final int print_habla = 55;
+  public static final int l_int_colacho = 26;
+  public static final int l_string_kris = 31;
+  public static final int op_leq_copito = 14;
+  public static final int op_mul_cometa = 5;
+  public static final int p_cierra_cuento = 33;
+  public static final int sep_regalo = 50;
+  public static final int l_t_noel = 28;
+  public static final int break_corta = 45;
+  public static final int l_float_santa = 27;
+  public static final int read_escucha = 47;
+  public static final int p_abre_empaque = 34;
+  public static final int p_abre_cuento = 32;
+  public static final int op_inc_quien = 8;
+  public static final int op_or_gaspar = 17;
+  public static final int op_and_melchor = 16;
+  public static final int error_carbon = 52;
+  public static final int print_habla = 46;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "op_res_rodolfo",
   "op_sum_cupido",
   "op_div_bailarin",
-  "op_dve_trueno",
   "op_mul_cometa",
   "op_mod_rayo",
   "op_pow_travieso",
@@ -99,10 +89,7 @@ public interface sym {
   "t_bool_noel",
   "t_char_pascuero",
   "t_string_kris",
-  "t_arr_gordo",
   "t_null_reno",
-  "t_void_frosty",
-  "t_struct_snowman",
   "l_int_colacho",
   "l_float_santa",
   "l_t_noel",
@@ -123,11 +110,6 @@ public interface sym {
   "until_revisa",
   "return_envia",
   "break_corta",
-  "while_repite",
-  "switch_regalo",
-  "case_juguete",
-  "default_copo",
-  "in_envuelto_en",
   "print_habla",
   "read_escucha",
   "fin_regalo",
