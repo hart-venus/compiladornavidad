@@ -49,6 +49,11 @@ function int main(){ @ Main es la única clase sin tipo de retorno
         print(i)|
     }
 
+    @ Todo este for debería caerse
+    for (local int i <= 0| i < 10| ++i){
+        print(i)|
+    }
+
     print("El ciclo terminó")|
     local string miString <= "Hola"|
     read(miString)|

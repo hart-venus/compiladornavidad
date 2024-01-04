@@ -184,7 +184,7 @@ non terminal parametros_funcion_renos, parametro_funcion_reno;
 // no terminales para definiciones de lineas de código
 non terminal linea_hombre_jengibre, lineas_hombre_jengibre;
 // no terminales para asignacion de variables y expresiones
-non terminal asignacion_adorno, expresion_regalo, elemento_arreglo_juguete, l_arr_gordo;
+non terminal asignacion_adorno, expresion_regalo, elemento_arreglo_juguete, l_arr_gordo, asignacion_existente_nieve;
 non terminal expr_ar_regaloprin, expr_rel_regalocomprado, expr_log_regalomanual;
 // no terminales para flujo de control
 non terminal retorno_carta_santa, llamada_func_pino, do_until_fabrica_juguetes;
@@ -314,7 +314,7 @@ do_until_fabrica_juguetes ::=
   do_hace bloque_codigo_casa_jengibre until_revisa p_abre_cuento expresion_regalo p_cierra_cuento; // do {} until (a)|
 
 for_vispera ::=
-  for_envuelve p_abre_cuento asignacion_adorno fin_regalo expresion_regalo fin_regalo expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre; // for (a| b| c) {}
+  for_envuelve p_abre_cuento asignacion_existente_nieve fin_regalo expresion_regalo fin_regalo expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre; // for (a| b| c) {}
 
 if_travieso ::=
   if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre| // if (a) {}
@@ -352,6 +352,9 @@ asignacion_adorno ::=
     addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
   :}
   | // local int a[1] <= {1}
+  asignacion_existente_nieve; // si ya existe la variable, no se agrega a la tabla de simbolos
+
+asignacion_existente_nieve ::=
   id_persona assign_entregar expresion_regalo| // a <= 1|
   elemento_arreglo_juguete assign_entregar expresion_regalo; // a[1] <= 1|
 
