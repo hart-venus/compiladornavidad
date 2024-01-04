@@ -6,9 +6,9 @@
 	Wander Jimenez Calvo c.2020425905
 	Ariel Leyva Irigoyen c.2022175018
 
-	Tarea #1
+	Proyecto #2
 	Estatus de la Entrega: Excelente 
-	Repositorio de GitHub: https://github.com/hart-venus/compiladornavidad/tree/tarea-1
+	Repositorio de GitHub: https://github.com/hart-venus/compiladornavidad
 	 
 ---
 
