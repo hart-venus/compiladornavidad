@@ -7,12 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java_cup.runtime.Symbol;
 
-/**
- * Hello world.
- *
- */
-
-
 public class App {
   /**
    * Clase principal que agarra el Lexer previamente generado y lo prueba con
