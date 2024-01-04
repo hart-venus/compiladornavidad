@@ -306,7 +306,7 @@ llamada_func_pino ::=
   read_escucha p_abre_cuento args_santa p_cierra_cuento; // read(a)
 
 
-lineas_hombre_jengibre ::= linea_hombre_jengibre lineas_hombre_jengibre | linea_hombre_jengibre;
+lineas_hombre_jengibre ::= linea_hombre_jengibre | lineas_hombre_jengibre linea_hombre_jengibre;
 
 l_arr_gordo ::= cb_abre_regalo args_santa cb_cierra_regalo;
 
@@ -323,7 +323,7 @@ if_travieso ::=
   if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre elif_ayudante_lista else_inocente; // if (a) {} elif (b) {} elif ... else {}
 
 elif_ayudante_lista ::=
-  elif_lista_santa | elif_lista_santa elif_ayudante_lista;
+  elif_lista_santa | elif_ayudante_lista elif_lista_santa;
 
 elif_lista_santa ::=
   elif_hada p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre;
