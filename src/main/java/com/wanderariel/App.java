@@ -12,6 +12,7 @@ import java_cup.runtime.Symbol;
  *
  */
 
+
 public class App {
   /**
    * Clase principal que agarra el Lexer previamente generado y lo prueba con
@@ -23,6 +24,7 @@ public class App {
    */
   public static void main(String[] args) {
     // Conseguir primer argumento
+
     String fileName; 
     if (args.length > 0) {
       fileName = args[0];
