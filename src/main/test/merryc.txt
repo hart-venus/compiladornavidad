@@ -99,3 +99,5 @@ function int main(){ @ Main es la única clase sin tipo de retorno
     loaslc int miOtraVariable| @ Mal escrita, debería mostrar error de sintaxis y continuar
     local int miVariable2|
 }
+
+local int hola

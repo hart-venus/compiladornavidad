@@ -631,6 +631,9 @@ public class parser extends java_cup.runtime.lr_parser {
     System.out.println("Continuando...");
   }
   public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
+    if (token.value == null){
+      throw new Exception("Error de sintaxis irrecuperable al final del archivo");
+    }
     throw new Exception("Error de sintaxis irrecuperable en la linea " + token.left + " columna " + token.right + ": " + token.value);
   }
 
