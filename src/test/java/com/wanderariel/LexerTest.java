@@ -20,14 +20,14 @@ import static org.junit.Assert.assertEquals;
  * Salida: ninguna.
  * 
  */
-
 public class LexerTest {
+
   @Test
   public void testIntLiterals() throws FileNotFoundException, IOException {
     Lexer lexer = new Lexer(new BufferedReader(new FileReader("src/main/test/int_literals.txt")));
     List<Symbol> actualSymbols = lexer.getTokens();
 
-    // Formato brindado
+    // Formato
     List<String> actualTokenIdentifiers = actualSymbols.stream()
         .map(symbol -> "#" + symbol.sym)
         .collect(Collectors.toList());
