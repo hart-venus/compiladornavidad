@@ -83,4 +83,14 @@ public class AppTest {
     assertNotNull(sym.terminalNames);
   }
 
+  public void testEscapeCharacters() throws IOException {
+    Lexer lexer = new Lexer(new StringReader("\"Escape \\\" character\""));
+    assertEquals(sym.l_string_kris, lexer.next_token().sym);
+  }
+
+  public void testMultilineString() throws IOException {
+    Lexer lexer = new Lexer(new StringReader("\"Multiline\nString\n\""));
+    assertEquals(sym.l_string_kris, lexer.next_token().sym);
+  }
+
 }
