@@ -391,6 +391,3 @@
 | miVariable2                         | id_persona        | 19              | 99    | 14      |
 | |                                   | fin_regalo        | 48              | 99    | 25      |
 | }                                   | cb_cierra_regalo  | 37              | 100   | 0       |
-| local                               | local_dulce       | 54              | 102   | 0       |
-| int                                 | t_int_colacho     | 20              | 102   | 6       |
-| hola                                | id_persona        | 19              | 102   | 10      |
