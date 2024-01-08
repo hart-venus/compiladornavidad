@@ -12,6 +12,10 @@ public class SymbolTableObject {
         return tipoDato;
     }
 
+    public TipoExpresion getTipoExpresion(){
+        return Expresion.tipoFromString(tipoDato);
+    }
+
     public String getTipoEntrada() {
         return tipoEntrada;
     }
