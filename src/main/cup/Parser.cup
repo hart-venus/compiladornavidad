@@ -243,17 +243,17 @@ t_santa ::=
 ;
 l_santa ::= 
   l_int_colacho:l
-  {: RESULT = l; :}
+  {: RESULT = new Expresion(l, TipoExpresion.INT); :}
   | l_float_santa:l
-  {: RESULT = l; :}
+  {: RESULT = new Expresion(l, TipoExpresion.FLOAT); :}
   | l_t_noel:l
-  {: RESULT = l; :}
+  {: RESULT = new Expresion(true, TipoExpresion.BOOL); :}
   | l_f_noel:l
-  {: RESULT = l; :}
+  {: RESULT = new Expresion(false, TipoExpresion.BOOL); :}
   | l_char_pascuero:l
-  {: RESULT = l; :}
+  {: RESULT = new Expresion(l, TipoExpresion.CHAR); :}
   | l_string_kris:l
-  {: RESULT = new SymbolTableObject("literal", "string", l.toString()); :}
+  {: RESULT = new Expresion(l, TipoExpresion.STRING); :}
   ;
 args_santa ::= expresion_regalo | args_santa sep_regalo expresion_regalo;
 
@@ -356,7 +356,12 @@ asignacion_adorno ::=
   | // local int a|
   local_dulce:l t_santa:t elemento_arreglo_juguete:el
   {:
-    addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+    if(t.toString() != "int" && t.toString() != "char"){
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
+    }
+    else {
+      addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+    }
   :}
   | // local int a[1]|
   local_dulce t_santa:t id_persona:id assign_entregar expresion_regalo 
@@ -376,7 +381,22 @@ asignacion_existente_nieve ::=
   elemento_arreglo_juguete assign_entregar expresion_regalo; // a[1] <= 1|
 
 expresion_regalo ::=
-  l_santa | id_persona | elemento_arreglo_juguete | p_abre_cuento expresion_regalo p_cierra_cuento | expr_ar_regaloprin
+  l_santa:l
+  {:
+    RESULT = l;
+  :}
+  | 
+  id_persona:id
+  {:
+    RESULT = new Expresion(id.toString(), getTipo(id.toString()));
+  :}
+  | 
+  elemento_arreglo_juguete:eaj
+  {:
+    RESULT = new Expresion(eaj.toString(), getTipo(eaj.toString()));
+    System.out.println(getTipo(eaj.toString()));
+  :}
+  | p_abre_cuento expresion_regalo p_cierra_cuento | expr_ar_regaloprin
   | expr_rel_regalocomprado | expr_log_regalomanual | llamada_func_pino;
 
 expr_ar_regaloprin ::= 

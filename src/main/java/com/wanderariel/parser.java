@@ -841,7 +841,7 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = l; 
+		 RESULT = new Expresion(l, TipoExpresion.INT); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -853,7 +853,7 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = l; 
+		 RESULT = new Expresion(l, TipoExpresion.FLOAT); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -865,7 +865,7 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = l; 
+		 RESULT = new Expresion(true, TipoExpresion.BOOL); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -877,7 +877,7 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = l; 
+		 RESULT = new Expresion(false, TipoExpresion.BOOL); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -889,7 +889,7 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = l; 
+		 RESULT = new Expresion(l, TipoExpresion.CHAR); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -901,7 +901,7 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = new SymbolTableObject("literal", "string", l.toString()); 
+		 RESULT = new Expresion(l, TipoExpresion.STRING); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1396,7 +1396,12 @@ class CUP$parser$actions {
 		int elright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object el = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+    if(t.toString() != "int" && t.toString() != "char"){
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
+    }
+    else {
+      addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+    }
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1470,7 +1475,12 @@ class CUP$parser$actions {
           case 65: // expresion_regalo ::= l_santa 
             {
               Object RESULT =null;
-
+		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    RESULT = l;
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1479,7 +1489,12 @@ class CUP$parser$actions {
           case 66: // expresion_regalo ::= id_persona 
             {
               Object RESULT =null;
-
+		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    RESULT = new Expresion(id.toString(), getTipo(id.toString()));
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1488,7 +1503,13 @@ class CUP$parser$actions {
           case 67: // expresion_regalo ::= elemento_arreglo_juguete 
             {
               Object RESULT =null;
-
+		int eajleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int eajright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object eaj = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    RESULT = new Expresion(eaj.toString(), getTipo(eaj.toString()));
+    System.out.println(getTipo(eaj.toString()));
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
