@@ -44,6 +44,22 @@ action code {:
     System.out.println("Tabla de simbolos exportada a tabla_sim.md");
   }
 
+  /**
+  * Función para conseguir el tipo de un símbolo en la tabla de símbolos actual
+  * entrada: un string
+  * salida: un Expresion.TipoExpresion
+  * restricciones: ninguna
+  * objetivo: conseguir el tipo de un símbolo en la tabla de símbolos actual
+  */
+  public TipoExpresion getTipo(String nombre) {
+    for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
+      if (value.getNombre().equals(nombre)) {
+        return Expresion.tipoFromString(value.getTipoDato());
+      }
+    }
+    return TipoExpresion.NULL;
+  }
+
 
   /**
   * función para cambiar el hash actual al que se le asocian los símbolos
@@ -237,7 +253,7 @@ l_santa ::=
   | l_char_pascuero:l
   {: RESULT = l; :}
   | l_string_kris:l
-  {: RESULT = l; :}
+  {: RESULT = new SymbolTableObject("literal", "string", l.toString()); :}
   ;
 args_santa ::= expresion_regalo | args_santa sep_regalo expresion_regalo;
 

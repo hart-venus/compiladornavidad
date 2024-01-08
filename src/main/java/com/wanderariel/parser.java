@@ -689,6 +689,23 @@ class CUP$parser$actions {
   }
 
   /**
+  * Función para conseguir el tipo de un símbolo en la tabla de símbolos actual
+  * entrada: un string
+  * salida: un Expresion.TipoExpresion
+  * restricciones: ninguna
+  * objetivo: conseguir el tipo de un símbolo en la tabla de símbolos actual
+  */
+  public TipoExpresion getTipo(String nombre) {
+    for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
+      if (value.getNombre().equals(nombre)) {
+        return Expresion.tipoFromString(value.getTipoDato());
+      }
+    }
+    return TipoExpresion.NULL;
+  }
+
+
+  /**
   * función para cambiar el hash actual al que se le asocian los símbolos
   * entrada: un string
   * salida: ninguna
@@ -884,7 +901,7 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = l; 
+		 RESULT = new SymbolTableObject("literal", "string", l.toString()); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
