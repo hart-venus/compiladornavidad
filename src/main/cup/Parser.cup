@@ -44,6 +44,7 @@ action code {:
     System.out.println("Tabla de simbolos exportada a tabla_sim.md");
   }
 
+
   /**
   * función para cambiar el hash actual al que se le asocian los símbolos
   * entrada: un string

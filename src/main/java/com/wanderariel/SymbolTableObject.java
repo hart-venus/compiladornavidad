@@ -11,6 +11,7 @@ public class SymbolTableObject {
     public String getTipoDato() {
         return tipoDato;
     }
+
     public String getTipoEntrada() {
         return tipoEntrada;
     }
