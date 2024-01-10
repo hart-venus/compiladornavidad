@@ -255,7 +255,12 @@ l_santa ::=
   | l_string_kris:l
   {: RESULT = new Expresion(l, TipoExpresion.STRING); :}
   ;
-args_santa ::= expresion_regalo | args_santa sep_regalo expresion_regalo;
+args_santa ::= expresion_regalo:e
+  {: RESULT = new ArrayList<Expresion>(); RESULT.add(e); :}
+  | args_santa:args sep_regalo expresion_regalo:e
+  {: RESULT = args; RESULT.add(e); :}
+  ;
+  
 
 funciones_bolsa_navidena ::= funcion_ayudante_santa | funciones_bolsa_navidena funcion_ayudante_santa;
 funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre | error def_funcion_trineo bloque_codigo_casa_jengibre;
@@ -325,7 +330,12 @@ llamada_func_pino ::=
 
 lineas_hombre_jengibre ::= linea_hombre_jengibre | lineas_hombre_jengibre linea_hombre_jengibre;
 
-l_arr_gordo ::= cb_abre_regalo args_santa cb_cierra_regalo;
+l_arr_gordo ::= cb_abre_regalo args_santa:a cb_cierra_regalo
+{:
+  System.out.println(a);
+:}
+
+;
 
 do_until_fabrica_juguetes ::=
   do_hace bloque_codigo_casa_jengibre until_revisa p_abre_cuento expresion_regalo p_cierra_cuento; // do {} until (a)|
@@ -371,7 +381,12 @@ asignacion_adorno ::=
   | // local int a <= 1|
   local_dulce:l t_santa:t elemento_arreglo_juguete:el assign_entregar l_arr_gordo
   {:
-    addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+    if (t.toString() != "int" && t.toString() != "char") {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
+    }
+    else {
+      addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+    }
   :}
   | // local int a[1] <= {1}
   asignacion_existente_nieve; // si ya existe la variable, no se agrega a la tabla de simbolos
@@ -394,10 +409,17 @@ expresion_regalo ::=
   elemento_arreglo_juguete:eaj
   {:
     RESULT = new Expresion(eaj.toString(), getTipo(eaj.toString()));
-    System.out.println(getTipo(eaj.toString()));
   :}
-  | p_abre_cuento expresion_regalo p_cierra_cuento | expr_ar_regaloprin
-  | expr_rel_regalocomprado | expr_log_regalomanual | llamada_func_pino;
+  | p_abre_cuento expresion_regalo:e p_cierra_cuento
+  {: RESULT = e; :}
+  | expr_ar_regaloprin:e
+  {: RESULT = e; :}
+  | expr_rel_regalocomprado:e
+  {: RESULT = e; :}
+  | expr_log_regalomanual:e
+  {: RESULT = e; :}
+  | llamada_func_pino:e
+  {: RESULT = e; :};
 
 expr_ar_regaloprin ::= 
   expresion_regalo op_res_rodolfo expresion_regalo | // a - b

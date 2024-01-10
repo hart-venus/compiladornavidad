@@ -46,4 +46,15 @@
 | 3          | l_int_colacho     | 26              | 11    | 19      |
 | ]          | p_cierra_empaque  | 35              | 11    | 20      |
 | |          | fin_regalo        | 48              | 11    | 21      |
-| }          | cb_cierra_regalo  | 37              | 12    | 0       |
+| local      | local_dulce       | 54              | 12    | 4       |
+| int        | t_int_colacho     | 20              | 12    | 10      |
+| kk         | id_persona        | 19              | 12    | 14      |
+| [          | p_abre_empaque    | 34              | 12    | 16      |
+| 1          | l_int_colacho     | 26              | 12    | 17      |
+| ]          | p_cierra_empaque  | 35              | 12    | 18      |
+| <=         | assign_entregar   | 49              | 12    | 20      |
+| {          | cb_abre_regalo    | 36              | 12    | 23      |
+| hola       | l_string_kris     | 31              | 12    | 29      |
+| }          | cb_cierra_regalo  | 37              | 12    | 30      |
+| |          | fin_regalo        | 48              | 12    | 31      |
+| }          | cb_cierra_regalo  | 37              | 13    | 0       |

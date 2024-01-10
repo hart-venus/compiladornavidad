@@ -10,4 +10,5 @@ function int main() {
 
     @ Como nuestra gramática no permite arreglos de flotantes, esto no debería compilar.
     local float jj[3]|
+    local int kk[1] <= {"hola"}|
 }
