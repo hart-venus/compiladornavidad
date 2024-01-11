@@ -316,7 +316,8 @@ elemento_arreglo_juguete ::=
 bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo | cb_abre_regalo error cb_cierra_regalo; // atrapa errores dentro de bloques
 
 retorno_carta_santa ::=
-  return_envia expresion_regalo; // return 1;
+  return_envia expresion_regalo |
+  return_envia; // sin expresion de retorno
 
 linea_hombre_jengibre ::= 
   asignacion_adorno fin_regalo|
@@ -333,9 +334,9 @@ llamada_func_pino ::=
   id_persona p_abre_cuento p_cierra_cuento | // a()
   id_persona p_abre_cuento args_santa p_cierra_cuento | 
   print_habla p_abre_cuento args_santa p_cierra_cuento | // print(a)
-  print_habla p_abre_cuento p_cierra_cuento | // print()
-  read_escucha p_abre_cuento p_cierra_cuento | // read()
-  read_escucha p_abre_cuento args_santa p_cierra_cuento; // read(a)
+  print_habla p_abre_cuento p_cierra_cuento | // print() -> Imprimir un salto de linea
+  read_escucha p_abre_cuento id_persona p_cierra_cuento | // read(a)
+  read_escucha p_abre_cuento elemento_arreglo_juguete p_cierra_cuento; // read(a[1])
 
 
 lineas_hombre_jengibre ::= linea_hombre_jengibre | lineas_hombre_jengibre linea_hombre_jengibre;
