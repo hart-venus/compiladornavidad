@@ -14,6 +14,8 @@ function int main() {
 
     @ Como nuestra gramática no permite arreglos de flotantes, esto no debería compilar.
     local float jj[3]| 
+    @ Esto tampoco 
+    local int f[-1]|
 
     local int a[1] <= {1}| @ valido 
     local char b[2] <= {'a', 'b'}| @ valido

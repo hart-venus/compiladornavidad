@@ -405,13 +405,20 @@ asignacion_adorno ::=
     addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
   :} 
   | // local int a|
-  local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho p_cierra_empaque
+  local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho:l_int p_cierra_empaque
   {:
     if(t.toString() != "int" && t.toString() != "char"){
       System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
     }
     else {
-      addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+
+      var i_arr = (int)l_int;
+      if (i_arr < 0) {
+        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
+      }
+      else {
+        addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+      }
     }
   :}
   | // local int a[1]|

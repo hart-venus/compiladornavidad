@@ -1452,12 +1452,22 @@ class CUP$parser$actions {
 		int elleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
 		int elright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
 		Object el = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+		int l_intleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int l_intright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object l_int = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
     if(t.toString() != "int" && t.toString() != "char"){
       System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
     }
     else {
-      addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+
+      var i_arr = (int)l_int;
+      if (i_arr < 0) {
+        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
+      }
+      else {
+        addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+      }
     }
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
