@@ -5,3 +5,5 @@
 | main  | local       | j      | int      |
 | main  | local       | k      | int      |
 | main  | local       | ii     | char[]   |
+| main  | local       | a      | int[]    |
+| main  | local       | b      | char[]   |

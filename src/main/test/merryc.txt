@@ -8,11 +8,20 @@ function int main() {
     local char ii[3]|
     ii[0]|
     @ No se puede definir un arreglo si no se le da un tamaño literal
-    local char jj[i]| @ Pica error
+    @local char jj[i]| @ Pica error
 
 
 
     @ Como nuestra gramática no permite arreglos de flotantes, esto no debería compilar.
-    local float jj[3]|
-    local int kk[1] <= {"hola"}|
+    local float jj[3]| 
+
+    local int a[1] <= {1}| @ valido 
+    local char b[2] <= {'a', 'b'}| @ valido
+
+    local char c[2] <= {'a', 'b', 'c'}| @ invalido, se le da un tamaño mayor al arreglo
+    local char d[2] <= {'a'}| @ invalido, se le da un tamaño menor al arreglo
+
+    local int e[3] <= {'a', 'b', 'c'}| @ invalido, se le asignan valores de tipo char a un arreglo de enteros
+
+
 }

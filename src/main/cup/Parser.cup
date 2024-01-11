@@ -255,8 +255,6 @@ l_santa ::=
   | l_string_kris:l
   {: 
     RESULT = new Expresion(l, TipoExpresion.STRING);
-    System.out.println(l);
-    
   :}
   ;
 args_santa ::= expresion_regalo:e
@@ -344,7 +342,38 @@ lineas_hombre_jengibre ::= linea_hombre_jengibre | lineas_hombre_jengibre linea_
 
 l_arr_gordo ::= cb_abre_regalo args_santa:a cb_cierra_regalo
 {:
-  System.out.println(a);
+  var arrL = (ArrayList<Expresion>)a;
+  var valido = true;
+
+  // iterar sobre el arreglo y verificar que todos los elementos sean del mismo tipo
+  // y que el tipo sea char o int
+
+  TipoExpresion tipo = arrL.get(0).getTipo();
+  if (tipo != TipoExpresion.INT && tipo != TipoExpresion.CHAR) {
+    System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para arreglo");
+    RESULT = new Expresion("null", TipoExpresion.NULL);
+    valido = false;
+  }
+  for (Expresion e : arrL) {
+    if (e.getTipo() != tipo) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para un literal de arreglo de tipo " + tipo.toString());
+      RESULT = new Expresion("null", TipoExpresion.NULL);
+      valido = false;  
+      break;
+    }
+  }
+
+  if (valido){
+    // finalmente, retornar una nueva expresión con el tipo de dato del arreglo
+    if (tipo == TipoExpresion.INT) {
+      RESULT = new Expresion(arrL, TipoExpresion.INT_ARR);
+    }
+    else {
+      RESULT = new Expresion(arrL, TipoExpresion.CHAR_ARR);
+    }
+  }
+
+
 :}
 
 ;
@@ -391,13 +420,38 @@ asignacion_adorno ::=
     addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
   :}
   | // local int a <= 1|
-  local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho p_cierra_empaque assign_entregar expresion_regalo
+  local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho:l_int p_cierra_empaque assign_entregar l_arr_gordo:l_arr
   {:
     if (t.toString() != "int" && t.toString() != "char") {
       System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
     }
     else {
-      addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+      // Si llegamos aquí, sabemos que el tipo que buscamos es int o char
+      // Y que recibimos un literal de arreglo que puede estar mal formado (NULL)
+      // O bien formado con un tipo de dato que no es el que buscamos
+      var e_arr = (Expresion)l_arr;
+      if (e_arr.getTipo() == TipoExpresion.NULL){
+        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Literal de arreglo mal formado");
+      }
+      else {
+
+        TipoExpresion tipo = Expresion.tipoFromString(t.toString() + "[]");
+
+        if (e_arr.getTipo() != tipo){
+          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e_arr.getTipo().toString() + " no valido para una variable de tipo " + tipo.toString());
+        }
+        else {
+          // finalmente, asegurar que la longitud es la misma entre el arreglo y el literal
+          var arr = (ArrayList<Expresion>)e_arr.getValor();
+          if ((int)l_int != arr.size()) {
+            System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + l_int + " no coincide con la longitud del literal de arreglo " + arr.size());
+          }
+          else {
+            addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+          }
+
+        }
+      }
     }
   :}
   | // local int a[1] <= {1}

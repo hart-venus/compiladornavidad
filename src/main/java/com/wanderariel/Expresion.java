@@ -20,6 +20,17 @@ public class Expresion {
         this.tipo = tipo;
     }
 
+    public static TipoExpresion toArr(TipoExpresion tipo) {
+        switch (tipo) {
+            case INT:
+                return TipoExpresion.INT_ARR;
+            case CHAR:
+                return TipoExpresion.CHAR_ARR;
+            default:
+                return TipoExpresion.NULL;
+        }
+    }
+
     public static TipoExpresion tipoFromString(String tipo) {
         switch (tipo) {
             case "int":
