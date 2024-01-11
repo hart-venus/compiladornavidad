@@ -253,12 +253,24 @@ l_santa ::=
   | l_char_pascuero:l
   {: RESULT = new Expresion(l, TipoExpresion.CHAR); :}
   | l_string_kris:l
-  {: RESULT = new Expresion(l, TipoExpresion.STRING); :}
+  {: 
+    RESULT = new Expresion(l, TipoExpresion.STRING);
+    System.out.println(l);
+    
+  :}
   ;
 args_santa ::= expresion_regalo:e
-  {: RESULT = new ArrayList<Expresion>(); RESULT.add(e); :}
+  {: 
+    var arrL = new ArrayList<Expresion>();
+    arrL.add((Expresion)e);
+    RESULT = arrL;
+  :}
   | args_santa:args sep_regalo expresion_regalo:e
-  {: RESULT = args; RESULT.add(e); :}
+  {: 
+    var arrL = (ArrayList<Expresion>)args;
+    arrL.add((Expresion)e);
+    RESULT = arrL;
+  :}
   ;
   
 
@@ -364,7 +376,7 @@ asignacion_adorno ::=
     addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
   :} 
   | // local int a|
-  local_dulce:l t_santa:t elemento_arreglo_juguete:el
+  local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho p_cierra_empaque
   {:
     if(t.toString() != "int" && t.toString() != "char"){
       System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
@@ -379,7 +391,7 @@ asignacion_adorno ::=
     addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
   :}
   | // local int a <= 1|
-  local_dulce:l t_santa:t elemento_arreglo_juguete:el assign_entregar l_arr_gordo
+  local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho p_cierra_empaque assign_entregar expresion_regalo
   {:
     if (t.toString() != "int" && t.toString() != "char") {
       System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");

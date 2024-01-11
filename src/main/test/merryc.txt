@@ -7,6 +7,10 @@ function int main() {
     @ Ahora, definamos un arreglo 
     local char ii[3]|
     ii[0]|
+    @ No se puede definir un arreglo si no se le da un tamaño literal
+    local char jj[i]| @ Pica error
+
+
 
     @ Como nuestra gramática no permite arreglos de flotantes, esto no debería compilar.
     local float jj[3]|
