@@ -1016,10 +1016,17 @@ class CUP$parser$actions {
 		int fright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
 		Object f = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
 		
-    setHash("main");
-    addSymbol(new SymbolTableObject("funcion", "int", "main"));
-    addFirmaFuncion(new FirmaFuncion("main", TipoExpresion.INT, true, new TipoExpresion[] {}));
-    // función main no tiene por qué tener return, por lo tanto lo asignamos true por defecto
+
+    // 1. validación de que main no existe
+    if (encontrarFuncion("main") != null) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion main ya declarada");
+    } else {
+      setHash("main");
+      addSymbol(new SymbolTableObject("funcion", "int", "main"));
+      addFirmaFuncion(new FirmaFuncion("main", TipoExpresion.INT, true, new TipoExpresion[] {}));
+      // función main no tiene por qué tener return, por lo tanto lo asignamos true por defecto
+    }
+
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1039,9 +1046,14 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
-    setHash(id.toString());
-    addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
-    addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
+    // 1. Validación de que la función no existe
+    if (encontrarFuncion(id.toString()) != null) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+    } else {
+      setHash(id.toString());
+      addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+      addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
+    }
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1061,9 +1073,13 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
  
-    setHash(id.toString());
-    addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
-    addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+    if (encontrarFuncion(id.toString()) != null) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+    } else {
+      setHash(id.toString());
+      addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
+      addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+    }
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("NT$0",28, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

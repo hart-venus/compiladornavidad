@@ -310,24 +310,40 @@ def_funcion_trineo ::=
   function_chimenea:f t_int_colacho main_navidad p_abre_cuento p_cierra_cuento 
   // función main sin parámetros que retorna un int
   {:
-    setHash("main");
-    addSymbol(new SymbolTableObject("funcion", "int", "main"));
-    addFirmaFuncion(new FirmaFuncion("main", TipoExpresion.INT, true, new TipoExpresion[] {}));
-    // función main no tiene por qué tener return, por lo tanto lo asignamos true por defecto
+
+    // 1. validación de que main no existe
+    if (encontrarFuncion("main") != null) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion main ya declarada");
+    } else {
+      setHash("main");
+      addSymbol(new SymbolTableObject("funcion", "int", "main"));
+      addFirmaFuncion(new FirmaFuncion("main", TipoExpresion.INT, true, new TipoExpresion[] {}));
+      // función main no tiene por qué tener return, por lo tanto lo asignamos true por defecto
+    }
+
   :}
   |
   function_chimenea:f t_santa:tipo id_persona:id p_abre_cuento p_cierra_cuento 
   {:
-    setHash(id.toString());
-    addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
-    addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
+    // 1. Validación de que la función no existe
+    if (encontrarFuncion(id.toString()) != null) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+    } else {
+      setHash(id.toString());
+      addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+      addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
+    }
   :}
   | // sin parametros
   function_chimenea:f t_santa:tipo id_persona:id p_abre_cuento
   {: 
-    setHash(id.toString());
-    addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
-    addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+    if (encontrarFuncion(id.toString()) != null) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+    } else {
+      setHash(id.toString());
+      addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
+      addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+    }
   :}
 
   parametros_funcion_renos p_cierra_cuento

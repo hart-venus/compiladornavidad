@@ -18,3 +18,9 @@ function int main() {
     local float xd <= 3.14| @ no pica error, no estoy declarando una variable ya declarada
     local int xd[3]| @ pica error ya que estoy declarando una variable ya declarada
 }
+
+
+@ Toda esta declaración pica error, ya que no se pueden definir dos funciones con el mismo nombre
+function int sumxa() {
+    print("hola mundo!")|
+}
