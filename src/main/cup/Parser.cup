@@ -413,7 +413,7 @@ asignacion_adorno ::=
     else {
 
       var i_arr = (int)l_int;
-      if (i_arr < 0) {
+      if (i_arr <= 0) {
         System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
       }
       else {

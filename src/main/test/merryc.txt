@@ -16,6 +16,7 @@ function int main() {
     local float jj[3]| 
     @ Esto tampoco 
     local int f[-1]|
+    local char g[3]| @ valido
 
     local int a[1] <= {1}| @ valido 
     local char b[2] <= {'a', 'b'}| @ valido
