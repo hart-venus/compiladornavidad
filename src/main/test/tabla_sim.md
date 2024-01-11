@@ -3,6 +3,9 @@
 | suma  | funcion     | suma   | int      |
 | suma  | parametro   | a      | int      |
 | suma  | parametro   | b      | int      |
+| suma  | local       | c      | char     |
+| main  | funcion     | main   | int      |
+| main  | local       | xd     | float    |
 | suha  | funcion     | suha   | char     |
 | suha  | parametro   | a      | char     |
 | suha  | parametro   | b      | char     |

@@ -1,4 +1,5 @@
 function int suma(int a, int b) {
+    local char c| 
     return 3|
 }
 
@@ -7,5 +8,13 @@ function float sumxa(float a, float b) {
 }
 
 function char suha(char a, char b) {
-    return 3|
+    local int a| @ pica error ya que a ya esta declarada
+    @ pica error ya que nunca retorno un char 
+}
+
+function int main() {
+
+    print("xd")|
+    local float xd <= 3.14| @ no pica error, no estoy declarando una variable ya declarada
+    local int xd[3]| @ pica error ya que estoy declarando una variable ya declarada
 }

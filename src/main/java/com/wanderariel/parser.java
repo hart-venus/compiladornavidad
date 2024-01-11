@@ -719,7 +719,7 @@ class CUP$parser$actions {
         return Expresion.tipoFromString(value.getTipoDato());
       }
     }
-    return TipoExpresion.NULL;
+    return null; // no existe el símbolo 
   }
 
 
@@ -1489,7 +1489,14 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+
+    if (getTipo(id.toString()) != null) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+    }
+    else {
+      addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+    }
+
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1522,7 +1529,12 @@ class CUP$parser$actions {
         System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
       }
       else {
-        addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+        if (getTipo(el.toString()) != null) {
+          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
+        }
+        else {
+          addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+        }
       }
     }
   
@@ -1541,7 +1553,12 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
-    addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+    if (getTipo(id.toString()) != null) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+    } else {
+      addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+    }
+
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_adorno",12, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1592,9 +1609,14 @@ class CUP$parser$actions {
             System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + l_int + " no coincide con la longitud del literal de arreglo " + arr.size());
           }
           else {
-            addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
-          }
 
+            if (getTipo(el.toString()) != null) {
+              System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
+            }
+            else {
+              addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+            }
+          }
         }
       }
     }

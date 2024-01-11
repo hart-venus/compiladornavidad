@@ -76,7 +76,7 @@ action code {:
         return Expresion.tipoFromString(value.getTipoDato());
       }
     }
-    return TipoExpresion.NULL;
+    return null; // no existe el símbolo 
   }
 
 
@@ -453,7 +453,14 @@ else_inocente ::=
 asignacion_adorno ::= 
   local_dulce t_santa:t id_persona:id 
   {:
-    addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+
+    if (getTipo(id.toString()) != null) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+    }
+    else {
+      addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+    }
+
   :} 
   | // local int a|
   local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho:l_int p_cierra_empaque
@@ -468,14 +475,24 @@ asignacion_adorno ::=
         System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
       }
       else {
-        addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+        if (getTipo(el.toString()) != null) {
+          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
+        }
+        else {
+          addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+        }
       }
     }
   :}
   | // local int a[1]|
   local_dulce t_santa:t id_persona:id assign_entregar expresion_regalo 
   {:
-    addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+    if (getTipo(id.toString()) != null) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+    } else {
+      addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+    }
+
   :}
   | // local int a <= 1|
   local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho:l_int p_cierra_empaque assign_entregar l_arr_gordo:l_arr
@@ -505,9 +522,14 @@ asignacion_adorno ::=
             System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + l_int + " no coincide con la longitud del literal de arreglo " + arr.size());
           }
           else {
-            addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
-          }
 
+            if (getTipo(el.toString()) != null) {
+              System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
+            }
+            else {
+              addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+            }
+          }
         }
       }
     }
