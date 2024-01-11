@@ -655,6 +655,25 @@ class CUP$parser$actions {
   */
   HashMap<String, ArrayList<SymbolTableObject>> tablasSimbolos = new HashMap<String, ArrayList<SymbolTableObject>>();
   String currentHash = "";
+  ArrayList<FirmaFuncion> firmasFunciones = new ArrayList<FirmaFuncion>();
+
+  public void addFirmaFuncion(FirmaFuncion firma) {
+    firmasFunciones.add(firma);
+  }
+
+  public FirmaFuncion encontrarFuncion(String id) {
+    for (FirmaFuncion firma : firmasFunciones) {
+      if (firma.getNombre().equals(id)) {
+        return firma;
+      }
+    }
+    return null;
+  }
+
+  public FirmaFuncion functionActual() {
+    return firmasFunciones.get(firmasFunciones.size() - 1);
+  }
+
 
   /**
   * función para imprimir la tabla de símbolos
@@ -767,7 +786,18 @@ class CUP$parser$actions {
               Object RESULT =null;
 		
     exportarTablaSimbolos();
-    imprimirTablaSimbolos(); 
+    imprimirTablaSimbolos();
+
+
+    if (encontrarFuncion("main") == null) {
+      System.out.println("Error de semantica: no se encontro la funcion main");
+    }
+
+    for (FirmaFuncion firma : firmasFunciones) {
+      if (!firma.isRetornaValor()) {
+        System.out.println("Error de semantica: la funcion " + firma.getNombre() + " no tiene return valido");
+      }
+    }
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("navidad",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -988,6 +1018,8 @@ class CUP$parser$actions {
 		
     setHash("main");
     addSymbol(new SymbolTableObject("funcion", "int", "main"));
+    addFirmaFuncion(new FirmaFuncion("main", TipoExpresion.INT, true, new TipoExpresion[] {}));
+    // función main no tiene por qué tener return, por lo tanto lo asignamos true por defecto
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1009,6 +1041,7 @@ class CUP$parser$actions {
 		
     setHash(id.toString());
     addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+    addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1029,6 +1062,7 @@ class CUP$parser$actions {
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
  
     setHash(id.toString());
+    addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
     addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("NT$0",28, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1085,6 +1119,8 @@ class CUP$parser$actions {
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     addSymbol(new SymbolTableObject("parametro", t.toString(), id.toString()));
+    // Conseguir la función actual y meterle el parámetro
+    functionActual().addTipoParametro(Expresion.tipoFromString(t.toString()));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("parametro_funcion_reno",9, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1126,7 +1162,21 @@ class CUP$parser$actions {
           case 29: // retorno_carta_santa ::= return_envia expresion_regalo 
             {
               Object RESULT =null;
-
+		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    var tipo = ((Expresion)e).getTipo();
+    var tipoFuncion = functionActual().getTipoRetorno();
+    if (tipo != tipoFuncion) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + tipo.toString() + " no valido para una funcion de tipo " + tipoFuncion.toString());
+    }
+    else {
+      functionActual().setRetornaValor(true);
+    }
+  
+  
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("retorno_carta_santa",20, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

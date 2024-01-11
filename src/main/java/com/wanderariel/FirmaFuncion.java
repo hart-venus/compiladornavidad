@@ -33,6 +33,15 @@ public class FirmaFuncion {
         return tiposParametros;
     }
 
+    public void addTipoParametro(TipoExpresion tipo) {
+        TipoExpresion[] newTiposParametros = new TipoExpresion[tiposParametros.length + 1];
+        for (int i = 0; i < tiposParametros.length; i++) {
+            newTiposParametros[i] = tiposParametros[i];
+        }
+        newTiposParametros[tiposParametros.length] = tipo;
+        tiposParametros = newTiposParametros;
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }

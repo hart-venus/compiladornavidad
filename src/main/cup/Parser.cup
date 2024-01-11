@@ -12,6 +12,25 @@ action code {:
   */
   HashMap<String, ArrayList<SymbolTableObject>> tablasSimbolos = new HashMap<String, ArrayList<SymbolTableObject>>();
   String currentHash = "";
+  ArrayList<FirmaFuncion> firmasFunciones = new ArrayList<FirmaFuncion>();
+
+  public void addFirmaFuncion(FirmaFuncion firma) {
+    firmasFunciones.add(firma);
+  }
+
+  public FirmaFuncion encontrarFuncion(String id) {
+    for (FirmaFuncion firma : firmasFunciones) {
+      if (firma.getNombre().equals(id)) {
+        return firma;
+      }
+    }
+    return null;
+  }
+
+  public FirmaFuncion functionActual() {
+    return firmasFunciones.get(firmasFunciones.size() - 1);
+  }
+
 
   /**
   * función para imprimir la tabla de símbolos
@@ -225,7 +244,18 @@ start with navidad;
 navidad ::= funciones_bolsa_navidena 
   {:
     exportarTablaSimbolos();
-    imprimirTablaSimbolos(); 
+    imprimirTablaSimbolos();
+
+
+    if (encontrarFuncion("main") == null) {
+      System.out.println("Error de semantica: no se encontro la funcion main");
+    }
+
+    for (FirmaFuncion firma : firmasFunciones) {
+      if (!firma.isRetornaValor()) {
+        System.out.println("Error de semantica: la funcion " + firma.getNombre() + " no tiene return valido");
+      }
+    }
   :};
 
 
@@ -282,17 +312,21 @@ def_funcion_trineo ::=
   {:
     setHash("main");
     addSymbol(new SymbolTableObject("funcion", "int", "main"));
+    addFirmaFuncion(new FirmaFuncion("main", TipoExpresion.INT, true, new TipoExpresion[] {}));
+    // función main no tiene por qué tener return, por lo tanto lo asignamos true por defecto
   :}
   |
   function_chimenea:f t_santa:tipo id_persona:id p_abre_cuento p_cierra_cuento 
   {:
     setHash(id.toString());
     addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+    addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
   :}
   | // sin parametros
   function_chimenea:f t_santa:tipo id_persona:id p_abre_cuento
   {: 
     setHash(id.toString());
+    addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
     addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
   :}
 
@@ -304,6 +338,8 @@ parametro_funcion_reno ::=
   t_santa:t id_persona:id
   {:
     addSymbol(new SymbolTableObject("parametro", t.toString(), id.toString()));
+    // Conseguir la función actual y meterle el parámetro
+    functionActual().addTipoParametro(Expresion.tipoFromString(t.toString()));
   :}
   ;
 elemento_arreglo_juguete ::= 
@@ -316,7 +352,21 @@ elemento_arreglo_juguete ::=
 bloque_codigo_casa_jengibre ::= cb_abre_regalo lineas_hombre_jengibre cb_cierra_regalo | cb_abre_regalo error cb_cierra_regalo; // atrapa errores dentro de bloques
 
 retorno_carta_santa ::=
-  return_envia expresion_regalo |
+  return_envia expresion_regalo:e 
+  {:
+    var tipo = ((Expresion)e).getTipo();
+    var tipoFuncion = functionActual().getTipoRetorno();
+    if (tipo != tipoFuncion) {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + tipo.toString() + " no valido para una funcion de tipo " + tipoFuncion.toString());
+    }
+    else {
+      functionActual().setRetornaValor(true);
+    }
+  
+  
+  :}
+  
+  |
   return_envia; // sin expresion de retorno
 
 linea_hombre_jengibre ::= 
