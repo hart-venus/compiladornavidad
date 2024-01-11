@@ -95,6 +95,14 @@ import java.util.Hashtable;
         } while (token.sym != sym.EOF);
         return symbolCount;
     }
+
+    public int getLine() {
+        return yyline;
+    }
+
+    public int getColumn() {
+        return yycolumn;
+    }
 %}
 
 // Regular Expressions

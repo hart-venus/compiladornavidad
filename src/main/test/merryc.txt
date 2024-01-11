@@ -1,103 +1,18 @@
-@ check de función mal formada
-function ERROR malDeclarada(a, b, adios){
-    local int z|
-    return -1| 
+function int main() {
+    print("hola mundo")|
+    local int i| @ Se define i como un entero
+    local int j <= i| 
+    local int k <= l| @ Pica error ya que l no esta definido
+
+    @ Ahora, definamos un arreglo 
+    local char ii[3]|
+    ii[0]|
+    @ No se puede definir un arreglo si no se le da un tamaño literal
+    local char jj[i]| @ Pica error
+
+
+
+    @ Como nuestra gramática no permite arreglos de flotantes, esto no debería compilar.
+    local float jj[3]|
+    local int kk[1] <= {"hola"}|
 }
-
-function int miFuncion() {
-    local int a <= 2|
-    local int b|
-    return (a**a)|
-}
-@ b sí se declara, Z no se declara 
-local int Z|
-function float miOtraFuncion(float a, float b){
-    local int a <= 1|
-    local float b <= 0.5|
-    b <= -0.77|
-    local int otroarreglo[3] <= {1,2,3}|
-    otroarreglo[0] <= (0)| @ 0, 2, 3
-    return 0.0|
-}
-
-/_ comentario
-multi
-linea _/
-
-local int Z| @ Hace match con "error", no se declara en tabla de símbolos
-function int main(){ @ Main es la única clase sin tipo de retorno
-    local string a <= "hola"|
-    local int b <= (10*1) ** 2|
-    --b|
-    local bool miBooleano <= true|
-    local bool miOtroBooleano <= 1 => 2|
-    local bool miOtroOtroBooleano <= !(miOtroBooleano ^ miBooleano)|
-    local bool miOtroOtroOtroBooleano <= miOtroOtroBooleano # miOtroBooleano|
-    local float c <= 1.0|
-
-    b <= miFuncion()|
-    miOtraFuncion(1.0, c)|
-
-    local int i <= 0|
-
-    do {
-        ++i|
-        print(i)|
-    } until (i => 10)|
-
-    for (i <= 0| i < 10| ++i){
-        print(i)|
-    }
-
-    @ Todo este for debería caerse
-    for (local int i <= 0| i < 10| ++i){
-        print(i)|
-    }
-
-    print("El ciclo terminó")|
-    local string miString <= "Hola"|
-    read(miString)|
-
-    @ 1. if sin else ni elif 
-    if (miString == "Hola"){
-        print("El string es Hola")|
-    } 
-
-    @ 2. if con else
-
-    if (miString == "Hola"){
-        print("El string es Hola")|
-        break|
-    } else {
-        print("El string no es Hola")|
-    }
-
-    @ 3. if con elif
-
-    if (miString == "Hola"){
-        print("El string es Hola")|
-    } elif (miString == "Chao"){
-        print("El string es Chao")|
-    } elif (miString == "Adios"){
-        print("El string es Adios")|
-    } 
-
-    @ 4. if con elif y else
-
-    if (miString == "Hola"){
-        print("El string es Hola")|
-    } elif (miString == "Chao"){
-        print("El string es Chao")|
-    } else {
-        print("El string no es Hola, Chao ni Adios")|
-    }
-
-    {} @ Esto pica error porque no es un statement válido
-    @ El compilador debería mostrar un error de sintaxis y continuar
-
-    local int miVariable|
-    loaslc int miOtraVariable| @ Mal escrita, debería mostrar error de sintaxis y continuar
-    local int miVariable2|
-}
-
-local int hola

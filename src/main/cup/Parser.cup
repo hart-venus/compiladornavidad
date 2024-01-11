@@ -45,6 +45,23 @@ action code {:
   }
 
   /**
+  * Función para conseguir el tipo de un símbolo en la tabla de símbolos actual
+  * entrada: un string
+  * salida: un Expresion.TipoExpresion
+  * restricciones: ninguna
+  * objetivo: conseguir el tipo de un símbolo en la tabla de símbolos actual
+  */
+  public TipoExpresion getTipo(String nombre) {
+    for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
+      if (value.getNombre().equals(nombre)) {
+        return Expresion.tipoFromString(value.getTipoDato());
+      }
+    }
+    return TipoExpresion.NULL;
+  }
+
+
+  /**
   * función para cambiar el hash actual al que se le asocian los símbolos
   * entrada: un string
   * salida: ninguna
@@ -226,19 +243,36 @@ t_santa ::=
 ;
 l_santa ::= 
   l_int_colacho:l
-  {: RESULT = l; :}
+  {: RESULT = new Expresion(l, TipoExpresion.INT); :}
   | l_float_santa:l
-  {: RESULT = l; :}
+  {: RESULT = new Expresion(l, TipoExpresion.FLOAT); :}
   | l_t_noel:l
-  {: RESULT = l; :}
+  {: RESULT = new Expresion(true, TipoExpresion.BOOL); :}
   | l_f_noel:l
-  {: RESULT = l; :}
+  {: RESULT = new Expresion(false, TipoExpresion.BOOL); :}
   | l_char_pascuero:l
-  {: RESULT = l; :}
+  {: RESULT = new Expresion(l, TipoExpresion.CHAR); :}
   | l_string_kris:l
-  {: RESULT = l; :}
+  {: 
+    RESULT = new Expresion(l, TipoExpresion.STRING);
+    System.out.println(l);
+    
+  :}
   ;
-args_santa ::= expresion_regalo | args_santa sep_regalo expresion_regalo;
+args_santa ::= expresion_regalo:e
+  {: 
+    var arrL = new ArrayList<Expresion>();
+    arrL.add((Expresion)e);
+    RESULT = arrL;
+  :}
+  | args_santa:args sep_regalo expresion_regalo:e
+  {: 
+    var arrL = (ArrayList<Expresion>)args;
+    arrL.add((Expresion)e);
+    RESULT = arrL;
+  :}
+  ;
+  
 
 funciones_bolsa_navidena ::= funcion_ayudante_santa | funciones_bolsa_navidena funcion_ayudante_santa;
 funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre | error def_funcion_trineo bloque_codigo_casa_jengibre;
@@ -308,7 +342,12 @@ llamada_func_pino ::=
 
 lineas_hombre_jengibre ::= linea_hombre_jengibre | lineas_hombre_jengibre linea_hombre_jengibre;
 
-l_arr_gordo ::= cb_abre_regalo args_santa cb_cierra_regalo;
+l_arr_gordo ::= cb_abre_regalo args_santa:a cb_cierra_regalo
+{:
+  System.out.println(a);
+:}
+
+;
 
 do_until_fabrica_juguetes ::=
   do_hace bloque_codigo_casa_jengibre until_revisa p_abre_cuento expresion_regalo p_cierra_cuento; // do {} until (a)|
@@ -337,9 +376,14 @@ asignacion_adorno ::=
     addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
   :} 
   | // local int a|
-  local_dulce:l t_santa:t elemento_arreglo_juguete:el
+  local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho p_cierra_empaque
   {:
-    addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+    if(t.toString() != "int" && t.toString() != "char"){
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
+    }
+    else {
+      addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+    }
   :}
   | // local int a[1]|
   local_dulce t_santa:t id_persona:id assign_entregar expresion_regalo 
@@ -347,9 +391,14 @@ asignacion_adorno ::=
     addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
   :}
   | // local int a <= 1|
-  local_dulce:l t_santa:t elemento_arreglo_juguete:el assign_entregar l_arr_gordo
+  local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho p_cierra_empaque assign_entregar expresion_regalo
   {:
-    addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+    if (t.toString() != "int" && t.toString() != "char") {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
+    }
+    else {
+      addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+    }
   :}
   | // local int a[1] <= {1}
   asignacion_existente_nieve; // si ya existe la variable, no se agrega a la tabla de simbolos
@@ -359,8 +408,30 @@ asignacion_existente_nieve ::=
   elemento_arreglo_juguete assign_entregar expresion_regalo; // a[1] <= 1|
 
 expresion_regalo ::=
-  l_santa | id_persona | elemento_arreglo_juguete | p_abre_cuento expresion_regalo p_cierra_cuento | expr_ar_regaloprin
-  | expr_rel_regalocomprado | expr_log_regalomanual | llamada_func_pino;
+  l_santa:l
+  {:
+    RESULT = l;
+  :}
+  | 
+  id_persona:id
+  {:
+    RESULT = new Expresion(id.toString(), getTipo(id.toString()));
+  :}
+  | 
+  elemento_arreglo_juguete:eaj
+  {:
+    RESULT = new Expresion(eaj.toString(), getTipo(eaj.toString()));
+  :}
+  | p_abre_cuento expresion_regalo:e p_cierra_cuento
+  {: RESULT = e; :}
+  | expr_ar_regaloprin:e
+  {: RESULT = e; :}
+  | expr_rel_regalocomprado:e
+  {: RESULT = e; :}
+  | expr_log_regalomanual:e
+  {: RESULT = e; :}
+  | llamada_func_pino:e
+  {: RESULT = e; :};
 
 expr_ar_regaloprin ::= 
   expresion_regalo op_res_rodolfo expresion_regalo | // a - b
