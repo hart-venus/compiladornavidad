@@ -604,6 +604,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 
   Lexer lex;
+  int literalId = 0;
   String outputPath;
   private final String LIB_PATH = "src/main/asm/santalib.asm";
 
@@ -632,6 +633,8 @@ public class parser extends java_cup.runtime.lr_parser {
     // carga los buffer codeBuffer y dataBuffer con .text y .data
     codeBuffer.append(".text\n");
     dataBuffer.append(".data\n");
+    // añadir un endl al dataBuffer 
+    dataBuffer.append("endl: .asciiz \"\\n\"\n");
   }
 
 
@@ -833,7 +836,7 @@ class CUP$parser$actions {
       if (!firma.isRetornaValor()) {
         System.out.println("Error de semantica: la funcion " + firma.getNombre() + " no tiene return valido");
       }
-    }
+    } 
   
     // escribir en el archivo de salida los 3 buffers
     try {
@@ -982,8 +985,18 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 
-    RESULT = new Expresion(l, TipoExpresion.STRING);
+		
+
+    // añadir definición de string al dataBuffer
+    var str = (String)l;
+    var strId = "str" + literalId;
+
+    dataBuffer.append(strId + ": .asciiz \"" + str + "\"\n");
+
+    ++literalId;
+
+
+    RESULT = new Expresion(l, TipoExpresion.STRING, strId);
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1410,7 +1423,27 @@ class CUP$parser$actions {
           case 42: // llamada_func_pino ::= print_habla p_abre_cuento args_santa p_cierra_cuento 
             {
               Object RESULT =null;
+		int argsleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int argsright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object args = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
+    var expr_args = (ArrayList<Expresion>)args;
 
+    for (Expresion e : expr_args) {
+      // hacer un switch con los diferentes tipos de la expresión
+      // y generar el código de acuerdo al tipo
+      switch (e.getTipo()) {
+        case STRING:
+          codeBuffer.append("la $a0, " + e.getDireccion() + "\n");
+          codeBuffer.append("jal printString\n");
+        // default error semántico
+        default:
+          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para print");
+          break;
+      }
+    }
+
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("llamada_func_pino",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1419,7 +1452,12 @@ class CUP$parser$actions {
           case 43: // llamada_func_pino ::= print_habla p_abre_cuento p_cierra_cuento 
             {
               Object RESULT =null;
-
+		
+    // generación de código de print endl 
+    codeBuffer.append("la $a0, endl\n");
+    codeBuffer.append("li $v0, 4\n");
+    codeBuffer.append("syscall\n");
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("llamada_func_pino",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

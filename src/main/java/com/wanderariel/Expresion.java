@@ -14,10 +14,24 @@ enum TipoExpresion {
 public class Expresion {
     private Object valor;
     private TipoExpresion tipo;
+    private String direccion;
 
     public Expresion(Object valor, TipoExpresion tipo) {
         this.valor = valor;
         this.tipo = tipo;
+    }
+    public Expresion(Object valor, TipoExpresion tipo, String direccion) {
+        this.valor = valor;
+        this.tipo = tipo;
+        this.direccion = direccion;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion; 
     }
 
     public static TipoExpresion toArr(TipoExpresion tipo) {

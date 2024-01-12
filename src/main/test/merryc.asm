@@ -1,9 +1,10 @@
 .data
+endl: .asciiz "\n"
+str0: .asciiz "Hello World"
 .text
-suma:
-sumxa:
-suha:
 main:
+la $a0, str0
+jal printString
 li $v0, 10
 syscall
 
@@ -17,5 +18,10 @@ readInt:
 
 readFloat:
     li $v0, 6  # read_float syscall
+    syscall
+    jr $ra
+
+printString:
+    li $v0, 4  # print_string syscall
     syscall
     jr $ra

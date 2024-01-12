@@ -106,6 +106,7 @@ action code {:
 
 parser code {:
   Lexer lex;
+  int literalId = 0;
   String outputPath;
   private final String LIB_PATH = "src/main/asm/santalib.asm";
 
@@ -134,6 +135,8 @@ parser code {:
     // carga los buffer codeBuffer y dataBuffer con .text y .data
     codeBuffer.append(".text\n");
     dataBuffer.append(".data\n");
+    // añadir un endl al dataBuffer 
+    dataBuffer.append("endl: .asciiz \"\\n\"\n");
   }
 
 
@@ -291,7 +294,7 @@ navidad ::= funciones_bolsa_navidena
       if (!firma.isRetornaValor()) {
         System.out.println("Error de semantica: la funcion " + firma.getNombre() + " no tiene return valido");
       }
-    }
+    } 
   
     // escribir en el archivo de salida los 3 buffers
     try {
@@ -335,8 +338,18 @@ l_santa ::=
   | l_char_pascuero:l
   {: RESULT = new Expresion(l, TipoExpresion.CHAR); :}
   | l_string_kris:l
-  {: 
-    RESULT = new Expresion(l, TipoExpresion.STRING);
+  {:
+
+    // añadir definición de string al dataBuffer
+    var str = (String)l;
+    var strId = "str" + literalId;
+
+    dataBuffer.append(strId + ": .asciiz \"" + str + "\"\n");
+
+    ++literalId;
+
+
+    RESULT = new Expresion(l, TipoExpresion.STRING, strId);
   :}
   ;
 args_santa ::= expresion_regalo:e
@@ -499,8 +512,31 @@ linea_hombre_jengibre ::=
 llamada_func_pino ::= 
   id_persona p_abre_cuento p_cierra_cuento | // a()
   id_persona p_abre_cuento args_santa p_cierra_cuento | 
-  print_habla p_abre_cuento args_santa p_cierra_cuento | // print(a)
-  print_habla p_abre_cuento p_cierra_cuento | // print() -> Imprimir un salto de linea
+  print_habla p_abre_cuento args_santa:args p_cierra_cuento {:
+    var expr_args = (ArrayList<Expresion>)args;
+
+    for (Expresion e : expr_args) {
+      // hacer un switch con los diferentes tipos de la expresión
+      // y generar el código de acuerdo al tipo
+      switch (e.getTipo()) {
+        case STRING:
+          codeBuffer.append("la $a0, " + e.getDireccion() + "\n");
+          codeBuffer.append("jal printString\n");
+        // default error semántico
+        default:
+          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para print");
+          break;
+      }
+    }
+
+  :}| // print(a, b, ...)
+  
+  print_habla p_abre_cuento p_cierra_cuento {:
+    // generación de código de print endl 
+    codeBuffer.append("la $a0, endl\n");
+    codeBuffer.append("li $v0, 4\n");
+    codeBuffer.append("syscall\n");
+  :}| // print() -> Imprimir un salto de linea
   read_escucha p_abre_cuento id_persona p_cierra_cuento | // read(a)
   read_escucha p_abre_cuento elemento_arreglo_juguete p_cierra_cuento; // read(a[1])
 

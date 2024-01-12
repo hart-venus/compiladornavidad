@@ -11,3 +11,8 @@ readFloat:
     li $v0, 6  # read_float syscall
     syscall
     jr $ra
+
+printString:
+    li $v0, 4  # print_string syscall
+    syscall
+    jr $ra
