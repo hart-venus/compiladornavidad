@@ -521,21 +521,23 @@ llamada_func_pino ::=
       switch (e.getTipo()) {
         case STRING:
           codeBuffer.append("la $a0, " + e.getDireccion() + "\n");
-          codeBuffer.append("jal printString\n");
+          codeBuffer.append("jal printString\n"); 
+          break;
         // default error semántico
         default:
           System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para print");
           break;
       }
     }
-
+    // después de imprimir todos los argumentos, imprimir un enter
+    codeBuffer.append("la $a0, endl\n");
+    codeBuffer.append("jal printString\n");
   :}| // print(a, b, ...)
   
   print_habla p_abre_cuento p_cierra_cuento {:
     // generación de código de print endl 
     codeBuffer.append("la $a0, endl\n");
-    codeBuffer.append("li $v0, 4\n");
-    codeBuffer.append("syscall\n");
+    codeBuffer.append("jal printString\n"); 
   :}| // print() -> Imprimir un salto de linea
   read_escucha p_abre_cuento id_persona p_cierra_cuento | // read(a)
   read_escucha p_abre_cuento elemento_arreglo_juguete p_cierra_cuento; // read(a[1])

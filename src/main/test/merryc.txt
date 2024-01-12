@@ -1,3 +1,5 @@
 function int main() {
-    print("Hello World")|
+    local char c <= 'c'|
+    print("Hello World y ", c, "hola")|
+    print("Adios mundo")|
 }

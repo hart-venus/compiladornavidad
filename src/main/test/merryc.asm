@@ -1,9 +1,19 @@
 .data
 endl: .asciiz "\n"
-str0: .asciiz "Hello World"
+str0: .asciiz "Hello World y "
+str1: .asciiz "hola"
+str2: .asciiz "Adios mundo"
 .text
 main:
 la $a0, str0
+jal printString
+la $a0, str1
+jal printString
+la $a0, endl
+jal printString
+la $a0, str2
+jal printString
+la $a0, endl
 jal printString
 li $v0, 10
 syscall

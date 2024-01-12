@@ -1435,14 +1435,17 @@ class CUP$parser$actions {
       switch (e.getTipo()) {
         case STRING:
           codeBuffer.append("la $a0, " + e.getDireccion() + "\n");
-          codeBuffer.append("jal printString\n");
+          codeBuffer.append("jal printString\n"); 
+          break;
         // default error semántico
         default:
           System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para print");
           break;
       }
     }
-
+    // después de imprimir todos los argumentos, imprimir un enter
+    codeBuffer.append("la $a0, endl\n");
+    codeBuffer.append("jal printString\n");
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("llamada_func_pino",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1455,8 +1458,7 @@ class CUP$parser$actions {
 		
     // generación de código de print endl 
     codeBuffer.append("la $a0, endl\n");
-    codeBuffer.append("li $v0, 4\n");
-    codeBuffer.append("syscall\n");
+    codeBuffer.append("jal printString\n"); 
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("llamada_func_pino",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
