@@ -45,9 +45,6 @@
 | {              | cb_abre_regalo    | 36              | 8     | 31      |
 | local          | local_dulce       | 54              | 9     | 4       |
 | int            | t_int_colacho     | 20              | 9     | 10      |
-| c              | id_persona        | 19              | 9     | 14      |
+| d              | id_persona        | 19              | 9     | 14      |
 | |              | fin_regalo        | 48              | 9     | 15      |
-| return         | return_envia      | 44              | 10    | 4       |
-| c              | id_persona        | 19              | 10    | 11      |
-| |              | fin_regalo        | 48              | 10    | 12      |
-| }              | cb_cierra_regalo  | 37              | 11    | 0       |
+| }              | cb_cierra_regalo  | 37              | 10    | 0       |

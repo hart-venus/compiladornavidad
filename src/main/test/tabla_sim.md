@@ -3,6 +3,6 @@
 | add   | funcion     | add    | int      |
 | add   | parametro   | a      | int      |
 | add   | parametro   | b      | int      |
-| add   | local       | c      | int      |
+| add   | local       | d      | int      |
 | main  | funcion     | main   | int      |
 | main  | local       | c      | char     |

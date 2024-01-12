@@ -1154,7 +1154,7 @@ class CUP$parser$actions {
         setHash(id.toString());
         RESULT = id.toString();
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
-        addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), true, new TipoExpresion[] {}));
+        addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
         // 3. inserción de label
         codeBuffer.append(id.toString() + ":\n");
       }
@@ -1192,7 +1192,7 @@ class CUP$parser$actions {
         setHash(id.toString());
         RESULT = id.toString();
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
-        addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), true, new TipoExpresion[] {}));
+        addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
         // 3. inserción de label
         codeBuffer.append(id.toString() + ":\n");
       }
