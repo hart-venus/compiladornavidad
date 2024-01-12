@@ -71,13 +71,16 @@ action code {:
   * restricciones: ninguna
   * objetivo: conseguir el tipo de un símbolo en la tabla de símbolos actual
   */
-  public TipoExpresion getTipo(String nombre) {
+  public TipoExpresion getTipo(String nombre, boolean picarError) {
     for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
       if (value.getNombre().equals(nombre)) {
         return Expresion.tipoFromString(value.getTipoDato());
       }
     }
-    return null; // no existe el símbolo 
+    if (picarError){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + nombre + " no declarada en el alcance actual");
+    }
+    return TipoExpresion.NULL;
   }
 
 
@@ -287,12 +290,12 @@ navidad ::= funciones_bolsa_navidena
 
 
     if (encontrarFuncion("main") == null) {
-      System.out.println("Error de semantica: no se encontro la funcion main");
+      System.out.println("Error semántico: no se encontro la funcion main");
     }
 
     for (FirmaFuncion firma : firmasFunciones) {
       if (!firma.isRetornaValor()) {
-        System.out.println("Error de semantica: la funcion " + firma.getNombre() + " no tiene return valido");
+        System.out.println("Error semántico: la funcion " + firma.getNombre() + " no tiene return valido");
       }
     } 
   
@@ -400,7 +403,7 @@ def_funcion_trineo ::=
 
     // 1. validación de que main no existe
     if (encontrarFuncion("main") != null) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion main ya declarada");
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion main ya declarada");
     } else {
       setHash("main");
       RESULT = "main";
@@ -419,12 +422,12 @@ def_funcion_trineo ::=
     // (char, int, float, bool)
     var str_tipo = tipo.toString();
     if (str_tipo != "char" && str_tipo != "int" && str_tipo != "float" && str_tipo != "bool") {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + str_tipo + " no valido para una funcion");
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + str_tipo + " no valido para una funcion");
     }
     else {
       // 2. Validación de que la función no existe
       if (encontrarFuncion(id.toString()) != null) {
-        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
       } else {
         setHash(id.toString());
         RESULT = id.toString();
@@ -442,12 +445,12 @@ def_funcion_trineo ::=
     // (char, int, float, bool)
     var str_tipo = tipo.toString();
     if (str_tipo != "char" && str_tipo != "int" && str_tipo != "float" && str_tipo != "bool") {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + str_tipo + " no valido para una funcion");
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + str_tipo + " no valido para una funcion");
     }
     else {
       // 2. Validación de que la función no existe
       if (encontrarFuncion(id.toString()) != null) {
-        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
       } else {
         setHash(id.toString());
         RESULT = id.toString();
@@ -486,7 +489,7 @@ retorno_carta_santa ::=
     var tipo = ((Expresion)e).getTipo();
     var tipoFuncion = functionActual().getTipoRetorno();
     if (tipo != tipoFuncion) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + tipo.toString() + " no valido para una funcion de tipo " + tipoFuncion.toString());
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + tipo.toString() + " no valido para una funcion de tipo " + tipoFuncion.toString());
     }
     else {
       functionActual().setRetornaValor(true);
@@ -525,7 +528,7 @@ llamada_func_pino ::=
           break;
         // default error semántico
         default:
-          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para print");
+          System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para print");
           break;
       }
     }
@@ -555,13 +558,13 @@ l_arr_gordo ::= cb_abre_regalo args_santa:a cb_cierra_regalo
 
   TipoExpresion tipo = arrL.get(0).getTipo();
   if (tipo != TipoExpresion.INT && tipo != TipoExpresion.CHAR) {
-    System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para arreglo");
+    System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para arreglo");
     RESULT = new Expresion("null", TipoExpresion.NULL);
     valido = false;
   }
   for (Expresion e : arrL) {
     if (e.getTipo() != tipo) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para un literal de arreglo de tipo " + tipo.toString());
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para un literal de arreglo de tipo " + tipo.toString());
       RESULT = new Expresion("null", TipoExpresion.NULL);
       valido = false;  
       break;
@@ -579,9 +582,7 @@ l_arr_gordo ::= cb_abre_regalo args_santa:a cb_cierra_regalo
   }
 
 
-:}
-
-;
+:};
 
 do_until_fabrica_juguetes ::=
   do_hace bloque_codigo_casa_jengibre until_revisa p_abre_cuento expresion_regalo p_cierra_cuento; // do {} until (a)|
@@ -608,8 +609,8 @@ asignacion_adorno ::=
   local_dulce t_santa:t id_persona:id 
   {:
 
-    if (getTipo(id.toString()) != null) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+    if (getTipo(id.toString(), false) != TipoExpresion.NULL) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
     }
     else {
       addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
@@ -620,17 +621,17 @@ asignacion_adorno ::=
   local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho:l_int p_cierra_empaque
   {:
     if(t.toString() != "int" && t.toString() != "char"){
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
     }
     else {
 
       var i_arr = (int)l_int;
       if (i_arr <= 0) {
-        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
       }
       else {
-        if (getTipo(el.toString()) != null) {
-          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
+        if (getTipo(el.toString(), false) != TipoExpresion.NULL) {
+          System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
         }
         else {
           addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
@@ -641,8 +642,8 @@ asignacion_adorno ::=
   | // local int a[1]|
   local_dulce t_santa:t id_persona:id assign_entregar expresion_regalo 
   {:
-    if (getTipo(id.toString()) != null) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+    if (getTipo(id.toString(), false) != TipoExpresion.NULL) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
     } else {
       addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
     }
@@ -652,7 +653,7 @@ asignacion_adorno ::=
   local_dulce:l t_santa:t id_persona:el p_abre_empaque l_int_colacho:l_int p_cierra_empaque assign_entregar l_arr_gordo:l_arr
   {:
     if (t.toString() != "int" && t.toString() != "char") {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
     }
     else {
       // Si llegamos aquí, sabemos que el tipo que buscamos es int o char
@@ -660,25 +661,25 @@ asignacion_adorno ::=
       // O bien formado con un tipo de dato que no es el que buscamos
       var e_arr = (Expresion)l_arr;
       if (e_arr.getTipo() == TipoExpresion.NULL){
-        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Literal de arreglo mal formado");
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Literal de arreglo mal formado");
       }
       else {
 
         TipoExpresion tipo = Expresion.tipoFromString(t.toString() + "[]");
 
         if (e_arr.getTipo() != tipo){
-          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e_arr.getTipo().toString() + " no valido para una variable de tipo " + tipo.toString());
+          System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e_arr.getTipo().toString() + " no valido para una variable de tipo " + tipo.toString());
         }
         else {
           // finalmente, asegurar que la longitud es la misma entre el arreglo y el literal
           var arr = (ArrayList<Expresion>)e_arr.getValor();
           if ((int)l_int != arr.size()) {
-            System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + l_int + " no coincide con la longitud del literal de arreglo " + arr.size());
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + l_int + " no coincide con la longitud del literal de arreglo " + arr.size());
           }
           else {
 
-            if (getTipo(el.toString()) != null) {
-              System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
+            if (getTipo(el.toString(), false) != TipoExpresion.NULL) {
+              System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
             }
             else {
               addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
@@ -703,12 +704,12 @@ expresion_regalo ::=
   | 
   id_persona:id
   {:
-    RESULT = new Expresion(id.toString(), getTipo(id.toString()));
+    RESULT = new Expresion(id.toString(), getTipo(id.toString(), true));
   :}
   | 
   elemento_arreglo_juguete:eaj
   {:
-    RESULT = new Expresion(eaj.toString(), getTipo(eaj.toString()));
+    RESULT = new Expresion(eaj.toString(), getTipo(eaj.toString(), true));
   :}
   | p_abre_cuento expresion_regalo:e p_cierra_cuento
   {: RESULT = e; :}

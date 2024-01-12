@@ -15,8 +15,11 @@ la $a0, str2
 jal printString
 la $a0, endl
 jal printString
+la $a0, endl
+jal printString
 li $v0, 10
 syscall
+add:
 
 # Esta sección es añadida automáticamente por el compilador y contiene funciones usadas
 # Internamente.

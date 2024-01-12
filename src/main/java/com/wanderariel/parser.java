@@ -752,13 +752,16 @@ class CUP$parser$actions {
   * restricciones: ninguna
   * objetivo: conseguir el tipo de un símbolo en la tabla de símbolos actual
   */
-  public TipoExpresion getTipo(String nombre) {
+  public TipoExpresion getTipo(String nombre, boolean picarError) {
     for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
       if (value.getNombre().equals(nombre)) {
         return Expresion.tipoFromString(value.getTipoDato());
       }
     }
-    return null; // no existe el símbolo 
+    if (picarError){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + nombre + " no declarada en el alcance actual");
+    }
+    return TipoExpresion.NULL;
   }
 
 
@@ -829,12 +832,12 @@ class CUP$parser$actions {
 
 
     if (encontrarFuncion("main") == null) {
-      System.out.println("Error de semantica: no se encontro la funcion main");
+      System.out.println("Error semántico: no se encontro la funcion main");
     }
 
     for (FirmaFuncion firma : firmasFunciones) {
       if (!firma.isRetornaValor()) {
-        System.out.println("Error de semantica: la funcion " + firma.getNombre() + " no tiene return valido");
+        System.out.println("Error semántico: la funcion " + firma.getNombre() + " no tiene return valido");
       }
     } 
   
@@ -1107,7 +1110,7 @@ class CUP$parser$actions {
 
     // 1. validación de que main no existe
     if (encontrarFuncion("main") != null) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion main ya declarada");
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion main ya declarada");
     } else {
       setHash("main");
       RESULT = "main";
@@ -1141,12 +1144,12 @@ class CUP$parser$actions {
     // (char, int, float, bool)
     var str_tipo = tipo.toString();
     if (str_tipo != "char" && str_tipo != "int" && str_tipo != "float" && str_tipo != "bool") {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + str_tipo + " no valido para una funcion");
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + str_tipo + " no valido para una funcion");
     }
     else {
       // 2. Validación de que la función no existe
       if (encontrarFuncion(id.toString()) != null) {
-        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
       } else {
         setHash(id.toString());
         RESULT = id.toString();
@@ -1179,12 +1182,12 @@ class CUP$parser$actions {
     // (char, int, float, bool)
     var str_tipo = tipo.toString();
     if (str_tipo != "char" && str_tipo != "int" && str_tipo != "float" && str_tipo != "bool") {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + str_tipo + " no valido para una funcion");
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + str_tipo + " no valido para una funcion");
     }
     else {
       // 2. Validación de que la función no existe
       if (encontrarFuncion(id.toString()) != null) {
-        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
       } else {
         setHash(id.toString());
         RESULT = id.toString();
@@ -1299,7 +1302,7 @@ class CUP$parser$actions {
     var tipo = ((Expresion)e).getTipo();
     var tipoFuncion = functionActual().getTipoRetorno();
     if (tipo != tipoFuncion) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + tipo.toString() + " no valido para una funcion de tipo " + tipoFuncion.toString());
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + tipo.toString() + " no valido para una funcion de tipo " + tipoFuncion.toString());
     }
     else {
       functionActual().setRetornaValor(true);
@@ -1439,7 +1442,7 @@ class CUP$parser$actions {
           break;
         // default error semántico
         default:
-          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para print");
+          System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para print");
           break;
       }
     }
@@ -1516,13 +1519,13 @@ class CUP$parser$actions {
 
   TipoExpresion tipo = arrL.get(0).getTipo();
   if (tipo != TipoExpresion.INT && tipo != TipoExpresion.CHAR) {
-    System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para arreglo");
+    System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para arreglo");
     RESULT = new Expresion("null", TipoExpresion.NULL);
     valido = false;
   }
   for (Expresion e : arrL) {
     if (e.getTipo() != tipo) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para un literal de arreglo de tipo " + tipo.toString());
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para un literal de arreglo de tipo " + tipo.toString());
       RESULT = new Expresion("null", TipoExpresion.NULL);
       valido = false;  
       break;
@@ -1647,8 +1650,8 @@ class CUP$parser$actions {
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
 
-    if (getTipo(id.toString()) != null) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+    if (getTipo(id.toString(), false) != TipoExpresion.NULL) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
     }
     else {
       addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
@@ -1677,17 +1680,17 @@ class CUP$parser$actions {
 		Object l_int = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
     if(t.toString() != "int" && t.toString() != "char"){
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
     }
     else {
 
       var i_arr = (int)l_int;
       if (i_arr <= 0) {
-        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
       }
       else {
-        if (getTipo(el.toString()) != null) {
-          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
+        if (getTipo(el.toString(), false) != TipoExpresion.NULL) {
+          System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
         }
         else {
           addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
@@ -1710,8 +1713,8 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
-    if (getTipo(id.toString()) != null) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+    if (getTipo(id.toString(), false) != TipoExpresion.NULL) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
     } else {
       addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
     }
@@ -1742,7 +1745,7 @@ class CUP$parser$actions {
 		Object l_arr = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     if (t.toString() != "int" && t.toString() != "char") {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + t.toString() + " no valido para arreglo");
     }
     else {
       // Si llegamos aquí, sabemos que el tipo que buscamos es int o char
@@ -1750,25 +1753,25 @@ class CUP$parser$actions {
       // O bien formado con un tipo de dato que no es el que buscamos
       var e_arr = (Expresion)l_arr;
       if (e_arr.getTipo() == TipoExpresion.NULL){
-        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Literal de arreglo mal formado");
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Literal de arreglo mal formado");
       }
       else {
 
         TipoExpresion tipo = Expresion.tipoFromString(t.toString() + "[]");
 
         if (e_arr.getTipo() != tipo){
-          System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e_arr.getTipo().toString() + " no valido para una variable de tipo " + tipo.toString());
+          System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e_arr.getTipo().toString() + " no valido para una variable de tipo " + tipo.toString());
         }
         else {
           // finalmente, asegurar que la longitud es la misma entre el arreglo y el literal
           var arr = (ArrayList<Expresion>)e_arr.getValor();
           if ((int)l_int != arr.size()) {
-            System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + l_int + " no coincide con la longitud del literal de arreglo " + arr.size());
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + l_int + " no coincide con la longitud del literal de arreglo " + arr.size());
           }
           else {
 
-            if (getTipo(el.toString()) != null) {
-              System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
+            if (getTipo(el.toString(), false) != TipoExpresion.NULL) {
+              System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + el.toString() + " ya declarada");
             }
             else {
               addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
@@ -1831,7 +1834,7 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    RESULT = new Expresion(id.toString(), getTipo(id.toString()));
+    RESULT = new Expresion(id.toString(), getTipo(id.toString(), true));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1845,7 +1848,7 @@ class CUP$parser$actions {
 		int eajright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object eaj = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    RESULT = new Expresion(eaj.toString(), getTipo(eaj.toString()));
+    RESULT = new Expresion(eaj.toString(), getTipo(eaj.toString(), true));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

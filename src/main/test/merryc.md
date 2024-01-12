@@ -12,18 +12,42 @@
 | <=             | assign_entregar   | 49              | 1     | 17      |
 | 'c'            | l_char_pascuero   | 30              | 1     | 20      |
 | |              | fin_regalo        | 48              | 1     | 23      |
-| print          | print_habla       | 46              | 2     | 4       |
-| (              | p_abre_cuento     | 32              | 2     | 9       |
-| Hello World y  | l_string_kris     | 31              | 2     | 25      |
-| ,              | sep_regalo        | 50              | 2     | 26      |
-| c              | id_persona        | 19              | 2     | 28      |
-| ,              | sep_regalo        | 50              | 2     | 29      |
-| hola           | l_string_kris     | 31              | 2     | 36      |
-| )              | p_cierra_cuento   | 33              | 2     | 37      |
-| |              | fin_regalo        | 48              | 2     | 38      |
 | print          | print_habla       | 46              | 3     | 4       |
 | (              | p_abre_cuento     | 32              | 3     | 9       |
-| Adios mundo    | l_string_kris     | 31              | 3     | 22      |
-| )              | p_cierra_cuento   | 33              | 3     | 23      |
-| |              | fin_regalo        | 48              | 3     | 24      |
-| }              | cb_cierra_regalo  | 37              | 4     | 0       |
+| Hello World y  | l_string_kris     | 31              | 3     | 25      |
+| ,              | sep_regalo        | 50              | 3     | 26      |
+| c              | id_persona        | 19              | 3     | 28      |
+| ,              | sep_regalo        | 50              | 3     | 29      |
+| hola           | l_string_kris     | 31              | 3     | 36      |
+| )              | p_cierra_cuento   | 33              | 3     | 37      |
+| |              | fin_regalo        | 48              | 3     | 38      |
+| print          | print_habla       | 46              | 4     | 4       |
+| (              | p_abre_cuento     | 32              | 4     | 9       |
+| Adios mundo    | l_string_kris     | 31              | 4     | 22      |
+| )              | p_cierra_cuento   | 33              | 4     | 23      |
+| |              | fin_regalo        | 48              | 4     | 24      |
+| print          | print_habla       | 46              | 5     | 4       |
+| (              | p_abre_cuento     | 32              | 5     | 9       |
+| holamundo      | id_persona        | 19              | 5     | 10      |
+| )              | p_cierra_cuento   | 33              | 5     | 19      |
+| |              | fin_regalo        | 48              | 5     | 20      |
+| }              | cb_cierra_regalo  | 37              | 6     | 0       |
+| function       | function_chimenea | 53              | 8     | 0       |
+| int            | t_int_colacho     | 20              | 8     | 9       |
+| add            | id_persona        | 19              | 8     | 13      |
+| (              | p_abre_cuento     | 32              | 8     | 16      |
+| int            | t_int_colacho     | 20              | 8     | 17      |
+| a              | id_persona        | 19              | 8     | 21      |
+| ,              | sep_regalo        | 50              | 8     | 22      |
+| int            | t_int_colacho     | 20              | 8     | 24      |
+| b              | id_persona        | 19              | 8     | 28      |
+| )              | p_cierra_cuento   | 33              | 8     | 29      |
+| {              | cb_abre_regalo    | 36              | 8     | 31      |
+| local          | local_dulce       | 54              | 9     | 4       |
+| int            | t_int_colacho     | 20              | 9     | 10      |
+| c              | id_persona        | 19              | 9     | 14      |
+| |              | fin_regalo        | 48              | 9     | 15      |
+| return         | return_envia      | 44              | 10    | 4       |
+| c              | id_persona        | 19              | 10    | 11      |
+| |              | fin_regalo        | 48              | 10    | 12      |
+| }              | cb_cierra_regalo  | 37              | 11    | 0       |
