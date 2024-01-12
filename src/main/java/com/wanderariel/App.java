@@ -27,12 +27,21 @@ public class App {
       fileName = "src/main/test/merryc.txt";
     }
     // Conseguir segundo argumento
-    String outputPath;
+    String markdownOutputPath;
     if (args.length > 1) {
-      outputPath = args[1];
+      markdownOutputPath = args[1];
     } else {
       // argumento por defecto
-      outputPath = "src/main/test/merryc.md";
+      markdownOutputPath = "src/main/test/merryc.md";
+    }
+
+    // Conseguir tercer argumento
+    String mipsOutputPath;
+    if (args.length > 2) {
+      mipsOutputPath = args[2];
+    } else {
+      // argumento por defecto
+      mipsOutputPath = "src/main/test/merryc.asm";
     }
 
     System.out.println("Leyendo archivo de entrada: " + fileName);
@@ -59,15 +68,15 @@ public class App {
     }
     // Crea un MarkdownTablePrinter con la lista de arreglos de strings 
     // y el nombre del archivo de salida, para imprimir la tabla de markdown
-    MarkdownTablePrinter printer = new MarkdownTablePrinter(rows, outputPath);
+    MarkdownTablePrinter printer = new MarkdownTablePrinter(rows, markdownOutputPath);
     printer.print();
-    System.out.println("Tabla de tokens generada en: " + outputPath);
+    System.out.println("Tabla de tokens generada en: " + markdownOutputPath);
 
     // Parte 2: Análisis sintáctico
     System.out.println("Analizando sintaxis del archivo de entrada: " + fileName);
     try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
       Lexer lexer = new Lexer(reader);
-      parser p = new parser(lexer);
+      parser p = new parser(lexer, mipsOutputPath);
       p.parse();
       // Si no hay excepcion, el analisis sintactico fue exitoso
       System.out.println("Analisis sintactico exitoso. El archivo es generable por la gramatica.");

@@ -87,13 +87,13 @@
 | )           | p_cierra_cuento   | 33              | 24    | 23      |
 | |           | fin_regalo        | 48              | 24    | 24      |
 | }           | cb_cierra_regalo  | 37              | 25    | 0       |
-| function    | function_chimenea | 53              | 27    | 0       |
-| string      | t_string_kris     | 24              | 27    | 9       |
-| x           | id_persona        | 19              | 27    | 16      |
-| (           | p_abre_cuento     | 32              | 27    | 17      |
-| )           | p_cierra_cuento   | 33              | 27    | 18      |
-| {           | cb_abre_regalo    | 36              | 27    | 20      |
-| return      | return_envia      | 44              | 28    | 4       |
-| hola mundo! | l_string_kris     | 31              | 28    | 23      |
-| |           | fin_regalo        | 48              | 28    | 24      |
-| }           | cb_cierra_regalo  | 37              | 29    | 0       |
+| function    | function_chimenea | 53              | 30    | 0       |
+| string      | t_string_kris     | 24              | 30    | 9       |
+| x           | id_persona        | 19              | 30    | 16      |
+| (           | p_abre_cuento     | 32              | 30    | 17      |
+| )           | p_cierra_cuento   | 33              | 30    | 18      |
+| {           | cb_abre_regalo    | 36              | 30    | 20      |
+| return      | return_envia      | 44              | 31    | 4       |
+| hola mundo! | l_string_kris     | 31              | 31    | 23      |
+| |           | fin_regalo        | 48              | 31    | 24      |
+| }           | cb_cierra_regalo  | 37              | 32    | 0       |

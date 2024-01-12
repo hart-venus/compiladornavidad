@@ -1,5 +1,6 @@
 import java_cup.runtime.*;
 import java.util.*;
+import java.io.*;
 
 action code {:
   /** 
@@ -105,6 +106,38 @@ action code {:
 
 parser code {:
   Lexer lex;
+  String outputPath;
+  private final String LIB_PATH = "src/main/asm/santalib.asm";
+
+  StringBuffer dataBuffer = new StringBuffer();
+  StringBuffer codeBuffer = new StringBuffer();
+  StringBuffer libBuffer = new StringBuffer();
+
+  /* cargar libreria */
+
+  public void cargarLibreria() {
+    try {
+      File libFile = new File(LIB_PATH);
+      java.util.Scanner libScanner = new java.util.Scanner(libFile);
+      while (libScanner.hasNextLine()) {
+        String line = libScanner.nextLine();
+        libBuffer.append(line + "\n");
+      }
+      libScanner.close();
+    } catch (FileNotFoundException e) {
+      System.out.println("Error al cargar la libreria");
+      e.printStackTrace();
+    }
+  }
+
+  public void inicializarBuffers(){
+    // carga los buffer codeBuffer y dataBuffer con .text y .data
+    codeBuffer.append(".text\n");
+    dataBuffer.append(".data\n");
+  }
+
+
+
 
   /**
   * Constructor de la clase parser
@@ -113,8 +146,11 @@ parser code {:
   * restricciones: ninguna
   * objetivo: inicializar el lexer y el symbolFactory
   */
-  public parser(Lexer lex) {
+  public parser(Lexer lex, String outputPath) {
     this.lex = lex;
+    this.outputPath = outputPath;
+    cargarLibreria();
+    inicializarBuffers();
     this.symbolFactory = new DefaultSymbolFactory();
   }
   /**
@@ -256,6 +292,27 @@ navidad ::= funciones_bolsa_navidena
         System.out.println("Error de semantica: la funcion " + firma.getNombre() + " no tiene return valido");
       }
     }
+
+    // generar el código de salida MIPS
+    codeBuffer.append("li $v0, 10\n"); // syscall para terminar el programa
+    codeBuffer.append("syscall\n");
+
+
+    // escribir en el archivo de salida los 3 buffers
+    try {
+      File outputFile = new File(outputPath);
+      FileWriter writer = new FileWriter(outputFile);
+      writer.write(dataBuffer.toString());
+      writer.write(codeBuffer.toString());
+      writer.write(libBuffer.toString());
+      writer.close();
+      System.out.println("Archivo de salida generado en " + outputPath);
+    } catch (IOException e) {
+      System.out.println("Error al escribir en el archivo de salida");
+      e.printStackTrace();
+    }
+
+
   :};
 
 
@@ -319,6 +376,8 @@ def_funcion_trineo ::=
       addSymbol(new SymbolTableObject("funcion", "int", "main"));
       addFirmaFuncion(new FirmaFuncion("main", TipoExpresion.INT, true, new TipoExpresion[] {}));
       // función main no tiene por qué tener return, por lo tanto lo asignamos true por defecto
+      // 2. inserción de label
+      codeBuffer.append("main:\n");
     }
 
   :}
@@ -339,6 +398,8 @@ def_funcion_trineo ::=
         setHash(id.toString());
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
         addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), true, new TipoExpresion[] {}));
+        // 3. inserción de label
+        codeBuffer.append(id.toString() + ":\n");
       }
     }
   :}
@@ -359,6 +420,8 @@ def_funcion_trineo ::=
         setHash(id.toString());
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
         addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), true, new TipoExpresion[] {}));
+        // 3. inserción de label
+        codeBuffer.append(id.toString() + ":\n");
       }
     }
   :}
