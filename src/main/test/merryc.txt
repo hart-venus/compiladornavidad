@@ -24,3 +24,10 @@ function int main() {
 function int sumxa() {
     print("hola mundo!")|
 }
+
+@ Como la function_actual no cambia, este trata de recuperarse asociando a 
+@ la ultima función definida (lo trata como parte de sumxa)
+
+function string x() {
+    return "hola mundo!"|
+}

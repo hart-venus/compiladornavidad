@@ -1046,13 +1046,21 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 		
-    // 1. Validación de que la función no existe
-    if (encontrarFuncion(id.toString()) != null) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
-    } else {
-      setHash(id.toString());
-      addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
-      addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
+    // 1. Validación de que el retorno sea válido
+    // (char, int, float, bool)
+    var str_tipo = tipo.toString();
+    if (str_tipo != "char" && str_tipo != "int" && str_tipo != "float" && str_tipo != "bool") {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + str_tipo + " no valido para una funcion");
+    }
+    else {
+      // 2. Validación de que la función no existe
+      if (encontrarFuncion(id.toString()) != null) {
+        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+      } else {
+        setHash(id.toString());
+        addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+        addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), true, new TipoExpresion[] {}));
+      }
     }
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("def_funcion_trineo",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -1073,12 +1081,21 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
  
-    if (encontrarFuncion(id.toString()) != null) {
-      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
-    } else {
-      setHash(id.toString());
-      addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
-      addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+    // 1. Validación de que el retorno sea válido
+    // (char, int, float, bool)
+    var str_tipo = tipo.toString();
+    if (str_tipo != "char" && str_tipo != "int" && str_tipo != "float" && str_tipo != "bool") {
+      System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de retorno " + str_tipo + " no valido para una funcion");
+    }
+    else {
+      // 2. Validación de que la función no existe
+      if (encontrarFuncion(id.toString()) != null) {
+        System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+      } else {
+        setHash(id.toString());
+        addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
+        addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), true, new TipoExpresion[] {}));
+      }
     }
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("NT$0",28, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
