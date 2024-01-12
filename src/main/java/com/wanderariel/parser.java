@@ -834,12 +834,7 @@ class CUP$parser$actions {
         System.out.println("Error de semantica: la funcion " + firma.getNombre() + " no tiene return valido");
       }
     }
-
-    // generar el código de salida MIPS
-    codeBuffer.append("li $v0, 10\n"); // syscall para terminar el programa
-    codeBuffer.append("syscall\n");
-
-
+  
     // escribir en el archivo de salida los 3 buffers
     try {
       File outputFile = new File(outputPath);
@@ -1051,7 +1046,18 @@ class CUP$parser$actions {
           case 17: // funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre 
             {
               Object RESULT =null;
-
+		int dleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object d = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
+    var nombre_funcion = (String)d;
+    // en el caso que la función actual es la main, después de procesarla ocupo poner
+    // el syscall de salida del programa
+    if (nombre_funcion != null && nombre_funcion.equals("main")) {
+      codeBuffer.append("li $v0, 10\n"); // syscall para terminar el programa
+      codeBuffer.append("syscall\n");
+    }
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("funcion_ayudante_santa",5, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1060,7 +1066,19 @@ class CUP$parser$actions {
           case 18: // funcion_ayudante_santa ::= error def_funcion_trineo bloque_codigo_casa_jengibre 
             {
               Object RESULT =null;
+		int dleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object d = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
 
+    var nombre_funcion = (String)d;
+    // en el caso que la función actual es la main, después de procesarla ocupo poner
+    // el syscall de salida del programa
+    if (nombre_funcion != null && nombre_funcion.equals("main")) {
+      codeBuffer.append("li $v0, 10\n"); // syscall para terminar el programa
+      codeBuffer.append("syscall\n");
+    }
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("funcion_ayudante_santa",5, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1079,6 +1097,7 @@ class CUP$parser$actions {
       System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion main ya declarada");
     } else {
       setHash("main");
+      RESULT = "main";
       addSymbol(new SymbolTableObject("funcion", "int", "main"));
       addFirmaFuncion(new FirmaFuncion("main", TipoExpresion.INT, true, new TipoExpresion[] {}));
       // función main no tiene por qué tener return, por lo tanto lo asignamos true por defecto
@@ -1117,6 +1136,7 @@ class CUP$parser$actions {
         System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
       } else {
         setHash(id.toString());
+        RESULT = id.toString();
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
         addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), true, new TipoExpresion[] {}));
         // 3. inserción de label
@@ -1154,6 +1174,7 @@ class CUP$parser$actions {
         System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
       } else {
         setHash(id.toString());
+        RESULT = id.toString();
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
         addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), true, new TipoExpresion[] {}));
         // 3. inserción de label

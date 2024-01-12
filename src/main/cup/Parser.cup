@@ -292,12 +292,7 @@ navidad ::= funciones_bolsa_navidena
         System.out.println("Error de semantica: la funcion " + firma.getNombre() + " no tiene return valido");
       }
     }
-
-    // generar el código de salida MIPS
-    codeBuffer.append("li $v0, 10\n"); // syscall para terminar el programa
-    codeBuffer.append("syscall\n");
-
-
+  
     // escribir en el archivo de salida los 3 buffers
     try {
       File outputFile = new File(outputPath);
@@ -360,7 +355,29 @@ args_santa ::= expresion_regalo:e
   
 
 funciones_bolsa_navidena ::= funcion_ayudante_santa | funciones_bolsa_navidena funcion_ayudante_santa;
-funcion_ayudante_santa ::= def_funcion_trineo bloque_codigo_casa_jengibre | error def_funcion_trineo bloque_codigo_casa_jengibre;
+funcion_ayudante_santa ::=
+  def_funcion_trineo:d bloque_codigo_casa_jengibre 
+  {:
+    var nombre_funcion = (String)d;
+    // en el caso que la función actual es la main, después de procesarla ocupo poner
+    // el syscall de salida del programa
+    if (nombre_funcion != null && nombre_funcion.equals("main")) {
+      codeBuffer.append("li $v0, 10\n"); // syscall para terminar el programa
+      codeBuffer.append("syscall\n");
+    }
+  :}
+  | 
+  error def_funcion_trineo:d bloque_codigo_casa_jengibre
+  {:
+
+    var nombre_funcion = (String)d;
+    // en el caso que la función actual es la main, después de procesarla ocupo poner
+    // el syscall de salida del programa
+    if (nombre_funcion != null && nombre_funcion.equals("main")) {
+      codeBuffer.append("li $v0, 10\n"); // syscall para terminar el programa
+      codeBuffer.append("syscall\n");
+    }
+  :};
 // atrapa el error de statements fuera de funciones
 
 def_funcion_trineo ::= 
@@ -373,6 +390,7 @@ def_funcion_trineo ::=
       System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion main ya declarada");
     } else {
       setHash("main");
+      RESULT = "main";
       addSymbol(new SymbolTableObject("funcion", "int", "main"));
       addFirmaFuncion(new FirmaFuncion("main", TipoExpresion.INT, true, new TipoExpresion[] {}));
       // función main no tiene por qué tener return, por lo tanto lo asignamos true por defecto
@@ -396,6 +414,7 @@ def_funcion_trineo ::=
         System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
       } else {
         setHash(id.toString());
+        RESULT = id.toString();
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
         addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), true, new TipoExpresion[] {}));
         // 3. inserción de label
@@ -418,6 +437,7 @@ def_funcion_trineo ::=
         System.out.println("Error de semantica en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
       } else {
         setHash(id.toString());
+        RESULT = id.toString();
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
         addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), true, new TipoExpresion[] {}));
         // 3. inserción de label
