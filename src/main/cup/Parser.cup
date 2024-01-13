@@ -83,6 +83,23 @@ action code {:
     return TipoExpresion.NULL;
   }
 
+  public void addDireccion(String id, String dir){
+    for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
+      if (value.getNombre().equals(id)) {
+        value.setDireccion(dir);
+      }
+    }
+  }
+
+  public String getDireccion(String id){
+    for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
+      if (value.getNombre().equals(id)) {
+        return value.getDireccion();
+      }
+    }
+    return null;
+  }
+
 
   /**
   * función para cambiar el hash actual al que se le asocian los símbolos
@@ -141,8 +158,6 @@ parser code {:
     // añadir un endl al dataBuffer 
     dataBuffer.append("endl: .asciiz \"\\n\"\n");
   }
-
-
 
 
   /**
@@ -434,7 +449,7 @@ def_funcion_trineo ::=
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
         addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
         // 3. inserción de label
-        codeBuffer.append(id.toString() + ":\n");
+        codeBuffer.append("_" + id.toString() + ":\n");
       }
     }
   :}
@@ -457,7 +472,7 @@ def_funcion_trineo ::=
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
         addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
         // 3. inserción de label
-        codeBuffer.append(id.toString() + ":\n");
+        codeBuffer.append("_" + id.toString() + ":\n");
       }
     }
   :}
@@ -614,6 +629,12 @@ asignacion_adorno ::=
     }
     else {
       addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+
+      // si es una string, agregar la dirección de endl por defecto
+      if (t.toString() == "string") {
+        addDireccion(id.toString(), "endl");
+      }
+
     }
 
   :} 
@@ -640,12 +661,23 @@ asignacion_adorno ::=
     }
   :}
   | // local int a[1]|
-  local_dulce t_santa:t id_persona:id assign_entregar expresion_regalo 
+  local_dulce t_santa:t id_persona:id assign_entregar expresion_regalo:e
   {:
     if (getTipo(id.toString(), false) != TipoExpresion.NULL) {
       System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
     } else {
-      addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+
+      var expr = (Expresion)e;
+      if (expr.getTipo() != Expresion.tipoFromString(t.toString())) {
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una variable de tipo " + t.toString());
+      }
+      else {
+        addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+        // si es una string, agregar la dirección de la expresión 
+        if (t.toString() == "string") {
+          addDireccion(id.toString(), expr.getDireccion());
+        }
+      }
     }
 
   :}
@@ -693,7 +725,20 @@ asignacion_adorno ::=
   asignacion_existente_nieve; // si ya existe la variable, no se agrega a la tabla de simbolos
 
 asignacion_existente_nieve ::=
-  id_persona assign_entregar expresion_regalo| // a <= 1|
+  id_persona:id assign_entregar expresion_regalo:e {:
+    var expr = (Expresion)e;
+    var tipoId = getTipo(id.toString(), true);
+    if (tipoId != expr.getTipo()) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una variable de tipo " + tipoId.toString());
+    }
+    else {
+      // si es una string, agregar la dirección de la expresión 
+      if (tipoId == TipoExpresion.STRING) {
+        addDireccion(id.toString(), expr.getDireccion());
+      }
+    }
+  
+  :}| // a <= 1|
   elemento_arreglo_juguete assign_entregar expresion_regalo; // a[1] <= 1|
 
 expresion_regalo ::=
@@ -704,7 +749,7 @@ expresion_regalo ::=
   | 
   id_persona:id
   {:
-    RESULT = new Expresion(id.toString(), getTipo(id.toString(), true));
+    RESULT = new Expresion(id.toString(), getTipo(id.toString(), true), getDireccion(id.toString()));
   :}
   | 
   elemento_arreglo_juguete:eaj

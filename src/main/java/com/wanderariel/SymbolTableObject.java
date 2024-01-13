@@ -4,6 +4,7 @@ public class SymbolTableObject {
     private String tipoEntrada; // Tipo de entrada
     private String tipoDato; // Tipo de dato
     private String nombre; // Nombre de la variable
+    private String direccion; // Direccion de la variable (opcional)
 
     public String getNombre() {
         return nombre; 
@@ -18,6 +19,14 @@ public class SymbolTableObject {
 
     public String getTipoEntrada() {
         return tipoEntrada;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion; 
     }
 
     /** Constructor de la clase SymbolTableObject

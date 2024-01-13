@@ -638,8 +638,6 @@ public class parser extends java_cup.runtime.lr_parser {
   }
 
 
-
-
   /**
   * Constructor de la clase parser
   * entrada: un lexer
@@ -762,6 +760,23 @@ class CUP$parser$actions {
       System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + nombre + " no declarada en el alcance actual");
     }
     return TipoExpresion.NULL;
+  }
+
+  public void addDireccion(String id, String dir){
+    for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
+      if (value.getNombre().equals(id)) {
+        value.setDireccion(dir);
+      }
+    }
+  }
+
+  public String getDireccion(String id){
+    for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
+      if (value.getNombre().equals(id)) {
+        return value.getDireccion();
+      }
+    }
+    return null;
   }
 
 
@@ -1156,7 +1171,7 @@ class CUP$parser$actions {
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
         addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
         // 3. inserción de label
-        codeBuffer.append(id.toString() + ":\n");
+        codeBuffer.append("_" + id.toString() + ":\n");
       }
     }
   
@@ -1194,7 +1209,7 @@ class CUP$parser$actions {
         addSymbol(new SymbolTableObject("funcion", tipo.toString(), id.toString()));
         addFirmaFuncion(new FirmaFuncion(id.toString(), Expresion.tipoFromString(tipo.toString()), false, new TipoExpresion[] {}));
         // 3. inserción de label
-        codeBuffer.append(id.toString() + ":\n");
+        codeBuffer.append("_" + id.toString() + ":\n");
       }
     }
   
@@ -1655,6 +1670,12 @@ class CUP$parser$actions {
     }
     else {
       addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+
+      // si es una string, agregar la dirección de endl por defecto
+      if (t.toString() == "string") {
+        addDireccion(id.toString(), "endl");
+      }
+
     }
 
   
@@ -1712,11 +1733,25 @@ class CUP$parser$actions {
 		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     if (getTipo(id.toString(), false) != TipoExpresion.NULL) {
       System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
     } else {
-      addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+
+      var expr = (Expresion)e;
+      if (expr.getTipo() != Expresion.tipoFromString(t.toString())) {
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una variable de tipo " + t.toString());
+      }
+      else {
+        addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+        // si es una string, agregar la dirección de la expresión 
+        if (t.toString() == "string") {
+          addDireccion(id.toString(), expr.getDireccion());
+        }
+      }
     }
 
   
@@ -1798,7 +1833,26 @@ class CUP$parser$actions {
           case 64: // asignacion_existente_nieve ::= id_persona assign_entregar expresion_regalo 
             {
               Object RESULT =null;
-
+		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    var expr = (Expresion)e;
+    var tipoId = getTipo(id.toString(), true);
+    if (tipoId != expr.getTipo()) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una variable de tipo " + tipoId.toString());
+    }
+    else {
+      // si es una string, agregar la dirección de la expresión 
+      if (tipoId == TipoExpresion.STRING) {
+        addDireccion(id.toString(), expr.getDireccion());
+      }
+    }
+  
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("asignacion_existente_nieve",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1834,7 +1888,7 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    RESULT = new Expresion(id.toString(), getTipo(id.toString(), true));
+    RESULT = new Expresion(id.toString(), getTipo(id.toString(), true), getDireccion(id.toString()));
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

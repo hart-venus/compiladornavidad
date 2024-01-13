@@ -1,11 +1,15 @@
 function int main() {
-    local char c <= 'c'|
-    @ local string holamundo <= "Hola mundo"|
-    print("Hello World y ", c, "hola")|
-    print("Adios mundo")|
-    print(holamundo)|
+
+    local string x <= "Hola mundo"|
+    
+    print(x)|
+
+    x <= "Adios mundo"|
+
+    print(x, "pero", x)|
 }
 
 function int add(int a, int b) {
-    local int d| 
+    local int d[4]|
+    return d| 
 }
