@@ -6,3 +6,4 @@
 | add   | local       | d      | int[]    |
 | main  | funcion     | main   | int      |
 | main  | local       | x      | string   |
+| main  | local       | y      | string   |

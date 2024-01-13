@@ -693,9 +693,27 @@ class CUP$parser$actions {
   HashMap<String, ArrayList<SymbolTableObject>> tablasSimbolos = new HashMap<String, ArrayList<SymbolTableObject>>();
   String currentHash = "";
   ArrayList<FirmaFuncion> firmasFunciones = new ArrayList<FirmaFuncion>();
+  ArrayList<String> registrosSinUsar = new ArrayList<String>(Arrays.asList("$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
+
+  public void refrescarRegistros() {
+    registrosSinUsar = new ArrayList<String>(Arrays.asList("$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
+  }
+
+  int currSize = 0; // cual es el tamaño de la tabla de simbolos actual
 
   public void addFirmaFuncion(FirmaFuncion firma) {
     firmasFunciones.add(firma);
+  }
+
+  public String getUnoccupiedRegister() {
+    
+    if (registrosSinUsar.size() == 0) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "No hay registros disponibles");
+      return "$t0";
+    }
+    var reg = registrosSinUsar.get(0);
+    registrosSinUsar.remove(0);
+    return reg;
   }
 
   public FirmaFuncion encontrarFuncion(String id) {
@@ -1012,9 +1030,11 @@ class CUP$parser$actions {
     dataBuffer.append(strId + ": .asciiz \"" + str + "\"\n");
 
     ++literalId;
-
-
-    RESULT = new Expresion(l, TipoExpresion.STRING, strId);
+    // conseguir registro disponible
+    var reg = getUnoccupiedRegister();
+    // mover la dirección del string al registro
+    codeBuffer.append("la " + reg + ", " + strId + "\n");
+    RESULT = new Expresion(l, TipoExpresion.STRING, reg);
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1452,7 +1472,11 @@ class CUP$parser$actions {
       // y generar el código de acuerdo al tipo
       switch (e.getTipo()) {
         case STRING:
-          codeBuffer.append("la $a0, " + e.getDireccion() + "\n");
+          var expr = (Expresion)e;
+          // cargar el contenido de la direccion de la expresión en $a0
+          codeBuffer.append("move $a0, " + expr.getDireccion() + "\n");
+          
+          
           codeBuffer.append("jal printString\n"); 
           break;
         // default error semántico
@@ -1504,7 +1528,12 @@ class CUP$parser$actions {
           case 46: // lineas_hombre_jengibre ::= linea_hombre_jengibre 
             {
               Object RESULT =null;
-
+		 
+    // limpiar los registros sin usar
+    refrescarRegistros();
+    // añadir un enter al codigo (para depruar)
+    codeBuffer.append("\n");
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("lineas_hombre_jengibre",11, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1513,7 +1542,12 @@ class CUP$parser$actions {
           case 47: // lineas_hombre_jengibre ::= lineas_hombre_jengibre linea_hombre_jengibre 
             {
               Object RESULT =null;
-
+		
+    // limpiar los registros sin usar
+    refrescarRegistros();
+    // añadir un enter al codigo (para depruar)
+    codeBuffer.append("\n");
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("lineas_hombre_jengibre",11, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1671,9 +1705,11 @@ class CUP$parser$actions {
     else {
       addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
 
-      // si es una string, agregar la dirección de endl por defecto
+      // si es una string, agregar el valor de endl por defecto.
       if (t.toString() == "string") {
-        addDireccion(id.toString(), "endl");
+        addDireccion(id.toString(), String.valueOf(currSize) + "($sp)");
+        currSize += 4;
+        codeBuffer.append("la $t0, endl\n");
       }
 
     }
@@ -1747,9 +1783,15 @@ class CUP$parser$actions {
       }
       else {
         addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
-        // si es una string, agregar la dirección de la expresión 
+        // si es una string, mover la dirección del string a la variable
         if (t.toString() == "string") {
-          addDireccion(id.toString(), expr.getDireccion());
+          addDireccion(id.toString(), String.valueOf(currSize) + "($sp)");
+          currSize += 4;
+          // conseguir la dirección del id 
+          var dir = getDireccion(id.toString());
+          // mover el valor de la expresión a la dirección del id
+          codeBuffer.append("move $t0, " + expr.getDireccion() + "\n");
+          codeBuffer.append("sw $t0, " + dir + "\n");
         }
       }
     }
@@ -1848,7 +1890,11 @@ class CUP$parser$actions {
     else {
       // si es una string, agregar la dirección de la expresión 
       if (tipoId == TipoExpresion.STRING) {
-        addDireccion(id.toString(), expr.getDireccion());
+        // conseguir la dirección del id 
+        var dir = getDireccion(id.toString());
+        // mover el valor de la expresión a la dirección del id
+        codeBuffer.append("move $t0, " + expr.getDireccion() + "\n");
+        codeBuffer.append("sw $t0, " + dir + "\n");
       }
     }
   
@@ -1888,7 +1934,11 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    RESULT = new Expresion(id.toString(), getTipo(id.toString(), true), getDireccion(id.toString()));
+    // cargar el valor de la variable en un registro
+    var dir = getDireccion(id.toString());
+    var registro = getUnoccupiedRegister();
+    codeBuffer.append("lw " + registro + ", " + dir + "\n");
+    RESULT = new Expresion(id.toString(), getTipo(id.toString(), true), registro);
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

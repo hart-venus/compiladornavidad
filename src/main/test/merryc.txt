@@ -4,9 +4,10 @@ function int main() {
     
     print(x)|
 
-    x <= "Adios mundo"|
+    x <= "Adios mundo, "|
+    local string y <= "hola Marte."| @ err semantico
 
-    print(x, "pero", x)|
+    print(x, "pero, ", y)|
 }
 
 function int add(int a, int b) {
