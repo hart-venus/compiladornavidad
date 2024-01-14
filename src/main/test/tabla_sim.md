@@ -6,3 +6,5 @@
 | main  | local       | y      | int      |
 | main  | local       | c      | string   |
 | main  | local       | d      | string   |
+| main  | local       | x      | int      |
+| main  | local       | z      | int      |

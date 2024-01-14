@@ -1497,14 +1497,17 @@ class CUP$parser$actions {
         case STRING:
           // cargar el contenido de la direccion de la expresión en $a0
           codeBuffer.append("move $a0, " + e.getDireccion() + "\n");
-          codeBuffer.append("jal printString\n"); 
+          codeBuffer.append("li $v0, 4\n");
+          codeBuffer.append("syscall\n");
+
           break;
 
         case INT:
           // cargar el contenido de la expresión en $a0
           // recordar que e.getDireccion() es el registro donde está el valor
           codeBuffer.append("move $a0, " + e.getDireccion() + "\n");
-          codeBuffer.append("jal printInt\n");
+          codeBuffer.append("li $v0, 1\n");
+          codeBuffer.append("syscall\n");
           break;
         // default error semántico
         default:
@@ -1514,7 +1517,8 @@ class CUP$parser$actions {
     }
     // después de imprimir todos los argumentos, imprimir un enter
     codeBuffer.append("la $a0, endl\n");
-    codeBuffer.append("jal printString\n");
+    codeBuffer.append("li $v0, 4\n");
+    codeBuffer.append("syscall\n");
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("llamada_func_pino",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1527,7 +1531,8 @@ class CUP$parser$actions {
 		
     // generación de código de print endl 
     codeBuffer.append("la $a0, endl\n");
-    codeBuffer.append("jal printString\n"); 
+    codeBuffer.append("li $v0, 4\n");
+    codeBuffer.append("syscall\n");
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("llamada_func_pino",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2228,7 +2233,37 @@ class CUP$parser$actions {
           case 78: // expr_ar_regaloprin ::= expresion_regalo op_mod_rayo expresion_regalo 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    var a_expr = (Expresion)a;
+    var b_expr = (Expresion)b;
 
+    var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
+    var tipo_res = validarTipado("~", a_expr, b_expr, arraylist_tipos_validos);
+  
+    switch(tipo_res) {
+      case INT:
+        var reg = getUnoccupiedRegister();
+        // limpiar reg
+        codeBuffer.append("li " + reg + ", 0\n");
+        // dividir a_expr y b_expr
+        codeBuffer.append("div " + a_expr.getDireccion() + ", " + b_expr.getDireccion() + "\n");
+        // guardar el resultado en reg
+        codeBuffer.append("mfhi " + reg + "\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " ~ " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
+        break;
+
+      default:
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+    }
+  
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_ar_regaloprin",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -2237,7 +2272,45 @@ class CUP$parser$actions {
           case 79: // expr_ar_regaloprin ::= expresion_regalo op_pow_travieso expresion_regalo 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    var a_expr = (Expresion)a;
+    var b_expr = (Expresion)b;
 
+    var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
+    var tipo_res = validarTipado("**", a_expr, b_expr, arraylist_tipos_validos);
+
+    switch (tipo_res) {
+      case INT:
+        var reg = getUnoccupiedRegister();
+        // 1. meter los datos a $a0 y $a1
+        codeBuffer.append("move $a0, " + a_expr.getDireccion() + "\n");
+        codeBuffer.append("move $a1, " + b_expr.getDireccion() + "\n");
+        // 2. guardar mi $ra en la pila para no sobreescribirlo
+        // al llamar la función
+        codeBuffer.append("addi $sp, $sp, -4\n");
+        codeBuffer.append("sw $ra, 0($sp)\n");
+        // 3. llamar a la función
+        codeBuffer.append("jal expInt\n");
+        // 4. meter el resultado en reg
+        codeBuffer.append("move " + reg + ", $v0\n");
+        // 5. recuperar $ra de la pila
+        codeBuffer.append("lw $ra, 0($sp)\n");
+        codeBuffer.append("addi $sp, $sp, 4\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " ** " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
+        break;
+
+      default:
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+    }
+  
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_ar_regaloprin",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
