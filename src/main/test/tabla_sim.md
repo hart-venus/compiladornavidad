@@ -1,9 +1,7 @@
 | Tabla | TipoEntrada | Nombre | TipoDato |
 | ----- | ----------- | ------ | -------- |
-| add   | funcion     | add    | int      |
-| add   | parametro   | a      | int      |
-| add   | parametro   | b      | int      |
-| add   | local       | d      | int[]    |
 | main  | funcion     | main   | int      |
-| main  | local       | x      | string   |
-| main  | local       | y      | string   |
+| main  | local       | a      | int      |
+| main  | local       | b      | int      |
+| main  | local       | some   | string   |
+| main  | local       | body   | string   |

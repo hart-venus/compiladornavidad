@@ -1,16 +1,14 @@
-function int main() {
+function int main(){ 
+    local int a <= 2|
+    local int b| 
+    local string some|
+    local string body <= "y Adios mundo"|
 
-    local string x <= "Hola mundo"|
-    
-    print(x)|
 
-    x <= "Adios mundo, "|
-    local string y <= "hola Marte."| @ err semantico
+    print(some)|
 
-    print(x, "pero, ", y)|
-}
-
-function int add(int a, int b) {
-    local int d[4]|
-    return d| 
+    some <= "Hola mundo "|
+    print(some, body, " once told me ", a, 0.6)|
+    a <= 3|
+    print(a, b)|
 }

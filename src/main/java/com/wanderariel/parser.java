@@ -961,7 +961,13 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = new Expresion(l, TipoExpresion.INT); 
+		
+    // conseguir registro disponible
+    var reg = getUnoccupiedRegister();
+    // mover el valor del literal al registro
+    codeBuffer.append("li " + reg + ", " + l + "\n");
+    RESULT = new Expresion(l, TipoExpresion.INT, reg); 
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1472,12 +1478,16 @@ class CUP$parser$actions {
       // y generar el código de acuerdo al tipo
       switch (e.getTipo()) {
         case STRING:
-          var expr = (Expresion)e;
           // cargar el contenido de la direccion de la expresión en $a0
-          codeBuffer.append("move $a0, " + expr.getDireccion() + "\n");
-          
-          
+          codeBuffer.append("move $a0, " + e.getDireccion() + "\n");
           codeBuffer.append("jal printString\n"); 
+          break;
+
+        case INT:
+          // cargar el contenido de la expresión en $a0
+          // recordar que e.getDireccion() es el registro donde está el valor
+          codeBuffer.append("move $a0, " + e.getDireccion() + "\n");
+          codeBuffer.append("jal printInt\n");
           break;
         // default error semántico
         default:
@@ -1704,12 +1714,19 @@ class CUP$parser$actions {
     }
     else {
       addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
-
+      addDireccion(id.toString(), String.valueOf(currSize) + "($sp)");
+      currSize += 4;
       // si es una string, agregar el valor de endl por defecto.
       if (t.toString() == "string") {
-        addDireccion(id.toString(), String.valueOf(currSize) + "($sp)");
-        currSize += 4;
-        codeBuffer.append("la $t0, endl\n");
+        var reg = getUnoccupiedRegister();
+        codeBuffer.append("la " + reg + ", endl\n");
+        codeBuffer.append("sw " + reg + ", " + getDireccion(id.toString()) + "\n");
+      }
+      // si es un int, agregar 0 por defecto.
+      if (t.toString() == "int") {
+        var reg = getUnoccupiedRegister();
+        codeBuffer.append("li " + reg + ", 0\n");
+        codeBuffer.append("sw " + reg + ", " + getDireccion(id.toString()) + "\n");
       }
 
     }
@@ -1783,15 +1800,22 @@ class CUP$parser$actions {
       }
       else {
         addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
+        addDireccion(id.toString(), String.valueOf(currSize) + "($sp)");
+        currSize += 4;
         // si es una string, mover la dirección del string a la variable
         if (t.toString() == "string") {
-          addDireccion(id.toString(), String.valueOf(currSize) + "($sp)");
-          currSize += 4;
+
           // conseguir la dirección del id 
           var dir = getDireccion(id.toString());
           // mover el valor de la expresión a la dirección del id
-          codeBuffer.append("move $t0, " + expr.getDireccion() + "\n");
-          codeBuffer.append("sw $t0, " + dir + "\n");
+          var reg = getUnoccupiedRegister();
+          codeBuffer.append("move " + reg + ", " + expr.getDireccion() + "\n");
+          codeBuffer.append("sw " + reg + ", " + dir + "\n");
+        } else {
+          // mover e.getDireccion() (registro en el que está almacenado el literal)
+          // hacia la dirección del id
+          var dir = getDireccion(id.toString());
+          codeBuffer.append("sw " + expr.getDireccion() + ", " + dir + "\n");
         }
       }
     }
@@ -1893,8 +1917,19 @@ class CUP$parser$actions {
         // conseguir la dirección del id 
         var dir = getDireccion(id.toString());
         // mover el valor de la expresión a la dirección del id
-        codeBuffer.append("move $t0, " + expr.getDireccion() + "\n");
-        codeBuffer.append("sw $t0, " + dir + "\n");
+        var reg = getUnoccupiedRegister();
+
+        codeBuffer.append("move " + reg + ", " + expr.getDireccion() + "\n");
+        codeBuffer.append("sw " + reg + ", " + dir + "\n");
+      }
+
+      // si es un int, agregar el valor de la expresión 
+      if (tipoId == TipoExpresion.INT) {
+        var dir = getDireccion(id.toString());
+        var reg = getUnoccupiedRegister();
+
+        codeBuffer.append("move " + reg + ", " + expr.getDireccion() + "\n");
+        codeBuffer.append("sw " + reg + ", " + dir + "\n");
       }
     }
   

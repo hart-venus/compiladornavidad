@@ -1,0 +1,16 @@
+function int main() {
+
+    local string x <= "Hola mundo"|
+    
+    print(x)|
+
+    x <= "Adios mundo, "|
+    local string y <= "hola Marte."| 
+
+    print(x, "pero, ", y)|
+}
+
+function int add(int a, int b) {
+    local int d[4]|
+    return d| 
+}

@@ -16,3 +16,9 @@ printString:
     li $v0, 4  # print_string syscall
     syscall
     jr $ra
+
+printInt:
+    li $v0, 1  # print_int syscall
+    syscall
+    li $v0, 4  # print_string syscall
+    jr $ra
