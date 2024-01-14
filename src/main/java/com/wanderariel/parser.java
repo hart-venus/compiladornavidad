@@ -651,6 +651,7 @@ public class parser extends java_cup.runtime.lr_parser {
     dataBuffer.append(".data\n");
     // añadir un endl al dataBuffer 
     dataBuffer.append("endl: .asciiz \"\\n\"\n");
+    dataBuffer.append("fzero: .float 0.0\n");
   }
 
 
@@ -1796,6 +1797,12 @@ class CUP$parser$actions {
         codeBuffer.append("li " + reg + ", 0\n");
         codeBuffer.append("sw " + reg + ", " + getDireccion(id.toString()) + "\n");
       }
+      // si es un float, agregar 0.0 por defecto.
+      if (t.toString() == "float") {
+        var reg = getUnoccupiedRegister();
+        codeBuffer.append("lw " + reg + ", fzero\n");
+        codeBuffer.append("sw " + reg + ", " + getDireccion(id.toString()) + "\n");
+      }
 
     }
 
@@ -2128,20 +2135,28 @@ class CUP$parser$actions {
 		Object b = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     var a_expr = (Expresion)a;
+    var reg = getUnoccupiedRegister();
     var b_expr = (Expresion)b;
     var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
     var tipo_res = validarTipado("-", a_expr, b_expr, arraylist_tipos_validos);
 
     switch (tipo_res) {
       case INT: 
-        var reg = getUnoccupiedRegister();
         // limpiar reg
         codeBuffer.append("li " + reg + ", 0\n");
         // restar a_expr y b_expr
         codeBuffer.append("sub " + reg + ", " + a_expr.getDireccion() + ", " + b_expr.getDireccion() + "\n");
         RESULT = new Expresion(a_expr.getValor().toString() + " - " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
         break;
-
+      case FLOAT:
+        var fRegA = getUnoccupiedFloatRegister();
+        var fRegB = getUnoccupiedFloatRegister();
+        codeBuffer.append("mtc1 " + a_expr.getDireccion() + ", " + fRegA + "\n");
+        codeBuffer.append("mtc1 " + b_expr.getDireccion() + ", " + fRegB + "\n");
+        codeBuffer.append("sub.s " + fRegA + ", " + fRegA + ", " + fRegB + "\n");
+        codeBuffer.append("mfc1 " + reg + ", " + fRegA + "\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " - " + b_expr.getValor().toString(), TipoExpresion.FLOAT, reg);
+        break;
       default:
         RESULT = new Expresion("null", TipoExpresion.NULL);
         break;
@@ -2168,18 +2183,33 @@ class CUP$parser$actions {
     var b_expr = (Expresion)b;
     var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
     var tipo_res = validarTipado("+", a_expr, b_expr, arraylist_tipos_validos);
-
+    var reg = getUnoccupiedRegister();
     // switch para el tipo resultante, para finalmente pasar la direccion resultado
     // a un nuevo registro y retornar una nueva expresión
     switch (tipo_res) {
       case INT:
-        var reg = getUnoccupiedRegister();
         // limpiar reg
         codeBuffer.append("li " + reg + ", 0\n");
         // sumar a_expr y b_expr
         codeBuffer.append("add " + reg + ", " + a_expr.getDireccion() + ", " + b_expr.getDireccion() + "\n");
         RESULT = new Expresion(a_expr.getValor().toString() + " + " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
+        break;
 
+      case FLOAT:
+        // para las operaciones flotantes, como las direcciones siempre
+        // están en registros de uso general, hay que pasarlas a registros
+        // flotantes antes de hacer cualquier cosa.
+        var fRegA = getUnoccupiedFloatRegister();
+        var fRegB = getUnoccupiedFloatRegister();
+        // pasar a fReg el valor de a_expr
+        codeBuffer.append("mtc1 " + a_expr.getDireccion() + ", " + fRegA + "\n");
+        // pasar a fReg el valor de b_expr
+        codeBuffer.append("mtc1 " + b_expr.getDireccion() + ", " + fRegB + "\n");
+        // sumar a_expr y b_expr
+        codeBuffer.append("add.s " + fRegA + ", " + fRegA + ", " + fRegB + "\n");
+        // pasar el resultado a un nuevo registro de uso general
+        codeBuffer.append("mfc1 " + reg + ", " + fRegA + "\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " + " + b_expr.getValor().toString(), TipoExpresion.FLOAT, reg);        
         break;
       default:
         RESULT = new Expresion("null", TipoExpresion.NULL);
@@ -2203,12 +2233,12 @@ class CUP$parser$actions {
 		Object b = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
     var a_expr = (Expresion)a;
+    var reg = getUnoccupiedRegister();
     var b_expr = (Expresion)b;
     var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
     var tipo_res = validarTipado("/", a_expr, b_expr, arraylist_tipos_validos);
     switch (tipo_res) {
       case INT:
-        var reg = getUnoccupiedRegister();
         // limpiar reg
         codeBuffer.append("li " + reg + ", 0\n");
         // dividir a_expr y b_expr
@@ -2217,7 +2247,15 @@ class CUP$parser$actions {
         codeBuffer.append("mflo " + reg + "\n");
         RESULT = new Expresion(a_expr.getValor().toString() + " / " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
         break;
-
+      case FLOAT:
+        var fRegA = getUnoccupiedFloatRegister();
+        var fRegB = getUnoccupiedFloatRegister();
+        codeBuffer.append("mtc1 " + a_expr.getDireccion() + ", " + fRegA + "\n");
+        codeBuffer.append("mtc1 " + b_expr.getDireccion() + ", " + fRegB + "\n");
+        codeBuffer.append("div.s " + fRegA + ", " + fRegA + ", " + fRegB + "\n");
+        codeBuffer.append("mfc1 " + reg + ", " + fRegA + "\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " / " + b_expr.getValor().toString(), TipoExpresion.FLOAT, reg);
+        break;
       default:
         RESULT = new Expresion("null", TipoExpresion.NULL);
         break;
@@ -2242,20 +2280,27 @@ class CUP$parser$actions {
 		
     var a_expr = (Expresion)a;
     var b_expr = (Expresion)b;
-
+    var reg = getUnoccupiedRegister();
     var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
     var tipo_res = validarTipado("*", a_expr, b_expr, arraylist_tipos_validos);
 
     switch (tipo_res) {
       case INT:
-        var reg = getUnoccupiedRegister();
         // limpiar reg
         codeBuffer.append("li " + reg + ", 0\n");
         // multiplicar a_expr y b_expr
         codeBuffer.append("mul " + reg + ", " + a_expr.getDireccion() + ", " + b_expr.getDireccion() + "\n");
         RESULT = new Expresion(a_expr.getValor().toString() + " * " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
         break;
-
+      case FLOAT: 
+        var fRegA = getUnoccupiedFloatRegister();
+        var fRegB = getUnoccupiedFloatRegister();
+        codeBuffer.append("mtc1 " + a_expr.getDireccion() + ", " + fRegA + "\n");
+        codeBuffer.append("mtc1 " + b_expr.getDireccion() + ", " + fRegB + "\n");
+        codeBuffer.append("mul.s " + fRegA + ", " + fRegA + ", " + fRegB + "\n");
+        codeBuffer.append("mfc1 " + reg + ", " + fRegA + "\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " * " + b_expr.getValor().toString(), TipoExpresion.FLOAT, reg);
+        break;
       default:
         RESULT = new Expresion("null", TipoExpresion.NULL);
         break;
@@ -2282,9 +2327,9 @@ class CUP$parser$actions {
     var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
     var tipo_res = validarTipado("~", a_expr, b_expr, arraylist_tipos_validos);
   
+    var reg = getUnoccupiedRegister();
     switch(tipo_res) {
       case INT:
-        var reg = getUnoccupiedRegister();
         // limpiar reg
         codeBuffer.append("li " + reg + ", 0\n");
         // dividir a_expr y b_expr
@@ -2293,7 +2338,22 @@ class CUP$parser$actions {
         codeBuffer.append("mfhi " + reg + "\n");
         RESULT = new Expresion(a_expr.getValor().toString() + " ~ " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
         break;
-
+      case FLOAT:
+        codeBuffer.append("move $a0, " + a_expr.getDireccion() + "\n");
+        codeBuffer.append("move $a1, " + b_expr.getDireccion() + "\n");
+        // 2. guardar mi $ra en la pila para no sobreescribirlo
+        // al llamar la función
+        codeBuffer.append("addi $sp, $sp, -4\n");
+        codeBuffer.append("sw $ra, 0($sp)\n");
+        // 3. llamar a la función
+        codeBuffer.append("jal moduloFloat\n");
+        // 4. meter el resultado en reg
+        codeBuffer.append("move " + reg + ", $v0\n");
+        // 5. recuperar $ra de la pila
+        codeBuffer.append("lw $ra, 0($sp)\n");
+        codeBuffer.append("addi $sp, $sp, 4\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " ~ " + b_expr.getValor().toString(), TipoExpresion.FLOAT, reg);
+        break;
       default:
         RESULT = new Expresion("null", TipoExpresion.NULL);
         break;
