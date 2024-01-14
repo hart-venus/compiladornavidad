@@ -724,8 +724,11 @@ class CUP$parser$actions {
   public String getUnoccupiedRegister() {
     
     if (registrosSinUsar.size() == 0) {
-      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "No hay registros disponibles");
-      return "$t0";
+
+      System.out.println("Refrescando debido a falta de registros");
+      // workaround temporal: refrescar registros
+      refrescarRegistros();
+      return getUnoccupiedRegister();
     }
     var reg = registrosSinUsar.get(0);
     registrosSinUsar.remove(0);
@@ -2153,7 +2156,36 @@ class CUP$parser$actions {
           case 76: // expr_ar_regaloprin ::= expresion_regalo op_div_bailarin expresion_regalo 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    var a_expr = (Expresion)a;
+    var b_expr = (Expresion)b;
+    var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
+    var tipo_res = validarTipado("/", a_expr, b_expr, arraylist_tipos_validos);
+    switch (tipo_res) {
+      case INT:
+        var reg = getUnoccupiedRegister();
+        // limpiar reg
+        codeBuffer.append("li " + reg + ", 0\n");
+        // dividir a_expr y b_expr
+        codeBuffer.append("div " + a_expr.getDireccion() + ", " + b_expr.getDireccion() + "\n");
+        // guardar el resultado en reg
+        codeBuffer.append("mflo " + reg + "\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " / " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
+        break;
 
+      default:
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+    }
+  
+  
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_ar_regaloprin",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -2162,7 +2194,34 @@ class CUP$parser$actions {
           case 77: // expr_ar_regaloprin ::= expresion_regalo op_mul_cometa expresion_regalo 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    var a_expr = (Expresion)a;
+    var b_expr = (Expresion)b;
 
+    var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
+    var tipo_res = validarTipado("*", a_expr, b_expr, arraylist_tipos_validos);
+
+    switch (tipo_res) {
+      case INT:
+        var reg = getUnoccupiedRegister();
+        // limpiar reg
+        codeBuffer.append("li " + reg + ", 0\n");
+        // multiplicar a_expr y b_expr
+        codeBuffer.append("mul " + reg + ", " + a_expr.getDireccion() + ", " + b_expr.getDireccion() + "\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " * " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
+        break;
+
+      default:
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+    }
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_ar_regaloprin",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

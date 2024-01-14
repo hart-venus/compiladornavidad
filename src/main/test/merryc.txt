@@ -15,4 +15,8 @@ function int main(){
     local int d <= 1 - a + 24| @ 8
     print(d - -16)| @ 24
 
+    @ tests de precedencia de operandos
+
+    print(1 + 10/2) | @ 6 no 5
+    print(1+2*3) | @ 7 no 9
 }
