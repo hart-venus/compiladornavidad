@@ -1,22 +1,23 @@
 function int main(){ 
     
-    local int a <= 1|
-    local int b <= 2|
+    local int a| 
+    print(a)|
 
-    print(a+b+4)| @ 7
+    a <= 1| 
+    print(a)|
+    a <= 2| 
 
-    local int c <= a+b|
-    a <= 17|
+    a <= a * a * 3|
+    print(a)|
 
-    print(c)| @ 3
-    print(c+a,c+a+4)| @ 20 
+    local int b <= 6|
+    print(b * 7, 32)|
 
+    local int y <= a * b|
+    print(y)|
 
-    local int d <= 1 - a + 24| @ 8
-    print(d - -16)| @ 24
+    local string c <= "hello"|
+    local string d <= " world"|
+    print(c, d)|
 
-    @ tests de precedencia de operandos
-
-    print(1 + 10/2) | @ 6 no 5
-    print(1+2*3) | @ 7 no 9
 }

@@ -706,7 +706,8 @@ class CUP$parser$actions {
   * restricciones: ninguna
   * objetivo: imprimir en consola
   */
-  HashMap<String, ArrayList<SymbolTableObject>> tablasSimbolos = new HashMap<String, ArrayList<SymbolTableObject>>();
+  HashMap<String, SymbolTable> tablasSimbolos = new HashMap<String, SymbolTable>();
+
   String currentHash = "";
   ArrayList<FirmaFuncion> firmasFunciones = new ArrayList<FirmaFuncion>();
   ArrayList<String> registrosSinUsar = new ArrayList<String>(Arrays.asList("$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
@@ -714,8 +715,6 @@ class CUP$parser$actions {
   public void refrescarRegistros() {
     registrosSinUsar = new ArrayList<String>(Arrays.asList("$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
   }
-
-  int currSize = 0; // cual es el tamaño de la tabla de simbolos actual
 
   public void addFirmaFuncion(FirmaFuncion firma) {
     firmasFunciones.add(firma);
@@ -758,12 +757,9 @@ class CUP$parser$actions {
   */
   public void imprimirTablaSimbolos() {
     for (String key : tablasSimbolos.keySet()) {
-      System.out.println("Tabla de simbolo : " + key);
-      System.out.println("Valores : ");
-      for (SymbolTableObject value : tablasSimbolos.get(key)) {
-        System.out.println(value.toString());
-      }
-      System.out.println();
+      System.out.println("Tabla: " + key);
+      var val = tablasSimbolos.get(key);
+      val.imprimirTablaSimbolos();
     }
   }
 
@@ -771,10 +767,12 @@ class CUP$parser$actions {
     List<String[]> data = new ArrayList<String[]>();
     data.add(new String[] {"Tabla", "TipoEntrada", "Nombre", "TipoDato"});
     for (String key : tablasSimbolos.keySet()) {
-      for (SymbolTableObject value : tablasSimbolos.get(key)) {
-        data.add(new String[] {key, value.getTipoEntrada(), value.getNombre(), value.getTipoDato()});
+      var value = tablasSimbolos.get(key);
+      for (SymbolTableObject value2 : value.getSymbolTable()) {
+        data.add(new String[] {key, value2.getTipoEntrada(), value2.getNombre(), value2.getTipoDato()});
       }
     }
+    
     MarkdownTablePrinter tablePrinter = new MarkdownTablePrinter(data, "src/main/test/tabla_sim.md");
     tablePrinter.print();
     System.out.println("Tabla de simbolos exportada a tabla_sim.md");
@@ -788,7 +786,7 @@ class CUP$parser$actions {
   * objetivo: conseguir el tipo de un símbolo en la tabla de símbolos actual
   */
   public TipoExpresion getTipo(String nombre, boolean picarError) {
-    for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
+    for (SymbolTableObject value : tablasSimbolos.get(currentHash).getSymbolTable()) {
       if (value.getNombre().equals(nombre)) {
         return Expresion.tipoFromString(value.getTipoDato());
       }
@@ -800,7 +798,7 @@ class CUP$parser$actions {
   }
 
   public void addDireccion(String id, String dir){
-    for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
+    for (SymbolTableObject value : tablasSimbolos.get(currentHash).getSymbolTable()) {
       if (value.getNombre().equals(id)) {
         value.setDireccion(dir);
       }
@@ -808,7 +806,7 @@ class CUP$parser$actions {
   }
 
   public String getDireccion(String id){
-    for (SymbolTableObject value : tablasSimbolos.get(currentHash)) {
+    for (SymbolTableObject value : tablasSimbolos.get(currentHash).getSymbolTable()) {
       if (value.getNombre().equals(id)) {
         return value.getDireccion();
       }
@@ -826,7 +824,7 @@ class CUP$parser$actions {
   */
   public void setHash(String hash) {
     currentHash = hash;
-    tablasSimbolos.put(hash, new ArrayList<SymbolTableObject>());
+    tablasSimbolos.put(hash, new SymbolTable());
   }
   /**
   * función para agregar un símbolo a la tabla de símbolos
@@ -836,7 +834,7 @@ class CUP$parser$actions {
   * objetivo: agregar un símbolo a la tabla de símbolos
   */
   public void addSymbol(SymbolTableObject symbol) {
-    tablasSimbolos.get(currentHash).add(symbol);
+    tablasSimbolos.get(currentHash).getSymbolTable().add(symbol);
   }
 
   private final parser parser;
@@ -1733,8 +1731,8 @@ class CUP$parser$actions {
     }
     else {
       addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
-      addDireccion(id.toString(), String.valueOf(currSize) + "($sp)");
-      currSize += 4;
+      addDireccion(id.toString(), String.valueOf(tablasSimbolos.get(currentHash).getCurrentSize()) + "($sp)");
+      tablasSimbolos.get(currentHash).increaseSize(4);
       // si es una string, agregar el valor de endl por defecto.
       if (t.toString() == "string") {
         var reg = getUnoccupiedRegister();
@@ -1819,8 +1817,8 @@ class CUP$parser$actions {
       }
       else {
         addSymbol(new SymbolTableObject("local", t.toString(), id.toString()));
-        addDireccion(id.toString(), String.valueOf(currSize) + "($sp)");
-        currSize += 4;
+        addDireccion(id.toString(), String.valueOf(tablasSimbolos.get(currentHash).getCurrentSize()) + "($sp)");
+        tablasSimbolos.get(currentHash).increaseSize(4);
         // si es una string, mover la dirección del string a la variable
         if (t.toString() == "string") {
 

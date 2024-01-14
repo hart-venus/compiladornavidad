@@ -1,21 +1,59 @@
 .data
 endl: .asciiz "\n"
+str0: .asciiz "hello"
+str1: .asciiz " world"
 .text
 main:
-li $t1, 1
+li $t1, 0
 sw $t1, 0($sp)
 
-li $t1, 2
-sw $t1, 4($sp)
+lw $t1, 0($sp)
+move $a0, $t1
+jal printInt
+la $a0, endl
+jal printString
+
+li $t1, 1
+move $t2, $t1
+sw $t2, 0($sp)
 
 lw $t1, 0($sp)
-lw $t2, 4($sp)
+move $a0, $t1
+jal printInt
+la $a0, endl
+jal printString
+
+li $t1, 2
+move $t2, $t1
+sw $t2, 0($sp)
+
+lw $t1, 0($sp)
+lw $t2, 0($sp)
 li $t3, 0
-add $t3, $t1, $t2
-li $t4, 4
+mul $t3, $t1, $t2
+li $t4, 3
 li $t5, 0
-add $t5, $t3, $t4
-move $a0, $t5
+mul $t5, $t3, $t4
+move $t6, $t5
+sw $t6, 0($sp)
+
+lw $t1, 0($sp)
+move $a0, $t1
+jal printInt
+la $a0, endl
+jal printString
+
+li $t1, 6
+sw $t1, 4($sp)
+
+lw $t1, 4($sp)
+li $t2, 7
+li $t3, 0
+mul $t3, $t1, $t2
+li $t4, 32
+move $a0, $t3
+jal printInt
+move $a0, $t4
 jal printInt
 la $a0, endl
 jal printString
@@ -23,12 +61,8 @@ jal printString
 lw $t1, 0($sp)
 lw $t2, 4($sp)
 li $t3, 0
-add $t3, $t1, $t2
+mul $t3, $t1, $t2
 sw $t3, 8($sp)
-
-li $t1, 17
-move $t2, $t1
-sw $t2, 0($sp)
 
 lw $t1, 8($sp)
 move $a0, $t1
@@ -36,64 +70,20 @@ jal printInt
 la $a0, endl
 jal printString
 
-lw $t1, 8($sp)
-lw $t2, 0($sp)
-li $t3, 0
-add $t3, $t1, $t2
-lw $t4, 8($sp)
-lw $t5, 0($sp)
-li $t6, 0
-add $t6, $t4, $t5
-li $t7, 4
-li $t8, 0
-add $t8, $t6, $t7
-move $a0, $t3
-jal printInt
-move $a0, $t8
-jal printInt
-la $a0, endl
-jal printString
+la $t1, str0
+move $t2, $t1
+sw $t2, 12($sp)
 
-li $t1, 1
-lw $t2, 0($sp)
-li $t3, 0
-sub $t3, $t1, $t2
-li $t4, 24
-li $t5, 0
-add $t5, $t3, $t4
-sw $t5, 12($sp)
+la $t1, str1
+move $t2, $t1
+sw $t2, 16($sp)
 
 lw $t1, 12($sp)
-li $t2, -16
-li $t3, 0
-sub $t3, $t1, $t2
-move $a0, $t3
-jal printInt
-la $a0, endl
+lw $t2, 16($sp)
+move $a0, $t1
 jal printString
-
-li $t1, 1
-li $t2, 10
-li $t3, 2
-li $t4, 0
-div $t2, $t3
-mflo $t4
-li $t5, 0
-add $t5, $t1, $t4
-move $a0, $t5
-jal printInt
-la $a0, endl
+move $a0, $t2
 jal printString
-
-li $t1, 1
-li $t2, 2
-li $t3, 3
-li $t4, 0
-mul $t4, $t2, $t3
-li $t5, 0
-add $t5, $t1, $t4
-move $a0, $t5
-jal printInt
 la $a0, endl
 jal printString
 
