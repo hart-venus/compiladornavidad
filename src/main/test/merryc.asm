@@ -1,57 +1,56 @@
 .data
 endl: .asciiz "\n"
-str0: .asciiz "y Adios mundo"
-str1: .asciiz "Hola mundo "
-str2: .asciiz " once told me "
 .text
 main:
-li $t1, 2
+li $t1, 1
 sw $t1, 0($sp)
 
-li $t1, 0
+li $t1, 2
 sw $t1, 4($sp)
-
-la $t1, endl
-sw $t1, 8($sp)
-
-la $t1, str0
-move $t2, $t1
-sw $t2, 12($sp)
-
-lw $t1, 8($sp)
-move $a0, $t1
-jal printString
-la $a0, endl
-jal printString
-
-la $t1, str1
-move $t2, $t1
-sw $t2, 8($sp)
-
-lw $t1, 8($sp)
-lw $t2, 12($sp)
-la $t3, str2
-lw $t4, 0($sp)
-move $a0, $t1
-jal printString
-move $a0, $t2
-jal printString
-move $a0, $t3
-jal printString
-move $a0, $t4
-jal printInt
-la $a0, endl
-jal printString
-
-li $t1, 3
-move $t2, $t1
-sw $t2, 0($sp)
 
 lw $t1, 0($sp)
 lw $t2, 4($sp)
+li $t3, 0
+add $t3, $t1, $t2
+li $t4, 4
+li $t5, 0
+add $t5, $t3, $t4
+move $a0, $t5
+jal printInt
+la $a0, endl
+jal printString
+
+lw $t1, 0($sp)
+lw $t2, 4($sp)
+li $t3, 0
+add $t3, $t1, $t2
+move $t4, $t3
+sw $t4, 4($sp)
+
+li $t1, 17
+move $t2, $t1
+sw $t2, 0($sp)
+
+lw $t1, 4($sp)
 move $a0, $t1
 jal printInt
-move $a0, $t2
+la $a0, endl
+jal printString
+
+lw $t1, 4($sp)
+lw $t2, 0($sp)
+li $t3, 0
+add $t3, $t1, $t2
+lw $t4, 4($sp)
+lw $t5, 0($sp)
+li $t6, 0
+add $t6, $t4, $t5
+li $t7, 4
+li $t8, 0
+add $t8, $t6, $t7
+move $a0, $t3
+jal printInt
+move $a0, $t8
 jal printInt
 la $a0, endl
 jal printString

@@ -1,14 +1,14 @@
 function int main(){ 
-    local int a <= 2|
-    local int b| 
-    local string some|
-    local string body <= "y Adios mundo"|
+    
+    local int a <= 1|
+    local int b <= 2|
 
+    print(a+b+4)| @ 7
 
-    print(some)|
+    b <= a+b|
+    a <= 17|
 
-    some <= "Hola mundo "|
-    print(some, body, " once told me ", a, 0.6)|
-    a <= 3|
-    print(a, b)|
+    print(b)| @ 3
+    print(b+a,b+a+4)| @ 20 
+
 }

@@ -629,6 +629,22 @@ public class parser extends java_cup.runtime.lr_parser {
     }
   }
 
+  public TipoExpresion validarTipado(String op, Expresion a, Expresion b, ArrayList<TipoExpresion> tiposValidos) {
+    // validar que los tipos de a y b sean iguales
+    if (a.getTipo() != b.getTipo()) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipos de datos " + a.getTipo().toString() + " y " + b.getTipo().toString() + " no compatibles para operacion " + op);
+      return TipoExpresion.NULL;
+    }
+    // validar que el tipo de a esté en la lista de tipos validos
+    if (!tiposValidos.contains(a.getTipo())) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + a.getTipo().toString() + " no valido para operacion " + op);
+      return TipoExpresion.NULL;
+    }
+
+    return a.getTipo();
+  }
+
+
   public void inicializarBuffers(){
     // carga los buffer codeBuffer y dataBuffer con .text y .data
     codeBuffer.append(".text\n");
@@ -1969,11 +1985,16 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    // cargar el valor de la variable en un registro
-    var dir = getDireccion(id.toString());
-    var registro = getUnoccupiedRegister();
-    codeBuffer.append("lw " + registro + ", " + dir + "\n");
-    RESULT = new Expresion(id.toString(), getTipo(id.toString(), true), registro);
+    // validar que existe la variable
+    if (getTipo(id.toString(), true) != TipoExpresion.NULL) {
+      // cargar el valor de la variable en un registro
+      var dir = getDireccion(id.toString());
+      var registro = getUnoccupiedRegister();
+      codeBuffer.append("lw " + registro + ", " + dir + "\n");
+      RESULT = new Expresion(id.toString(), getTipo(id.toString(), true), registro);
+    } else {
+      RESULT = new Expresion("null", TipoExpresion.NULL);
+    }
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expresion_regalo",13, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2066,7 +2087,36 @@ class CUP$parser$actions {
           case 75: // expr_ar_regaloprin ::= expresion_regalo op_sum_cupido expresion_regalo 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    var a_expr = (Expresion)a;
+    var b_expr = (Expresion)b;
+    var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
+    var tipo_res = validarTipado("+", a_expr, b_expr, arraylist_tipos_validos);
 
+    // switch para el tipo resultante, para finalmente pasar la direccion resultado
+    // a un nuevo registro y retornar una nueva expresión
+    switch (tipo_res) {
+      case INT:
+        var reg = getUnoccupiedRegister();
+        // limpiar reg
+        codeBuffer.append("li " + reg + ", 0\n");
+        // sumar a_expr y b_expr
+        codeBuffer.append("add " + reg + ", " + a_expr.getDireccion() + ", " + b_expr.getDireccion() + "\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " + " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
+
+        break;
+      default:
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+    }
+
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_ar_regaloprin",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

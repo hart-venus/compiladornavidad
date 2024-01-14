@@ -3,5 +3,3 @@
 | main  | funcion     | main   | int      |
 | main  | local       | a      | int      |
 | main  | local       | b      | int      |
-| main  | local       | some   | string   |
-| main  | local       | body   | string   |
