@@ -1,0 +1,43 @@
+function int main(){ 
+    
+    local int a| 
+    print(a)|
+
+    a <= 1| 
+    print(a)|
+    a <= 2| 
+
+    a <= a * a * 3|
+    print(a)|
+
+    local int b <= 6|
+    print(b * 7, 32)|
+
+    local int y <= a * b|
+    print(y)|
+
+    local string c <= "hello"|
+    local string d <= " world"|
+    print(c, d)|
+
+    @ Probando parentesis 
+    local int x <= (1 + 2) * 2| @ 6 no 5
+    y <= 1 + 2 * 2| @ 5 no 6
+    print(x)|
+    print(y)|
+
+    @ Probando modulo 
+    local int z <= 15 ~ 4| @ 3
+    print(z)|
+
+    z <= 10 ~ 3 ~ 2| @ 1
+    print(z)|
+
+    print(60 ~ 13)| @ 8
+
+    @ Probando exponenciacion
+    print(2 ** 3 + 2)| @ 10
+    a <= 2 ** 3 + 2| @ 10
+    print(a ~ 2)| @ 0 
+
+}

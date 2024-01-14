@@ -1,10 +1,6 @@
 | Tabla | TipoEntrada | Nombre | TipoDato |
 | ----- | ----------- | ------ | -------- |
 | main  | funcion     | main   | int      |
-| main  | local       | a      | int      |
-| main  | local       | b      | int      |
-| main  | local       | y      | int      |
-| main  | local       | c      | string   |
-| main  | local       | d      | string   |
-| main  | local       | x      | int      |
-| main  | local       | z      | int      |
+| main  | local       | santa  | string   |
+| main  | local       | e      | float    |
+| main  | local       | z      | float    |

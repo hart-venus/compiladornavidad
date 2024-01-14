@@ -15,10 +15,15 @@ action code {:
 
   String currentHash = "";
   ArrayList<FirmaFuncion> firmasFunciones = new ArrayList<FirmaFuncion>();
-  ArrayList<String> registrosSinUsar = new ArrayList<String>(Arrays.asList("$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
+  ArrayList<String> registrosSinUsar = new ArrayList<String>(Arrays.asList("$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
+  ArrayList<String> registrosFloatSinUsar = new ArrayList<String>(Arrays.asList("$f0", "$f2", "$f3", "$f4", "$f5", "$f6", "$f7", "$f8", "$f9", "$f10", "$f11", "$f12", "$f13", "$f14", "$f15", "$f16", "$f17", "$f18", "$f19", "$f20", "$f21", "$f22", "$f23", "$f24", "$f25", "$f26", "$f27", "$f28", "$f29", "$f30", "$f31"));
 
   public void refrescarRegistros() {
-    registrosSinUsar = new ArrayList<String>(Arrays.asList("$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
+    registrosSinUsar = new ArrayList<String>(Arrays.asList("$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
+  }
+
+  public void refrescarRegistrosFloat() {
+    registrosFloatSinUsar = new ArrayList<String>(Arrays.asList("$f0", "$f2", "$f3", "$f4", "$f5", "$f6", "$f7", "$f8", "$f9", "$f10", "$f11", "$f12", "$f13", "$f14", "$f15", "$f16", "$f17", "$f18", "$f19", "$f20", "$f21", "$f22", "$f23", "$f24", "$f25", "$f26", "$f27", "$f28", "$f29", "$f30", "$f31"));
   }
 
   public void addFirmaFuncion(FirmaFuncion firma) {
@@ -36,6 +41,20 @@ action code {:
     }
     var reg = registrosSinUsar.get(0);
     registrosSinUsar.remove(0);
+    return reg;
+  }
+
+  public String getUnoccupiedFloatRegister() {
+    
+    if (registrosFloatSinUsar.size() == 0) {
+
+      System.out.println("Refrescando debido a falta de registros");
+      // workaround temporal: refrescar registros
+      refrescarRegistrosFloat();
+      return getUnoccupiedFloatRegister();
+    }
+    var reg = registrosFloatSinUsar.get(0);
+    registrosFloatSinUsar.remove(0);
     return reg;
   }
 
@@ -389,7 +408,19 @@ l_santa ::=
     RESULT = new Expresion(l, TipoExpresion.INT, reg); 
   :}
   | l_float_santa:l
-  {: RESULT = new Expresion(l, TipoExpresion.FLOAT); :}
+  {: 
+    // añadir definición de float al dataBuffer
+    var str = l.toString();
+    var strId = "float" + literalId;
+
+    dataBuffer.append(strId + ": .float " + str + "\n");
+    ++literalId;
+    // conseguir registro disponible
+    var reg = getUnoccupiedRegister();
+    codeBuffer.append("lw " + reg + ", " + strId + "\n");
+    RESULT = new Expresion(l, TipoExpresion.FLOAT, reg);
+    
+  :}
   | l_t_noel:l
   {: RESULT = new Expresion(true, TipoExpresion.BOOL); :}
   | l_f_noel:l
@@ -595,6 +626,17 @@ llamada_func_pino ::=
           codeBuffer.append("li $v0, 1\n");
           codeBuffer.append("syscall\n");
           break;
+
+        case FLOAT:
+          // cargar el contenido de la expresión en $f12
+          // recordar que e.getDireccion() es el registro donde está el valor
+          // .getDireccion() siempre maneja registros de uso general
+
+          // 1. pasar de uso general a $f12
+          codeBuffer.append("mtc1 " + e.getDireccion() + ", $f12\n");
+          codeBuffer.append("li $v0, 2\n");
+          codeBuffer.append("syscall\n");
+          break;
         // default error semántico
         default:
           System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para print");
@@ -605,6 +647,7 @@ llamada_func_pino ::=
     codeBuffer.append("la $a0, endl\n");
     codeBuffer.append("li $v0, 4\n");
     codeBuffer.append("syscall\n");
+    RESULT = new Expresion("null", TipoExpresion.NULL);
   :}| // print(a, b, ...)
 
   
@@ -613,6 +656,7 @@ llamada_func_pino ::=
     codeBuffer.append("la $a0, endl\n");
     codeBuffer.append("li $v0, 4\n");
     codeBuffer.append("syscall\n");
+    RESULT = new Expresion("null", TipoExpresion.NULL);
   :}| // print() -> Imprimir un salto de linea
   read_escucha p_abre_cuento id_persona p_cierra_cuento | // read(a)
   read_escucha p_abre_cuento elemento_arreglo_juguete p_cierra_cuento; // read(a[1])
@@ -623,6 +667,7 @@ lineas_hombre_jengibre ::=
   {: 
     // limpiar los registros sin usar
     refrescarRegistros();
+    refrescarRegistrosFloat();
     // añadir un enter al codigo (para depruar)
     codeBuffer.append("\n");
   :}
@@ -631,6 +676,7 @@ lineas_hombre_jengibre ::=
   {:
     // limpiar los registros sin usar
     refrescarRegistros();
+    refrescarRegistrosFloat();
     // añadir un enter al codigo (para depruar)
     codeBuffer.append("\n");
   :}
@@ -827,25 +873,15 @@ asignacion_existente_nieve ::=
       System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una variable de tipo " + tipoId.toString());
     }
     else {
-      // si es una string, agregar la dirección de la expresión 
-      if (tipoId == TipoExpresion.STRING) {
-        // conseguir la dirección del id 
-        var dir = getDireccion(id.toString());
-        // mover el valor de la expresión a la dirección del id
-        var reg = getUnoccupiedRegister();
+      // conseguir la dirección del id 
+      var dir = getDireccion(id.toString());
+      // mover el valor de la expresión a la dirección del id
+      var reg = getUnoccupiedRegister();
 
-        codeBuffer.append("move " + reg + ", " + expr.getDireccion() + "\n");
-        codeBuffer.append("sw " + reg + ", " + dir + "\n");
-      }
-
-      // si es un int, agregar el valor de la expresión 
-      if (tipoId == TipoExpresion.INT) {
-        var dir = getDireccion(id.toString());
-        var reg = getUnoccupiedRegister();
-
-        codeBuffer.append("move " + reg + ", " + expr.getDireccion() + "\n");
-        codeBuffer.append("sw " + reg + ", " + dir + "\n");
-      }
+      codeBuffer.append("move " + reg + ", " + expr.getDireccion() + "\n");
+      codeBuffer.append("sw " + reg + ", " + dir + "\n");
+  
+      
     }
   
   :}| // a <= 1|

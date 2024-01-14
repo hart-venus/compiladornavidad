@@ -710,10 +710,15 @@ class CUP$parser$actions {
 
   String currentHash = "";
   ArrayList<FirmaFuncion> firmasFunciones = new ArrayList<FirmaFuncion>();
-  ArrayList<String> registrosSinUsar = new ArrayList<String>(Arrays.asList("$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
+  ArrayList<String> registrosSinUsar = new ArrayList<String>(Arrays.asList("$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
+  ArrayList<String> registrosFloatSinUsar = new ArrayList<String>(Arrays.asList("$f0", "$f2", "$f3", "$f4", "$f5", "$f6", "$f7", "$f8", "$f9", "$f10", "$f11", "$f12", "$f13", "$f14", "$f15", "$f16", "$f17", "$f18", "$f19", "$f20", "$f21", "$f22", "$f23", "$f24", "$f25", "$f26", "$f27", "$f28", "$f29", "$f30", "$f31"));
 
   public void refrescarRegistros() {
-    registrosSinUsar = new ArrayList<String>(Arrays.asList("$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
+    registrosSinUsar = new ArrayList<String>(Arrays.asList("$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9"));
+  }
+
+  public void refrescarRegistrosFloat() {
+    registrosFloatSinUsar = new ArrayList<String>(Arrays.asList("$f0", "$f2", "$f3", "$f4", "$f5", "$f6", "$f7", "$f8", "$f9", "$f10", "$f11", "$f12", "$f13", "$f14", "$f15", "$f16", "$f17", "$f18", "$f19", "$f20", "$f21", "$f22", "$f23", "$f24", "$f25", "$f26", "$f27", "$f28", "$f29", "$f30", "$f31"));
   }
 
   public void addFirmaFuncion(FirmaFuncion firma) {
@@ -731,6 +736,20 @@ class CUP$parser$actions {
     }
     var reg = registrosSinUsar.get(0);
     registrosSinUsar.remove(0);
+    return reg;
+  }
+
+  public String getUnoccupiedFloatRegister() {
+    
+    if (registrosFloatSinUsar.size() == 0) {
+
+      System.out.println("Refrescando debido a falta de registros");
+      // workaround temporal: refrescar registros
+      refrescarRegistrosFloat();
+      return getUnoccupiedFloatRegister();
+    }
+    var reg = registrosFloatSinUsar.get(0);
+    registrosFloatSinUsar.remove(0);
     return reg;
   }
 
@@ -996,7 +1015,19 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = new Expresion(l, TipoExpresion.FLOAT); 
+		 
+    // añadir definición de float al dataBuffer
+    var str = l.toString();
+    var strId = "float" + literalId;
+
+    dataBuffer.append(strId + ": .float " + str + "\n");
+    ++literalId;
+    // conseguir registro disponible
+    var reg = getUnoccupiedRegister();
+    codeBuffer.append("lw " + reg + ", " + strId + "\n");
+    RESULT = new Expresion(l, TipoExpresion.FLOAT, reg);
+    
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1509,6 +1540,17 @@ class CUP$parser$actions {
           codeBuffer.append("li $v0, 1\n");
           codeBuffer.append("syscall\n");
           break;
+
+        case FLOAT:
+          // cargar el contenido de la expresión en $f12
+          // recordar que e.getDireccion() es el registro donde está el valor
+          // .getDireccion() siempre maneja registros de uso general
+
+          // 1. pasar de uso general a $f12
+          codeBuffer.append("mtc1 " + e.getDireccion() + ", $f12\n");
+          codeBuffer.append("li $v0, 2\n");
+          codeBuffer.append("syscall\n");
+          break;
         // default error semántico
         default:
           System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getTipo().toString() + " no valido para print");
@@ -1519,6 +1561,7 @@ class CUP$parser$actions {
     codeBuffer.append("la $a0, endl\n");
     codeBuffer.append("li $v0, 4\n");
     codeBuffer.append("syscall\n");
+    RESULT = new Expresion("null", TipoExpresion.NULL);
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("llamada_func_pino",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1533,6 +1576,7 @@ class CUP$parser$actions {
     codeBuffer.append("la $a0, endl\n");
     codeBuffer.append("li $v0, 4\n");
     codeBuffer.append("syscall\n");
+    RESULT = new Expresion("null", TipoExpresion.NULL);
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("llamada_func_pino",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1563,6 +1607,7 @@ class CUP$parser$actions {
 		 
     // limpiar los registros sin usar
     refrescarRegistros();
+    refrescarRegistrosFloat();
     // añadir un enter al codigo (para depruar)
     codeBuffer.append("\n");
   
@@ -1577,6 +1622,7 @@ class CUP$parser$actions {
 		
     // limpiar los registros sin usar
     refrescarRegistros();
+    refrescarRegistrosFloat();
     // añadir un enter al codigo (para depruar)
     codeBuffer.append("\n");
   
@@ -1934,25 +1980,15 @@ class CUP$parser$actions {
       System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una variable de tipo " + tipoId.toString());
     }
     else {
-      // si es una string, agregar la dirección de la expresión 
-      if (tipoId == TipoExpresion.STRING) {
-        // conseguir la dirección del id 
-        var dir = getDireccion(id.toString());
-        // mover el valor de la expresión a la dirección del id
-        var reg = getUnoccupiedRegister();
+      // conseguir la dirección del id 
+      var dir = getDireccion(id.toString());
+      // mover el valor de la expresión a la dirección del id
+      var reg = getUnoccupiedRegister();
 
-        codeBuffer.append("move " + reg + ", " + expr.getDireccion() + "\n");
-        codeBuffer.append("sw " + reg + ", " + dir + "\n");
-      }
-
-      // si es un int, agregar el valor de la expresión 
-      if (tipoId == TipoExpresion.INT) {
-        var dir = getDireccion(id.toString());
-        var reg = getUnoccupiedRegister();
-
-        codeBuffer.append("move " + reg + ", " + expr.getDireccion() + "\n");
-        codeBuffer.append("sw " + reg + ", " + dir + "\n");
-      }
+      codeBuffer.append("move " + reg + ", " + expr.getDireccion() + "\n");
+      codeBuffer.append("sw " + reg + ", " + dir + "\n");
+  
+      
     }
   
   
