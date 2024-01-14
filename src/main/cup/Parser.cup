@@ -880,7 +880,29 @@ expresion_regalo ::=
   {: RESULT = e; :};
 
 expr_ar_regaloprin ::= 
-  expresion_regalo op_res_rodolfo expresion_regalo | // a - b
+  expresion_regalo:a op_res_rodolfo expresion_regalo:b {:
+    var a_expr = (Expresion)a;
+    var b_expr = (Expresion)b;
+    var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
+    var tipo_res = validarTipado("-", a_expr, b_expr, arraylist_tipos_validos);
+
+    switch (tipo_res) {
+      case INT: 
+        var reg = getUnoccupiedRegister();
+        // limpiar reg
+        codeBuffer.append("li " + reg + ", 0\n");
+        // restar a_expr y b_expr
+        codeBuffer.append("sub " + reg + ", " + a_expr.getDireccion() + ", " + b_expr.getDireccion() + "\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " - " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
+        break;
+
+      default:
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+    }
+
+
+  :}| // a - b
   expresion_regalo:a op_sum_cupido expresion_regalo:b {:
     var a_expr = (Expresion)a;
     var b_expr = (Expresion)b;

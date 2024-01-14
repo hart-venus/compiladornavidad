@@ -5,10 +5,14 @@ function int main(){
 
     print(a+b+4)| @ 7
 
-    b <= a+b|
+    local int c <= a+b|
     a <= 17|
 
-    print(b)| @ 3
-    print(b+a,b+a+4)| @ 20 
+    print(c)| @ 3
+    print(c+a,c+a+4)| @ 20 
+
+
+    local int d <= 1 - a + 24| @ 8
+    print(d - -16)| @ 24
 
 }

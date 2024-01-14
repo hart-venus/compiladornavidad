@@ -24,24 +24,23 @@ lw $t1, 0($sp)
 lw $t2, 4($sp)
 li $t3, 0
 add $t3, $t1, $t2
-move $t4, $t3
-sw $t4, 4($sp)
+sw $t3, 8($sp)
 
 li $t1, 17
 move $t2, $t1
 sw $t2, 0($sp)
 
-lw $t1, 4($sp)
+lw $t1, 8($sp)
 move $a0, $t1
 jal printInt
 la $a0, endl
 jal printString
 
-lw $t1, 4($sp)
+lw $t1, 8($sp)
 lw $t2, 0($sp)
 li $t3, 0
 add $t3, $t1, $t2
-lw $t4, 4($sp)
+lw $t4, 8($sp)
 lw $t5, 0($sp)
 li $t6, 0
 add $t6, $t4, $t5
@@ -51,6 +50,43 @@ add $t8, $t6, $t7
 move $a0, $t3
 jal printInt
 move $a0, $t8
+jal printInt
+la $a0, endl
+jal printString
+
+li $t1, 1
+lw $t2, 0($sp)
+li $t3, 0
+sub $t3, $t1, $t2
+li $t4, 24
+li $t5, 0
+add $t5, $t3, $t4
+sw $t5, 12($sp)
+
+lw $t1, 12($sp)
+li $t2, -16
+li $t3, 0
+sub $t3, $t1, $t2
+move $a0, $t3
+jal printInt
+la $a0, endl
+jal printString
+
+li $t1, 0
+sw $t1, 16($sp)
+
+lw $t1, 12($sp)
+li $t2, -16
+li $t3, 0
+sub $t3, $t1, $t2
+li $t4, 0
+li $t5, 0
+add $t5, $t3, $t4
+move $t6, $t5
+sw $t6, 16($sp)
+
+lw $t1, 16($sp)
+move $a0, $t1
 jal printInt
 la $a0, endl
 jal printString

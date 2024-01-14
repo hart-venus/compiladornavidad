@@ -2078,7 +2078,35 @@ class CUP$parser$actions {
           case 74: // expr_ar_regaloprin ::= expresion_regalo op_res_rodolfo expresion_regalo 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    var a_expr = (Expresion)a;
+    var b_expr = (Expresion)b;
+    var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
+    var tipo_res = validarTipado("-", a_expr, b_expr, arraylist_tipos_validos);
 
+    switch (tipo_res) {
+      case INT: 
+        var reg = getUnoccupiedRegister();
+        // limpiar reg
+        codeBuffer.append("li " + reg + ", 0\n");
+        // restar a_expr y b_expr
+        codeBuffer.append("sub " + reg + ", " + a_expr.getDireccion() + ", " + b_expr.getDireccion() + "\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " - " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
+        break;
+
+      default:
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+    }
+
+
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_ar_regaloprin",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
