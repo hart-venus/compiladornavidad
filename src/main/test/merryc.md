@@ -137,4 +137,13 @@
 | 2                 | l_int_colacho     | 26              | 28    | 16      |
 | )                 | p_cierra_cuento   | 33              | 28    | 17      |
 | |                 | fin_regalo        | 48              | 28    | 18      |
-| }                 | cb_cierra_regalo  | 37              | 29    | 0       |
+| print             | print_habla       | 46              | 29    | 4       |
+| (                 | p_abre_cuento     | 32              | 29    | 9       |
+| 2.0               | l_float_santa     | 27              | 29    | 10      |
+| **                | op_pow_travieso   | 7               | 29    | 14      |
+| 0.5               | l_float_santa     | 27              | 29    | 17      |
+| +                 | op_sum_cupido     | 3               | 29    | 21      |
+| 0.04              | l_float_santa     | 27              | 29    | 23      |
+| )                 | p_cierra_cuento   | 33              | 29    | 27      |
+| |                 | fin_regalo        | 48              | 29    | 28      |
+| }                 | cb_cierra_regalo  | 37              | 30    | 0       |

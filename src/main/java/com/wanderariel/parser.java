@@ -652,6 +652,9 @@ public class parser extends java_cup.runtime.lr_parser {
     // añadir un endl al dataBuffer 
     dataBuffer.append("endl: .asciiz \"\\n\"\n");
     dataBuffer.append("fzero: .float 0.0\n");
+    dataBuffer.append("fone: .float 1.0\n");
+    dataBuffer.append("ftwo: .float 2.0\n");
+    dataBuffer.append("log2: .float 0.69314718055994\n");
   }
 
 
@@ -2377,13 +2380,12 @@ class CUP$parser$actions {
 		
     var a_expr = (Expresion)a;
     var b_expr = (Expresion)b;
-
+    var reg = getUnoccupiedRegister();
     var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT));
     var tipo_res = validarTipado("**", a_expr, b_expr, arraylist_tipos_validos);
 
     switch (tipo_res) {
       case INT:
-        var reg = getUnoccupiedRegister();
         // 1. meter los datos a $a0 y $a1
         codeBuffer.append("move $a0, " + a_expr.getDireccion() + "\n");
         codeBuffer.append("move $a1, " + b_expr.getDireccion() + "\n");
@@ -2400,7 +2402,23 @@ class CUP$parser$actions {
         codeBuffer.append("addi $sp, $sp, 4\n");
         RESULT = new Expresion(a_expr.getValor().toString() + " ** " + b_expr.getValor().toString(), TipoExpresion.INT, reg);
         break;
+      case FLOAT:
+        codeBuffer.append("move $a0, " + a_expr.getDireccion() + "\n");
+        codeBuffer.append("move $a1, " + b_expr.getDireccion() + "\n");
+        // 2. guardar mi $ra en la pila para no sobreescribirlo
+        // al llamar la función
+        codeBuffer.append("addi $sp, $sp, -4\n");
+        codeBuffer.append("sw $ra, 0($sp)\n");
+        // 3. llamar a la función
+        codeBuffer.append("jal pow\n");
+        // 4. meter el resultado en reg
+        codeBuffer.append("move " + reg + ", $v0\n");
+        // 5. recuperar $ra de la pila
+        codeBuffer.append("lw $ra, 0($sp)\n");
+        codeBuffer.append("addi $sp, $sp, 4\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " ** " + b_expr.getValor().toString(), TipoExpresion.FLOAT, reg);
 
+        break;
       default:
         RESULT = new Expresion("null", TipoExpresion.NULL);
         break;
