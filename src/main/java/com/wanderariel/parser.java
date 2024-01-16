@@ -1054,7 +1054,12 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = new Expresion(true, TipoExpresion.BOOL); 
+		 
+    // cargar 1 en un registro
+    var reg = getUnoccupiedRegister();
+    codeBuffer.append("li " + reg + ", 1\n");
+    RESULT = new Expresion(true, TipoExpresion.BOOL, reg);
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1066,7 +1071,12 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = new Expresion(false, TipoExpresion.BOOL); 
+		
+    // cargar 0 en un registro
+    var reg = getUnoccupiedRegister();
+    codeBuffer.append("li " + reg + ", 0\n");
+    RESULT = new Expresion(false, TipoExpresion.BOOL, reg);
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1817,7 +1827,12 @@ class CUP$parser$actions {
         codeBuffer.append("lw " + reg + ", fzero\n");
         codeBuffer.append("sw " + reg + ", " + getDireccion(id.toString()) + "\n");
       }
-
+      // si es un bool, agregar 0 por defecto.
+      if (t.toString() == "bool") {
+        var reg = getUnoccupiedRegister();
+        codeBuffer.append("li " + reg + ", 0\n");
+        codeBuffer.append("sw " + reg + ", " + getDireccion(id.toString()) + "\n");
+      }
     }
 
   
@@ -2572,7 +2587,51 @@ class CUP$parser$actions {
           case 84: // expr_rel_regalocomprado ::= expresion_regalo op_eq_astuto expresion_regalo 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    var a_expr = (Expresion)a;
+    var b_expr = (Expresion)b;
+    var reg = getUnoccupiedRegister();
+    var arraylist_tipos_validos = new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT, TipoExpresion.FLOAT, TipoExpresion.BOOL));
+    var tipo_res = validarTipado("==", a_expr, b_expr, arraylist_tipos_validos);
+    switch (tipo_res) {
+      case INT:
+      case BOOL: // ambos tienen el mismo procedimiento
+        codeBuffer.append("sub " + reg + ", " + a_expr.getDireccion() + ", " + b_expr.getDireccion() + "\n");
+        codeBuffer.append("sltiu " + reg + ", " + reg + ", 1\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " == " + b_expr.getValor().toString(), TipoExpresion.BOOL, reg);
+      break;
 
+      case FLOAT:
+        // guardar mi $ra en la pila para no sobreescribirlo
+        // al llamar la función
+        codeBuffer.append("addi $sp, $sp, -4\n");
+        codeBuffer.append("sw $ra, 0($sp)\n");
+        // cargar los valores de a_expr y b_expr en $a0 y $a1
+        codeBuffer.append("move $a0, " + a_expr.getDireccion() + "\n");
+        codeBuffer.append("move $a1, " + b_expr.getDireccion() + "\n");
+        // llamar a la función
+        codeBuffer.append("jal eqFloat\n");
+        // meter el resultado en reg
+        codeBuffer.append("move " + reg + ", $v0\n");
+        // recuperar $ra de la pila
+        codeBuffer.append("lw $ra, 0($sp)\n");
+        codeBuffer.append("addi $sp, $sp, 4\n");
+        RESULT = new Expresion(a_expr.getValor().toString() + " == " + b_expr.getValor().toString(), TipoExpresion.BOOL, reg);
+
+      break; 
+      default:
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+    }
+  
+  
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_rel_regalocomprado",18, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

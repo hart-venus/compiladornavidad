@@ -4,147 +4,39 @@ fzero: .float 0.0
 fone: .float 1.0
 ftwo: .float 2.0
 log2: .float 0.69314718055994
-str0: .asciiz "Hola mundo"
-float1: .float 3.14
-float2: .float 3.0
-float3: .float 2.0
-float4: .float 0.0
+float0: .float 0.5
+float1: .float 0.1
+float2: .float 0.5
+float3: .float 0.3
+float4: .float 0.2
 .text
 main:
-li $t0, 0
-sw $t0, 0($sp)
-
-lw $t0, 0($sp)
-addi $t0, $t0, 1
-sw $t0, 0($sp)
-move $a0, $t0
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-lw $t0, 0($sp)
-addi $t0, $t0, 1
-sw $t0, 0($sp)
-li $t1, 2
-li $t2, 0
-add $t2, $t0, $t1
-move $a0, $t2
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-lw $t0, 0($sp)
-move $a0, $t0
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-la $t0, str0
-move $t1, $t0
-sw $t1, 4($sp)
-
-lw $t0, float1
-sw $t0, 8($sp)
-
-lw $t0, 8($sp)
-mtc1 $t0, $f12
-li $v0, 2
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-la $a0, endl
-li $v0, 4
-syscall
-
-la $a0, endl
-li $v0, 4
-syscall
-
-l.s $f0, 8($sp)
-l.s $f2, fone
-add.s $f0, $f0, $f2
-s.s $f0, 8($sp)
-mfc1 $t0, $f0
-lw $t1, float2
-mtc1 $t0, $f3
-mtc1 $t1, $f4
-mul.s $f3, $f3, $f4
-mfc1 $t2, $f3
-lw $t3, float3
-move $a0, $t2
-move $a1, $t3
+lw $t0, float0
+lw $t1, float1
 addi $sp, $sp, -4
 sw $ra, 0($sp)
-jal pow
+move $a0, $t0
+move $a1, $t1
+jal eqFloat
+move $t2, $v0
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+
+lw $t0, float2
+lw $t1, float3
+lw $t2, float4
+mtc1 $t1, $f0
+mtc1 $t2, $f2
+add.s $f0, $f0, $f2
+mfc1 $t3, $f0
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+move $a0, $t0
+move $a1, $t3
+jal eqFloat
 move $t4, $v0
 lw $ra, 0($sp)
 addi $sp, $sp, 4
-mtc1 $t4, $f12
-li $v0, 2
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-li $t0, 0
-sw $t0, 12($sp)
-
-lw $t0, 12($sp)
-move $a0, $t0
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-lw $t0, 12($sp)
-addi $t0, $t0, -1
-sw $t0, 12($sp)
-li $t1, 50
-li $t2, 0
-mul $t2, $t0, $t1
-lw $t3, 12($sp)
-addi $t3, $t3, 1
-sw $t3, 12($sp)
-li $t4, 0
-add $t4, $t2, $t3
-move $a0, $t4
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-lw $t0, 12($sp)
-move $a0, $t0
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-lw $t0, float4
-sw $t0, 16($sp)
-
-l.s $f0, 16($sp)
-l.s $f2, fone
-sub.s $f0, $f0, $f2
-s.s $f0, 16($sp)
-mfc1 $t0, $f0
-mtc1 $t0, $f12
-li $v0, 2
-syscall
-la $a0, endl
-li $v0, 4
-syscall
 
 li $v0, 10
 syscall
@@ -211,6 +103,33 @@ expInt:
         addi $sp, $sp, 12
 
         jr $ra # Return
+
+eqFloat: 
+    # v0 := 1 si a0 == a1, 0 si a0 != a1
+    # guardar $f0, $f1
+    addi $sp, $sp, -8
+    swc1 $f0, 0($sp)
+    swc1 $f1, 4($sp)
+
+    # cargar $a0 y $a1 en $f0 y $f1
+    mtc1 $a0, $f0
+    mtc1 $a1, $f1
+
+    # comparar $f0 y $f1
+    c.eq.s $f0, $f1
+    # si son iguales, $v0 = 1
+    li $v0, 1
+    # si no, $v0 = 0
+    bc1f eqFloat_end
+    li $v0, 0
+
+    eqFloat_end:
+        # restaurar $f0, $f1
+        lwc1 $f0, 0($sp)
+        lwc1 $f1, 4($sp)
+        addi $sp, $sp, 8
+
+    jr $ra # retorna
 
 moduloFloat: 
     # calcula $a0 % $a1

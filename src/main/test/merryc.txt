@@ -1,27 +1,4 @@
 function int main(){
-    local int i <= 0|
-
-    print(++i)|
-    print(++i + 2)|
-    print(i)|
-
-    local string x <= "Hola mundo"|
-    local float y <= 3.14|
-
-    print(y)|
-    print(++z)|
-    print(--z)| @ err
-
-    print((++y * 3.0) ** 2.0)|
-
-    local int z <= 0| 
-    print(z)|
-
-    print(--z * 50 + ++z)|
-
-    print(z)| @ 0
-
-
-    local float a <= 0.0|
-    print(--a)| @ -1.0
+    0.5 == 0.10|
+    0.5 == (0.3 + 0.2)| 
 }

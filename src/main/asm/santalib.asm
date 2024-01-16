@@ -62,6 +62,33 @@ expInt:
 
         jr $ra # Return
 
+eqFloat: 
+    # v0 := 1 si a0 == a1, 0 si a0 != a1
+    # guardar $f0, $f1
+    addi $sp, $sp, -8
+    swc1 $f0, 0($sp)
+    swc1 $f1, 4($sp)
+
+    # cargar $a0 y $a1 en $f0 y $f1
+    mtc1 $a0, $f0
+    mtc1 $a1, $f1
+
+    # comparar $f0 y $f1
+    c.eq.s $f0, $f1
+    # si son iguales, $v0 = 1
+    li $v0, 1
+    # si no, $v0 = 0
+    bc1f eqFloat_end
+    li $v0, 0
+
+    eqFloat_end:
+        # restaurar $f0, $f1
+        lwc1 $f0, 0($sp)
+        lwc1 $f1, 4($sp)
+        addi $sp, $sp, 8
+
+    jr $ra # retorna
+
 moduloFloat: 
     # calcula $a0 % $a1
     # guardar $f0, $f1, $f2, $t0
