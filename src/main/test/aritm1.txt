@@ -1,0 +1,31 @@
+function int main() {
+    
+    local string santa <= "ho ho ho"|
+    local float e <= 2.7182818284590452353602874713527|
+    e <= 3| @ err. semantico
+
+    print(e)|
+
+    e <= 3.14|
+    local int x <= 3.14| @ err. semantico
+    local float xy <= 3.14 + 2| 
+
+
+
+    local float z <= 2.5 + 1.0|
+    print("z = ", z)|
+    z <= -6.0|
+
+    print((3.14 / (1.0/2.0) + z)* 10.0 / 2.0)| @ 1.4
+
+    print((3/ (3/2) + -6)* 10 / 2)| @ -15 (int) 
+    
+    print(5.5 ~ 2.0)| @ 1.5
+
+
+    print(2 ** -1) | @ 0
+    print(-1 ** -1)| @ -1
+    print(1 ** -230)| @ 1
+    print(-2 ** 2)| @ 4
+    print(2.0 ** -1.0)| @ 0.5
+}

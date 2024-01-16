@@ -4,103 +4,55 @@ fzero: .float 0.0
 fone: .float 1.0
 ftwo: .float 2.0
 log2: .float 0.69314718055994
-str0: .asciiz "ho ho ho"
-float1: .float 2.718281828459045
-float2: .float 3.14
-float3: .float 3.14
-float4: .float 3.14
-float5: .float 2.5
-float6: .float 1.0
-str7: .asciiz "z = "
-float8: .float -6.0
-float9: .float 3.14
-float10: .float 1.0
-float11: .float 2.0
-float12: .float 10.0
-float13: .float 2.0
-float14: .float 5.5
-float15: .float 2.0
-float16: .float 2.0
-float17: .float 0.5
-float18: .float 0.04
+str0: .asciiz "Hola mundo"
+float1: .float 3.14
+float2: .float 3.0
+float3: .float 2.0
+float4: .float 0.0
 .text
 main:
-la $t0, str0
-move $t1, $t0
-sw $t1, 0($sp)
+li $t0, 0
+sw $t0, 0($sp)
 
-lw $t0, float1
-sw $t0, 4($sp)
-
-li $t0, 3
-
-lw $t0, 4($sp)
-mtc1 $t0, $f12
-li $v0, 2
+lw $t0, 0($sp)
+addi $t0, $t0, 1
+sw $t0, 0($sp)
+move $a0, $t0
+li $v0, 1
 syscall
 la $a0, endl
 li $v0, 4
 syscall
 
-lw $t0, float2
+lw $t0, 0($sp)
+addi $t0, $t0, 1
+sw $t0, 0($sp)
+li $t1, 2
+li $t2, 0
+add $t2, $t0, $t1
+move $a0, $t2
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+lw $t0, 0($sp)
+move $a0, $t0
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+la $t0, str0
 move $t1, $t0
 sw $t1, 4($sp)
 
-lw $t0, float3
+lw $t0, float1
+sw $t0, 8($sp)
 
-lw $t0, float4
-li $t1, 2
-
-lw $t0, float5
-lw $t1, float6
-mtc1 $t0, $f0
-mtc1 $t1, $f2
-add.s $f0, $f0, $f2
-mfc1 $t2, $f0
-sw $t2, 8($sp)
-
-la $t0, str7
-lw $t1, 8($sp)
-move $a0, $t0
-li $v0, 4
-syscall
-mtc1 $t1, $f12
-li $v0, 2
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-lw $t0, float8
-move $t1, $t0
-sw $t1, 8($sp)
-
-lw $t0, float9
-lw $t1, float10
-lw $t2, float11
-mtc1 $t1, $f0
-mtc1 $t2, $f2
-div.s $f0, $f0, $f2
-mfc1 $t3, $f0
-mtc1 $t0, $f3
-mtc1 $t3, $f4
-div.s $f3, $f3, $f4
-mfc1 $t4, $f3
-lw $t5, 8($sp)
-mtc1 $t4, $f5
-mtc1 $t5, $f6
-add.s $f5, $f5, $f6
-mfc1 $t6, $f5
-lw $t7, float12
-mtc1 $t6, $f7
-mtc1 $t7, $f8
-mul.s $f7, $f7, $f8
-mfc1 $t8, $f7
-lw $t9, float13
-mtc1 $t8, $f9
-mtc1 $t9, $f10
-div.s $f9, $f9, $f10
-mfc1 $t0, $f9
+lw $t0, 8($sp)
 mtc1 $t0, $f12
 li $v0, 2
 syscall
@@ -108,133 +60,86 @@ la $a0, endl
 li $v0, 4
 syscall
 
-li $t0, 3
-li $t1, 3
-li $t2, 2
-li $t3, 0
-div $t1, $t2
-mflo $t3
-li $t4, 0
-div $t0, $t3
-mflo $t4
-li $t5, -6
-li $t6, 0
-add $t6, $t4, $t5
-li $t7, 10
-li $t8, 0
-mul $t8, $t6, $t7
-li $t9, 2
-li $t0, 0
-div $t8, $t9
-mflo $t0
-move $a0, $t0
-li $v0, 1
-syscall
 la $a0, endl
 li $v0, 4
 syscall
 
-lw $t0, float14
-lw $t1, float15
-move $a0, $t0
-move $a1, $t1
+la $a0, endl
+li $v0, 4
+syscall
+
+l.s $f0, 8($sp)
+l.s $f2, fone
+add.s $f0, $f0, $f2
+s.s $f0, 8($sp)
+mfc1 $t0, $f0
+lw $t1, float2
+mtc1 $t0, $f3
+mtc1 $t1, $f4
+mul.s $f3, $f3, $f4
+mfc1 $t2, $f3
+lw $t3, float3
+move $a0, $t2
+move $a1, $t3
 addi $sp, $sp, -4
 sw $ra, 0($sp)
-jal moduloFloat
-move $t2, $v0
+jal pow
+move $t4, $v0
 lw $ra, 0($sp)
 addi $sp, $sp, 4
-mtc1 $t2, $f12
+mtc1 $t4, $f12
 li $v0, 2
 syscall
 la $a0, endl
 li $v0, 4
 syscall
 
-li $t0, 2
-li $t1, -1
+li $t0, 0
+sw $t0, 12($sp)
+
+lw $t0, 12($sp)
 move $a0, $t0
-move $a1, $t1
-addi $sp, $sp, -4
-sw $ra, 0($sp)
-jal expInt
-move $t2, $v0
-lw $ra, 0($sp)
-addi $sp, $sp, 4
-move $a0, $t2
 li $v0, 1
 syscall
 la $a0, endl
 li $v0, 4
 syscall
 
-li $t0, -1
-li $t1, -1
-move $a0, $t0
-move $a1, $t1
-addi $sp, $sp, -4
-sw $ra, 0($sp)
-jal expInt
-move $t2, $v0
-lw $ra, 0($sp)
-addi $sp, $sp, 4
-move $a0, $t2
+lw $t0, 12($sp)
+addi $t0, $t0, -1
+sw $t0, 12($sp)
+li $t1, 50
+li $t2, 0
+mul $t2, $t0, $t1
+lw $t3, 12($sp)
+addi $t3, $t3, 1
+sw $t3, 12($sp)
+li $t4, 0
+add $t4, $t2, $t3
+move $a0, $t4
 li $v0, 1
 syscall
 la $a0, endl
 li $v0, 4
 syscall
 
-li $t0, 1
-li $t1, -230
+lw $t0, 12($sp)
 move $a0, $t0
-move $a1, $t1
-addi $sp, $sp, -4
-sw $ra, 0($sp)
-jal expInt
-move $t2, $v0
-lw $ra, 0($sp)
-addi $sp, $sp, 4
-move $a0, $t2
 li $v0, 1
 syscall
 la $a0, endl
 li $v0, 4
 syscall
 
-li $t0, -2
-li $t1, 2
-move $a0, $t0
-move $a1, $t1
-addi $sp, $sp, -4
-sw $ra, 0($sp)
-jal expInt
-move $t2, $v0
-lw $ra, 0($sp)
-addi $sp, $sp, 4
-move $a0, $t2
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
+lw $t0, float4
+sw $t0, 16($sp)
 
-lw $t0, float16
-lw $t1, float17
-move $a0, $t0
-move $a1, $t1
-addi $sp, $sp, -4
-sw $ra, 0($sp)
-jal pow
-move $t2, $v0
-lw $ra, 0($sp)
-addi $sp, $sp, 4
-lw $t3, float18
-mtc1 $t2, $f0
-mtc1 $t3, $f2
-add.s $f0, $f0, $f2
-mfc1 $t4, $f0
-mtc1 $t4, $f12
+l.s $f0, 16($sp)
+l.s $f2, fone
+sub.s $f0, $f0, $f2
+s.s $f0, 16($sp)
+mfc1 $t0, $f0
+mtc1 $t0, $f12
 li $v0, 2
 syscall
 la $a0, endl

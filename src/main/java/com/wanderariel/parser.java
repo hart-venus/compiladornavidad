@@ -644,6 +644,17 @@ public class parser extends java_cup.runtime.lr_parser {
     return a.getTipo();
   }
 
+  // overloading del metodo pero unario
+  public TipoExpresion validarTipado(String op, Expresion a, ArrayList<TipoExpresion> tiposValidos) {
+    // validar que el tipo de a esté en la lista de tipos validos
+    if (!tiposValidos.contains(a.getTipo())) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + a.getTipo().toString() + " no valido para operacion " + op);
+      return TipoExpresion.NULL;
+    }
+
+    return a.getTipo();
+  }
+
 
   public void inicializarBuffers(){
     // carga los buffer codeBuffer y dataBuffer con .text y .data
@@ -2433,7 +2444,55 @@ class CUP$parser$actions {
           case 80: // expr_ar_regaloprin ::= op_inc_quien id_persona 
             {
               Object RESULT =null;
+		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    // conseguir la dirección de la variable
+    var dir = getDireccion(id.toString());
+    var reg = getUnoccupiedRegister();
+    if (dir == null){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " no declarada");
+      RESULT = new Expresion("null", TipoExpresion.NULL);
+    }
+    else {
+      // conseguir el tipo de la variable (si tiene dirección también tiene tipo)
+      var tipo = getTipo(id.toString(), false);
+      switch (tipo) {
+        case INT:
+          // conseguir valor en la dirección cargándolo a un registro
+          codeBuffer.append("lw " + reg + ", " + dir + "\n");
+          // sumar 1 al registro
+          codeBuffer.append("addi " + reg + ", " + reg + ", 1\n");
+          // guardar el valor en la dirección
+          codeBuffer.append("sw " + reg + ", " + dir + "\n");
+          RESULT = new Expresion(id.toString() + "++", TipoExpresion.INT, reg);
 
+          break;
+        case FLOAT:
+          // conseguir valor en la dirección cargándolo a un registro flotante
+          var fReg = getUnoccupiedFloatRegister();
+          codeBuffer.append("l.s " + fReg + ", " + dir + "\n");
+          // cargar 1 en un registro flotante
+          var fRegOne = getUnoccupiedFloatRegister();
+          codeBuffer.append("l.s " + fRegOne + ", fone\n");
+          // sumar 1 al registro
+          codeBuffer.append("add.s " + fReg + ", " + fReg + ", " + fRegOne + "\n");
+          // guardar el valor en la dirección
+          codeBuffer.append("s.s " + fReg + ", " + dir + "\n");
+          // cargar el valor del registro flotante a un registro de uso general
+          codeBuffer.append("mfc1 " + reg + ", " + fReg + "\n");
+          RESULT = new Expresion(id.toString() + "++", TipoExpresion.FLOAT, reg);
+
+          break;
+        default:
+          System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para incremento");
+          RESULT = new Expresion("null", TipoExpresion.NULL);
+      }
+    }
+
+
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_ar_regaloprin",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -2442,7 +2501,51 @@ class CUP$parser$actions {
           case 81: // expr_ar_regaloprin ::= op_dec_grinch id_persona 
             {
               Object RESULT =null;
+		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+    // Conseguir dirección de la variable
+    var dir = getDireccion(id.toString());
+    var reg = getUnoccupiedRegister();
+    if (dir == null){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " no declarada");
+      RESULT = new Expresion("null", TipoExpresion.NULL);
+    } else {
+      var tipo = getTipo(id.toString(), false);
+      switch (tipo) {
+        case INT:
+          // conseguir valor en la dirección cargándolo a un registro
+          codeBuffer.append("lw " + reg + ", " + dir + "\n");
+          // restar 1 al registro
+          codeBuffer.append("addi " + reg + ", " + reg + ", -1\n");
+          // guardar el valor en la dirección
+          codeBuffer.append("sw " + reg + ", " + dir + "\n");
+          RESULT = new Expresion(id.toString() + "--", TipoExpresion.INT, reg);
 
+          break;
+        case FLOAT:
+          // conseguir valor en la dirección cargándolo a un registro flotante
+          var fReg = getUnoccupiedFloatRegister();
+          codeBuffer.append("l.s " + fReg + ", " + dir + "\n");
+          // cargar 1 en un registro flotante
+          var fRegOne = getUnoccupiedFloatRegister();
+          codeBuffer.append("l.s " + fRegOne + ", fone\n");
+          // restar 1 al registro
+          codeBuffer.append("sub.s " + fReg + ", " + fReg + ", " + fRegOne + "\n");
+          // guardar el valor en la dirección
+          codeBuffer.append("s.s " + fReg + ", " + dir + "\n");
+          // cargar el valor del registro flotante a un registro de uso general
+          codeBuffer.append("mfc1 " + reg + ", " + fReg + "\n");
+          RESULT = new Expresion(id.toString() + "--", TipoExpresion.FLOAT, reg);
+
+          break;
+        default:
+          System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para decremento");
+          RESULT = new Expresion("null", TipoExpresion.NULL);
+      }
+    }
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_ar_regaloprin",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
