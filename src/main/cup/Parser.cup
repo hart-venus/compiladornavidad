@@ -745,7 +745,33 @@ l_arr_gordo ::= cb_abre_regalo args_santa:a cb_cierra_regalo
 :};
 
 do_until_fabrica_juguetes ::=
-  do_hace bloque_codigo_casa_jengibre until_revisa p_abre_cuento expresion_regalo p_cierra_cuento; // do {} until (a)|
+  do_hace {:
+    // conseguir nuevo label
+    var label = "do" + labelId;
+    // agregar el label al stack de control
+    tablasSimbolos.get(currentHash).controlStackPush(label);
+    // agregar el label al codeBuffer
+    codeBuffer.append(label + ":\n");
+    ++labelId;
+  :} bloque_codigo_casa_jengibre until_revisa p_abre_cuento expresion_regalo:e p_cierra_cuento
+  
+  {:
+    // 1. validar que la expresión sea booleana, sino, error semántico
+    var expr = (Expresion)e;
+    if (expr.getTipo() != TipoExpresion.BOOL) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una expresion booleana");
+    }
+    else {
+      // 2. si la expresión es falsa, saltar al label del do
+      var label = tablasSimbolos.get(currentHash).controlStackTop();
+      codeBuffer.append("beq " + expr.getDireccion() + ", $zero, " + label + "\n");
+      // 4. agregar el label del fin del do
+      codeBuffer.append(label + "_fin:\n");
+      // 5. sacar el label del stack de control
+      tablasSimbolos.get(currentHash).controlStackPop();
+    }
+  :}
+  ; // do {} until (a)|
 
 for_vispera ::=
   for_envuelve p_abre_cuento asignacion_existente_nieve fin_regalo expresion_regalo fin_regalo expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre; // for (a| b| c) {}

@@ -6,28 +6,22 @@ ftwo: .float 2.0
 log2: .float 0.69314718055994
 str0: .asciiz "fizz"
 str1: .asciiz "buzz"
-str2: .asciiz "A"
-str3: .asciiz "B"
-str4: .asciiz "C"
-str5: .asciiz "b es true"
-str6: .asciiz "b es false"
-str7: .asciiz "Mi entrada es cero."
-str8: .asciiz "Mi entrada es uno."
-str9: .asciiz "Mi entrada es dos, o cuatro."
-str10: .asciiz "Lo siento, no puedo leer tu entrada."
-str11: .asciiz "Mi entrada es menor o igual a cuatro."
-str12: .asciiz "mi entrada es uno."
-str13: .asciiz "mi entrada es dos."
-str14: .asciiz "mi entrada es tres."
-str15: .asciiz "mi entrada es cuatro."
-str16: .asciiz "mi entrada es menor a uno."
-str17: .asciiz "Mi entrada es mayor a cuatro."
+str2: .asciiz "AAAAA"
 .text
 main:
-li $t0, 3
+li $t0, 0
 sw $t0, 0($sp)
 
-if0:
+la $t0, str0
+move $t1, $t0
+sw $t1, 4($sp)
+
+la $t0, str1
+move $t1, $t0
+sw $t1, 8($sp)
+
+do0:
+if1:
 lw $t0, 0($sp)
 li $t1, 3
 li $t2, 0
@@ -36,30 +30,50 @@ mfhi $t2
 li $t3, 0
 sub $t4, $t2, $t3
 sltiu $t4, $t4, 1
-beq $t4, $zero, if0_false
-la $t5, str0
-move $a0, $t5
+lw $t5, 0($sp)
+li $t6, 5
+li $t7, 0
+div $t5, $t6
+mfhi $t7
+li $t8, 0
+sub $t9, $t7, $t8
+sltiu $t9, $t9, 1
+and $t0, $t4, $t9
+beq $t0, $zero, if1_false
+li $t1, 0
+sw $t1, 12($sp)
+
+do2:
+la $t0, str2
+move $a0, $t0
 li $v0, 4
 syscall
 la $a0, endl
 li $v0, 4
 syscall
 
-j if0_fin
-if0_false:
-if0_fin:
+lw $t0, 12($sp)
+addi $t0, $t0, 1
+sw $t0, 12($sp)
 
-if1:
+lw $t0, 12($sp)
+li $t1, 10
+slt $t2, $t1, $t0
+beq $t2, $zero, do2
+do2_fin:
+
+j if1_fin
+if1_false:
 lw $t0, 0($sp)
-li $t1, 5
+li $t1, 3
 li $t2, 0
 div $t0, $t1
 mfhi $t2
 li $t3, 0
 sub $t4, $t2, $t3
 sltiu $t4, $t4, 1
-beq $t4, $zero, if1_false
-la $t5, str1
+beq $t4, $zero, if1_elif3_fin
+lw $t5, 4($sp)
 move $a0, $t5
 li $v0, 4
 syscall
@@ -68,24 +82,17 @@ li $v0, 4
 syscall
 
 j if1_fin
-if1_false:
-if1_fin:
-
-li $t0, 4
-move $t1, $t0
-sw $t1, 0($sp)
-
-if2:
+if1_elif3_fin:
 lw $t0, 0($sp)
-li $t1, 3
+li $t1, 5
 li $t2, 0
 div $t0, $t1
 mfhi $t2
 li $t3, 0
 sub $t4, $t2, $t3
 sltiu $t4, $t4, 1
-beq $t4, $zero, if2_false
-la $t5, str2
+beq $t4, $zero, if1_elif4_fin
+lw $t5, 8($sp)
 move $a0, $t5
 li $v0, 4
 syscall
@@ -93,225 +100,25 @@ la $a0, endl
 li $v0, 4
 syscall
 
-j if2_fin
-if2_false:
+j if1_fin
+if1_elif4_fin:
 lw $t0, 0($sp)
-li $t1, 3
-slt $t2, $t1, $t0
-beq $t2, $zero, if2_elif3_fin
-la $t3, str3
-move $a0, $t3
-li $v0, 4
+move $a0, $t0
+li $v0, 1
 syscall
 la $a0, endl
 li $v0, 4
 syscall
 
-j if2_fin
-if2_elif3_fin:
+if1_fin:
+
 lw $t0, 0($sp)
-li $t1, 4
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-beq $t2, $zero, if2_elif4_fin
-la $t3, str4
-move $a0, $t3
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if2_fin
-if2_elif4_fin:
-if2_fin:
-
-li $t0, 0
-sw $t0, 4($sp)
-
-if5:
-lw $t0, 4($sp)
-beq $t0, $zero, if5_false
-la $t1, str5
-move $a0, $t1
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if5_fin
-if5_false:
-la $t0, str6
-move $a0, $t0
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-if5_fin:
-
-li $t0, -1
-sw $t0, 8($sp)
-
-if6:
-lw $t0, 8($sp)
-li $t1, 0
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-beq $t2, $zero, if6_false
-la $t3, str7
-move $a0, $t3
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if6_fin
-if6_false:
-lw $t0, 8($sp)
-li $t1, 1
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-beq $t2, $zero, if6_elif7_fin
-la $t3, str8
-move $a0, $t3
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if6_fin
-if6_elif7_fin:
-lw $t0, 8($sp)
-li $t1, 2
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-lw $t3, 8($sp)
-li $t4, 4
-sub $t5, $t3, $t4
-sltiu $t5, $t5, 1
-or $t6, $t2, $t5
-beq $t6, $zero, if6_elif8_fin
-la $t7, str9
-move $a0, $t7
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if6_fin
-if6_elif8_fin:
-la $t0, str10
-move $a0, $t0
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-if6_fin:
-
-if9:
-lw $t0, 8($sp)
-li $t1, 4
+addi $t0, $t0, 1
+sw $t0, 0($sp)
+li $t1, 100
 slt $t2, $t1, $t0
-xori $t3, $t2, 1
-beq $t3, $zero, if9_false
-la $t4, str11
-move $a0, $t4
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-if10:
-lw $t0, 8($sp)
-li $t1, 1
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-beq $t2, $zero, if10_false
-la $t3, str12
-move $a0, $t3
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if10_fin
-if10_false:
-lw $t0, 8($sp)
-li $t1, 2
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-beq $t2, $zero, if10_elif11_fin
-la $t3, str13
-move $a0, $t3
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if10_fin
-if10_elif11_fin:
-lw $t0, 8($sp)
-li $t1, 3
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-beq $t2, $zero, if10_elif12_fin
-la $t3, str14
-move $a0, $t3
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if10_fin
-if10_elif12_fin:
-lw $t0, 8($sp)
-li $t1, 4
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-beq $t2, $zero, if10_elif13_fin
-la $t3, str15
-move $a0, $t3
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if10_fin
-if10_elif13_fin:
-la $t0, str16
-move $a0, $t0
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-if10_fin:
-
-j if9_fin
-if9_false:
-la $t0, str17
-move $a0, $t0
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-if9_fin:
+beq $t2, $zero, do0
+do0_fin:
 
 li $v0, 10
 syscall

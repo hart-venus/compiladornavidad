@@ -1,63 +1,28 @@
 function int main(){
+    local int a <= 0|
+    local string fizz <= "fizz"|
+    local string buzz <= "buzz"|
 
-    local int x <= 3|
+    do {
 
-    if ((x ~ 3) == 0){
-        print("fizz")|
-    }
-    if ((x ~ 5) == 0){
-        print("buzz")|
-    }
+        if (((a ~ 3) == 0) ^ ((a ~ 5) == 0)){
 
-    @ Ahora, un test con n elif 
+            local int b <= 0|
+            do {
+                print("AAAAA")|
+                ++b|
+            } until (b > 10)|
 
-    x <= 4|
-
-    if ((x ~ 3) == 0){
-        print("A")|
-    } elif (x > 3){
-        print("B")|
-    } elif (x == 4){
-        print("C")|
-    } 
-
-    local bool b <= false|
-
-    if (b) {
-        print("b es true")|
-    } else {
-        print("b es false")|
-    }
-
-    local int input <= -1|
-
-    if (input == 0) {
-        print("Mi entrada es cero.")|
-    } elif (input == 1){
-        print("Mi entrada es uno.")|
-    } elif ((input == 2) # (input == 4)){
-        print("Mi entrada es dos, o cuatro.")|
-    } else {
-        print("Lo siento, no puedo leer tu entrada.")|
-    }
-
-    if (!(input > 4)){
-        print("Mi entrada es menor o igual a cuatro.")|
-
-        if (input == 1) {
-            print("mi entrada es uno.")|
-        } elif (input == 2){
-            print("mi entrada es dos.")|
-        } elif (input == 3){
-            print("mi entrada es tres.")|
-        } elif (input == 4){
-            print("mi entrada es cuatro.")|
+        }
+        elif ((a ~ 3) == 0){
+            print(fizz)|
+        } elif ((a ~ 5) == 0){
+            print(buzz)|
         } else {
-            print("mi entrada es menor a uno.")|
+            print(a)|
         }
 
+    } until (++a > 100)|
 
-    } else {
-        print("Mi entrada es mayor a cuatro.")|
-    }
+
 }
