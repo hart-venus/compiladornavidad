@@ -1,5 +1,7 @@
 | Tabla | TipoEntrada | Nombre | TipoDato |
 | ----- | ----------- | ------ | -------- |
 | main  | funcion     | main   | int      |
-| main  | local       | a      | char     |
-| main  | local       | b      | char     |
+| main  | local       | a      | int[]    |
+| main  | local       | i      | int      |
+| main  | local       | x      | char[]   |
+| main  | local       | y      | int      |

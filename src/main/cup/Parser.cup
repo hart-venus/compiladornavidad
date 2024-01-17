@@ -597,9 +597,32 @@ parametro_funcion_reno ::=
   :}
   ;
 elemento_arreglo_juguete ::= 
-  id_persona:id p_abre_empaque expresion_regalo p_cierra_empaque
+  id_persona:id p_abre_empaque expresion_regalo:e p_cierra_empaque
   {:
-    RESULT = id.toString();
+    var e_expr = (Expresion)e;
+    var tipo = e_expr.getTipo();
+    var tipo_id = getTipo(id.toString(), true);
+    RESULT = new Expresion("null", TipoExpresion.NULL);
+    if (tipo != TipoExpresion.INT) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para indexar arreglo");
+    } // validar que sea un arreglo 
+    else if (tipo_id != TipoExpresion.INT_ARR && tipo_id != TipoExpresion.CHAR_ARR){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo_id.toString() + " no es un arreglo");
+    } else {
+      // 1. conseguir el registro donde está el valor de la expresión
+      var reg = ((Expresion)e).getDireccion();
+      // 2. multiplicar el valor por 4 (bit shift left 2)
+      codeBuffer.append("sll " + reg + ", " + reg + ", 2\n");
+      // 3. conseguir un nuevo registro, cargar la dirección del arreglo y sumarle el valor del registro
+      var reg2 = getUnoccupiedRegister();
+      codeBuffer.append("la " + reg2 + ", " + getDireccion(id.toString()) + "\n");
+      codeBuffer.append("add " + reg2 + ", " + reg2 + ", " + reg + "\n");
+      // 4. cargar el valor en la dirección del registro
+      codeBuffer.append("lw " + reg + ", 0(" + reg2 + ")\n");
+      // 5. retornar el valor 
+      RESULT = new Expresion(reg2, Expresion.fromArr(tipo_id), reg);
+
+    }
   :}  
 ;
 
@@ -739,7 +762,23 @@ llamada_func_pino ::=
   
     RESULT = new Expresion("null", TipoExpresion.NULL);
   :}| // read(a)
-  read_escucha p_abre_cuento elemento_arreglo_juguete p_cierra_cuento; // read(a[1])
+  read_escucha p_abre_cuento elemento_arreglo_juguete:eaj p_cierra_cuento{:
+    // verificar que el elemento del arreglo sea un int (tiene tipo int)
+    var tipo = ((Expresion)eaj).getTipo();
+    if (tipo == TipoExpresion.INT) {
+      // leer un int
+      codeBuffer.append("li $v0, 5\n");
+      codeBuffer.append("syscall\n");
+      // guardar el valor en el registro de la variable
+      String dir = (String)((Expresion)eaj).getValor(); // string con la dirección del índice del arreglo
+      codeBuffer.append("sw $v0, 0(" + dir + ")\n");
+    }
+    else {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para read");
+    }
+
+    RESULT = new Expresion("null", TipoExpresion.NULL);
+  :}; // read(a[1])
 
 
 lineas_hombre_jengibre ::= 
@@ -852,11 +891,23 @@ for_vispera ::=
     }
   :}
   
-  fin_regalo expresion_regalo:inc p_cierra_cuento bloque_codigo_casa_jengibre
-  {:
-    // saltar al label del for (para revisar la condición)
+  fin_regalo {:
+    var label = tablasSimbolos.get(currentHash).controlStackTop();
+    // no queremos llegar aqui desde arriba, asi que saltamos al final
+    codeBuffer.append("j inc" + label + "_fin\n");
+    codeBuffer.append("inc" + label + ":\n");
+  :}
+  
+  expresion_regalo:inc {:
     var label = tablasSimbolos.get(currentHash).controlStackTop();
     codeBuffer.append("j " + label + "\n");
+    codeBuffer.append("inc" + label + "_fin:\n");
+  :}
+  
+  p_cierra_cuento bloque_codigo_casa_jengibre
+  {:
+    codeBuffer.append("j inc" + tablasSimbolos.get(currentHash).controlStackTop() + "\n");
+    var label = tablasSimbolos.get(currentHash).controlStackTop();
     // generar el fin
     codeBuffer.append(label + "_fin:\n");
     // sacar el label del stack de control
@@ -1021,6 +1072,30 @@ asignacion_adorno ::=
         }
         else {
           addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+          addDireccion(el.toString(), String.valueOf(tablasSimbolos.get(currentHash).getCurrentSize()) + "($sp)");
+          tablasSimbolos.get(currentHash).increaseSize(4 * i_arr);
+          // si es un char[], agregar el valor de ' ' por defecto.
+          if (t.toString() == "char") {
+            var reg = getUnoccupiedRegister();
+            var reg2 = getUnoccupiedRegister();
+            codeBuffer.append("li " + reg + ", 32\n");
+            // cargar en el otro registro la dirección de la variable
+            codeBuffer.append("la " + reg2 + ", " + getDireccion(el.toString()) + "\n");
+            for (int i = 0; i < i_arr; ++i) {
+              codeBuffer.append("sw " + reg + ", " + i * 4 + "(" + reg2 + ")\n");
+            }
+          }
+          // si es un int[], agregar el valor de 0 por defecto.
+          if (t.toString() == "int") {
+            var reg = getUnoccupiedRegister();
+            var reg2 = getUnoccupiedRegister();
+            codeBuffer.append("li " + reg + ", 0\n");
+            // cargar en el otro registro la dirección de la variable
+            codeBuffer.append("la " + reg2 + ", " + getDireccion(el.toString()) + "\n");
+            for (int i = 0; i < i_arr; ++i) {
+              codeBuffer.append("sw " + reg + ", " + i * 4 + "(" + reg2 + ")\n");
+            }
+          }
         }
       }
     }
@@ -1093,6 +1168,15 @@ asignacion_adorno ::=
             }
             else {
               addSymbol(new SymbolTableObject("local", t.toString() + "[]", el.toString()));
+              addDireccion(el.toString(), String.valueOf(tablasSimbolos.get(currentHash).getCurrentSize()) + "($sp)");
+              tablasSimbolos.get(currentHash).increaseSize(4 * arr.size());
+              // cargamos el registro en el que quedó cada expresión en el arreglo
+              var reg2 = getUnoccupiedRegister();
+              // cargar dirección de la variable en reg2
+              codeBuffer.append("la " + reg2 + ", " + getDireccion(el.toString()) + "\n");
+              for (int i = 0; i < arr.size(); ++i) {
+                codeBuffer.append("sw " + arr.get(i).getDireccion() + ", " + i * 4 + "(" + reg2 + ")\n");
+              }
             }
           }
         }
@@ -1122,7 +1206,23 @@ asignacion_existente_nieve ::=
     }
   
   :}| // a <= 1|
-  elemento_arreglo_juguete assign_entregar expresion_regalo; // a[1] <= 1|
+  elemento_arreglo_juguete:eaj assign_entregar expresion_regalo:e {:
+    var expr_eaj = (Expresion)eaj;
+    var expr_e = (Expresion)e;
+
+    if (expr_eaj.getTipo() != expr_e.getTipo()){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr_e.getTipo().toString() + " no valido para una variable de tipo " + expr_eaj.getTipo().toString());
+    } else if (expr_eaj.getTipo() == TipoExpresion.NULL){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Asignación mal formada.");
+    }
+    else {
+      // conseguir la dirección del id 
+      var dir = (String)expr_eaj.getValor();
+      var reg = expr_e.getDireccion();
+      // mover el valor de la expresión a la dirección del id
+      codeBuffer.append("sw " + reg + ", 0(" + dir + ")\n");
+    }
+  :}; // a[1] <= 1|
 
 expresion_regalo ::=
   l_santa:l
@@ -1146,7 +1246,7 @@ expresion_regalo ::=
   | 
   elemento_arreglo_juguete:eaj
   {:
-    RESULT = new Expresion(eaj.toString(), getTipo(eaj.toString(), true));
+    RESULT = eaj;
   :}
   | p_abre_cuento expresion_regalo:e p_cierra_cuento
   {: RESULT = e; :}
@@ -1467,8 +1567,49 @@ expr_ar_regaloprin ::=
       }
     }
   :}| // --a
-  op_dec_grinch elemento_arreglo_juguete | // --a[1]
-  op_inc_quien elemento_arreglo_juguete; // ++a[1]
+  op_dec_grinch elemento_arreglo_juguete:eaj {:
+    // validar tipado INT
+    var eaj_expr = (Expresion)eaj;
+    var reg = getUnoccupiedRegister();
+    var tipo_res = validarTipado("--", eaj_expr, new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT)));
+    if (tipo_res == TipoExpresion.INT) {
+      // conseguir la dirección del id 
+      var dir = (String)eaj_expr.getValor();
+      // conseguir valor en la dirección cargándolo a un registro
+      codeBuffer.append("lw " + reg + ", " + "0(" + dir + ")\n");
+      // restar 1 al registro
+      codeBuffer.append("addi " + reg + ", " + reg + ", -1\n");
+      // guardar el valor en la dirección
+      codeBuffer.append("sw " + reg + ", 0(" + dir + ")\n");
+      RESULT = new Expresion(eaj_expr.getValor().toString() + "--", TipoExpresion.INT, reg);
+    }
+    else {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + eaj_expr.getTipo().toString() + " no valido para decremento");
+      RESULT = new Expresion("null", TipoExpresion.NULL);
+    }
+  :}
+  | // --a[1]
+  op_inc_quien elemento_arreglo_juguete:eaj {:
+    // validar tipado INT
+    var eaj_expr = (Expresion)eaj;
+    var reg = getUnoccupiedRegister();
+    var tipo_res = validarTipado("++", eaj_expr, new ArrayList<TipoExpresion>(Arrays.asList(TipoExpresion.INT)));
+    if (tipo_res == TipoExpresion.INT) {
+      // conseguir la dirección del id 
+      var dir = (String)eaj_expr.getValor();
+      // conseguir valor en la dirección cargándolo a un registro
+      codeBuffer.append("lw " + reg + ", 0(" + dir + ")\n");
+      // sumar 1 al registro
+      codeBuffer.append("addi " + reg + ", " + reg + ", 1\n");
+      // guardar el valor en la dirección
+      codeBuffer.append("sw " + reg + ", 0(" + dir + ")\n");
+      RESULT = new Expresion(eaj_expr.getValor().toString() + "++", TipoExpresion.INT, reg);
+    }
+    else {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + eaj_expr.getTipo().toString() + " no valido para incremento");
+      RESULT = new Expresion("null", TipoExpresion.NULL);
+    }  
+  :}; // ++a[1]
 
 expr_rel_regalocomprado ::=
   expresion_regalo:a op_eq_astuto expresion_regalo:b {:

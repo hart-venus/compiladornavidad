@@ -45,6 +45,17 @@ public class Expresion {
         }
     }
 
+    public static TipoExpresion fromArr(TipoExpresion tipo){
+        switch (tipo) {
+            case INT_ARR:
+                return TipoExpresion.INT;
+            case CHAR_ARR:
+                return TipoExpresion.CHAR;
+            default:
+                return TipoExpresion.NULL;
+        }
+    }
+
     public static TipoExpresion tipoFromString(String tipo) {
         switch (tipo) {
             case "int":
