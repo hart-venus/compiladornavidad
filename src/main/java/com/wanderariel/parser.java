@@ -1481,7 +1481,18 @@ class CUP$parser$actions {
           case 34: // linea_hombre_jengibre ::= break_corta fin_regalo 
             {
               Object RESULT =null;
-
+		
+    // 1. validar que el break esté dentro de una estructura de control
+    // (if, for, do-until)
+    var top = tablasSimbolos.get(currentHash).controlStackNonIfTop();
+    if (top == null){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Break fuera de estructura de control");
+    }
+    else {
+      // 2. agregar el salto al final de la estructura de control
+      codeBuffer.append("j " + top + "_fin\n");
+    }
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("linea_hombre_jengibre",10, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1624,7 +1635,36 @@ class CUP$parser$actions {
           case 44: // llamada_func_pino ::= read_escucha p_abre_cuento id_persona p_cierra_cuento 
             {
               Object RESULT =null;
-
+		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
+    // validar que string exista y tenga tipo válido
+    var tipo = getTipo(id.toString(), true);
+    var dir = getDireccion(id.toString());
+    switch (tipo){
+      case INT:
+        // leer un int
+        codeBuffer.append("li $v0, 5\n");
+        codeBuffer.append("syscall\n");
+        // guardar el valor en el registro de la variable
+        codeBuffer.append("sw $v0, " + dir + "\n");
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+      case FLOAT:
+        // leer un float
+        codeBuffer.append("li $v0, 6\n");
+        codeBuffer.append("syscall\n");
+        // guardar el valor en el registro de la variable
+        codeBuffer.append("swc1 $f0, " + dir + "\n");
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+      default:
+        break;
+    }
+  
+    RESULT = new Expresion("null", TipoExpresion.NULL);
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("llamada_func_pino",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

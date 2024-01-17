@@ -608,19 +608,40 @@ retorno_carta_santa ::=
     }
     else {
       functionActual().setRetornaValor(true);
+      // mover el valor de la expresión al registro de retorno ($v0)
+      codeBuffer.append("move $v0, " + ((Expresion)e).getDireccion() + "\n");
+      codeBuffer.append("jr $ra\n");
     }
-  
-  
-  :}
-  
-  |
-  return_envia; // sin expresion de retorno
+  :}|
+  return_envia {:
+    // 1. validar que el break esté dentro de una estructura de control
+    // (if, for, do-until)
+    var top = tablasSimbolos.get(currentHash).controlStackNonIfTop();
+    if (top == null){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Return fuera de estructura de control");
+    }
+    else {
+      // 2. agregar el salto al final de la estructura de control
+      codeBuffer.append("j " + top + "_fin\n");
+    }
+  :}; // sin expresion de retorno, este solamente se usa como un "break"
 
 linea_hombre_jengibre ::= 
   asignacion_adorno fin_regalo|
   retorno_carta_santa fin_regalo|
   expresion_regalo fin_regalo|
-  break_corta fin_regalo|
+  break_corta fin_regalo {:
+    // 1. validar que el break esté dentro de una estructura de control
+    // (if, for, do-until)
+    var top = tablasSimbolos.get(currentHash).controlStackNonIfTop();
+    if (top == null){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Break fuera de estructura de control");
+    }
+    else {
+      // 2. agregar el salto al final de la estructura de control
+      codeBuffer.append("j " + top + "_fin\n");
+    }
+  :}|
   do_until_fabrica_juguetes fin_regalo|
   for_vispera|
   bloque_codigo_casa_jengibre| // permite bloques sueltos 
@@ -684,7 +705,33 @@ llamada_func_pino ::=
     codeBuffer.append("syscall\n");
     RESULT = new Expresion("null", TipoExpresion.NULL);
   :}| // print() -> Imprimir un salto de linea
-  read_escucha p_abre_cuento id_persona p_cierra_cuento | // read(a)
+  read_escucha p_abre_cuento id_persona:id p_cierra_cuento {:
+    // validar que string exista y tenga tipo válido
+    var tipo = getTipo(id.toString(), true);
+    var dir = getDireccion(id.toString());
+    switch (tipo){
+      case INT:
+        // leer un int
+        codeBuffer.append("li $v0, 5\n");
+        codeBuffer.append("syscall\n");
+        // guardar el valor en el registro de la variable
+        codeBuffer.append("sw $v0, " + dir + "\n");
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+      case FLOAT:
+        // leer un float
+        codeBuffer.append("li $v0, 6\n");
+        codeBuffer.append("syscall\n");
+        // guardar el valor en el registro de la variable
+        codeBuffer.append("swc1 $f0, " + dir + "\n");
+        RESULT = new Expresion("null", TipoExpresion.NULL);
+        break;
+      default:
+        break;
+    }
+  
+    RESULT = new Expresion("null", TipoExpresion.NULL);
+  :}| // read(a)
   read_escucha p_abre_cuento elemento_arreglo_juguete p_cierra_cuento; // read(a[1])
 
 

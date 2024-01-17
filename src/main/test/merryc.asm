@@ -4,48 +4,10 @@ fzero: .float 0.0
 fone: .float 1.0
 ftwo: .float 2.0
 log2: .float 0.69314718055994
-str0: .asciiz "fizz"
-str1: .asciiz "buzz"
-str2: .asciiz "AAAAA"
-str3: .asciiz "nice"
+str0: .asciiz "hola mundo"
 .text
 main:
-li $t0, 0
-sw $t0, 0($sp)
-
 la $t0, str0
-move $t1, $t0
-sw $t1, 4($sp)
-
-la $t0, str1
-move $t1, $t0
-sw $t1, 8($sp)
-
-do0:
-if1:
-lw $t0, 0($sp)
-li $t1, 3
-li $t2, 0
-div $t0, $t1
-mfhi $t2
-li $t3, 0
-sub $t4, $t2, $t3
-sltiu $t4, $t4, 1
-lw $t5, 0($sp)
-li $t6, 5
-li $t7, 0
-div $t5, $t6
-mfhi $t7
-li $t8, 0
-sub $t9, $t7, $t8
-sltiu $t9, $t9, 1
-and $t0, $t4, $t9
-beq $t0, $zero, if1_false
-li $t1, 0
-sw $t1, 12($sp)
-
-do2:
-la $t0, str2
 move $a0, $t0
 li $v0, 4
 syscall
@@ -53,89 +15,48 @@ la $a0, endl
 li $v0, 4
 syscall
 
-lw $t0, 12($sp)
-addi $t0, $t0, 1
-sw $t0, 12($sp)
-
-lw $t0, 12($sp)
-li $t1, 10
-slt $t2, $t1, $t0
-beq $t2, $zero, do2
-do2_fin:
-
-j if1_fin
-if1_false:
-lw $t0, 0($sp)
-li $t1, 3
-li $t2, 0
-div $t0, $t1
-mfhi $t2
-li $t3, 0
-sub $t4, $t2, $t3
-sltiu $t4, $t4, 1
-beq $t4, $zero, if1_elif3_fin
-lw $t5, 4($sp)
-move $a0, $t5
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if1_fin
-if1_elif3_fin:
-lw $t0, 0($sp)
-li $t1, 5
-li $t2, 0
-div $t0, $t1
-mfhi $t2
-li $t3, 0
-sub $t4, $t2, $t3
-sltiu $t4, $t4, 1
-beq $t4, $zero, if1_elif4_fin
-lw $t5, 8($sp)
-move $a0, $t5
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if1_fin
-if1_elif4_fin:
-lw $t0, 0($sp)
-move $a0, $t0
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-if1_fin:
-
-lw $t0, 0($sp)
-addi $t0, $t0, 1
+li $t0, 0
 sw $t0, 0($sp)
-li $t1, 100
-slt $t2, $t1, $t0
-beq $t2, $zero, do0
-do0_fin:
 
 li $t0, 0
-sw $t0, 16($sp)
+sw $t0, 4($sp)
+
+lw $t0, fzero
+sw $t0, 8($sp)
+
+li $v0, 5
+syscall
+sw $v0, 4($sp)
+
+li $v0, 6
+syscall
+swc1 $f0, 8($sp)
+
+lw $t0, 8($sp)
+lw $t1, 8($sp)
+mtc1 $t0, $f0
+mtc1 $t1, $f2
+mul.s $f0, $f0, $f2
+mfc1 $t2, $f0
+mtc1 $t2, $f12
+li $v0, 2
+syscall
+la $a0, endl
+li $v0, 4
+syscall
 
 li $t0, 0
 move $t1, $t0
-sw $t1, 16($sp)
-for5:
-lw $t2, 16($sp)
-li $t3, 100
+sw $t1, 0($sp)
+for0:
+lw $t2, 0($sp)
+lw $t3, 4($sp)
 slt $t4, $t2, $t3
-beq $t4, $zero, for5_fin
-lw $t5, 16($sp)
+beq $t4, $zero, for0_fin
+lw $t5, 0($sp)
 addi $t5, $t5, 1
-sw $t5, 16($sp)
-lw $t6, 16($sp)
+sw $t5, 0($sp)
+lw $t6, 0($sp)
 move $a0, $t6
 li $v0, 1
 syscall
@@ -143,26 +64,8 @@ la $a0, endl
 li $v0, 4
 syscall
 
-if6:
-lw $t0, 16($sp)
-li $t1, 69
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-beq $t2, $zero, if6_false
-la $t3, str3
-move $a0, $t3
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if6_fin
-if6_false:
-if6_fin:
-
-j for5
-for5_fin:
+j for0
+for0_fin:
 
 li $v0, 10
 syscall

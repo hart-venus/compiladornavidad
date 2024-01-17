@@ -31,6 +31,17 @@ public class SymbolTable {
         return null;
     }
 
+    public String controlStackNonIfTop() {
+        // retorna el ultimo elemento del stack que no sea un if 
+        // (no tenga if como prefijo)
+        for (int i = controlStack.size() - 1; i >= 0; i--) {
+            if (!controlStack.get(i).startsWith("if")) {
+                return controlStack.get(i);
+            }
+        }
+        return null;
+    }
+
     public String controlStackPop() {
         if (controlStack.size() > 0) {
             return controlStack.remove(controlStack.size() - 1);
