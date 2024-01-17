@@ -452,7 +452,14 @@ l_santa ::=
     RESULT = new Expresion(false, TipoExpresion.BOOL, reg);
   :}
   | l_char_pascuero:l
-  {: RESULT = new Expresion(l, TipoExpresion.CHAR); :}
+  {: 
+    // conseguir registro disponible
+    var reg = getUnoccupiedRegister();
+    // mover el valor del literal al registro
+    codeBuffer.append("li " + reg + ", " + l + "\n");
+    RESULT = new Expresion(l, TipoExpresion.CHAR, reg);
+  
+  :}
   | l_string_kris:l
   {:
 
@@ -985,6 +992,12 @@ asignacion_adorno ::=
       if (t.toString() == "bool") {
         var reg = getUnoccupiedRegister();
         codeBuffer.append("li " + reg + ", 0\n");
+        codeBuffer.append("sw " + reg + ", " + getDireccion(id.toString()) + "\n");
+      }
+      // si es un char, agregar ' ' por defecto.
+      if (t.toString() == "char") {
+        var reg = getUnoccupiedRegister();
+        codeBuffer.append("li " + reg + ", 32\n");
         codeBuffer.append("sw " + reg + ", " + getDireccion(id.toString()) + "\n");
       }
     }

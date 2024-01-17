@@ -1,19 +1,7 @@
 function int main() {
-    print("hola mundo")|
-    local int i <= 0|
-    local int x <= 0|
-    local float z|
-    read(x)|
-    read(z)|
-
-    print(z * z)|
+    local char a|
+    a <= 'a'|
+    local char b <= 'b'|
 
 
-    for(i <= 0| i < x| ++i) {
-        print(i)|
-    }
-}
-
-function char test(int[] array){
-    return 'a'|
 }

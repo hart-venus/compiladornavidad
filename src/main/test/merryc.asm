@@ -4,68 +4,17 @@ fzero: .float 0.0
 fone: .float 1.0
 ftwo: .float 2.0
 log2: .float 0.69314718055994
-str0: .asciiz "hola mundo"
 .text
 main:
-la $t0, str0
-move $a0, $t0
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-li $t0, 0
+li $t0, 32
 sw $t0, 0($sp)
 
-li $t0, 0
-sw $t0, 4($sp)
-
-lw $t0, fzero
-sw $t0, 8($sp)
-
-li $v0, 5
-syscall
-sw $v0, 4($sp)
-
-li $v0, 6
-syscall
-swc1 $f0, 8($sp)
-
-lw $t0, 8($sp)
-lw $t1, 8($sp)
-mtc1 $t0, $f0
-mtc1 $t1, $f2
-mul.s $f0, $f0, $f2
-mfc1 $t2, $f0
-mtc1 $t2, $f12
-li $v0, 2
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-li $t0, 0
+li $t0, 'a'
 move $t1, $t0
 sw $t1, 0($sp)
-for0:
-lw $t2, 0($sp)
-lw $t3, 4($sp)
-slt $t4, $t2, $t3
-beq $t4, $zero, for0_fin
-lw $t5, 0($sp)
-addi $t5, $t5, 1
-sw $t5, 0($sp)
-lw $t6, 0($sp)
-move $a0, $t6
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
 
-j for0
-for0_fin:
+li $t0, 'b'
+sw $t0, 4($sp)
 
 li $v0, 10
 syscall

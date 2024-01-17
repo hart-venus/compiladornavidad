@@ -1101,7 +1101,14 @@ class CUP$parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object l = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = new Expresion(l, TipoExpresion.CHAR); 
+		 
+    // conseguir registro disponible
+    var reg = getUnoccupiedRegister();
+    // mover el valor del literal al registro
+    codeBuffer.append("li " + reg + ", " + l + "\n");
+    RESULT = new Expresion(l, TipoExpresion.CHAR, reg);
+  
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("l_santa",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1433,9 +1440,10 @@ class CUP$parser$actions {
     }
     else {
       functionActual().setRetornaValor(true);
+      // mover el valor de la expresión al registro de retorno ($v0)
+      codeBuffer.append("move $v0, " + ((Expresion)e).getDireccion() + "\n");
+      codeBuffer.append("jr $ra\n");
     }
-  
-  
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("retorno_carta_santa",20, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1445,7 +1453,18 @@ class CUP$parser$actions {
           case 30: // retorno_carta_santa ::= return_envia 
             {
               Object RESULT =null;
-
+		
+    // 1. validar que el break esté dentro de una estructura de control
+    // (if, for, do-until)
+    var top = tablasSimbolos.get(currentHash).controlStackNonIfTop();
+    if (top == null){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Return fuera de estructura de control");
+    }
+    else {
+      // 2. agregar el salto al final de la estructura de control
+      codeBuffer.append("j " + top + "_fin\n");
+    }
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("retorno_carta_santa",20, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -2110,6 +2129,12 @@ class CUP$parser$actions {
       if (t.toString() == "bool") {
         var reg = getUnoccupiedRegister();
         codeBuffer.append("li " + reg + ", 0\n");
+        codeBuffer.append("sw " + reg + ", " + getDireccion(id.toString()) + "\n");
+      }
+      // si es un char, agregar ' ' por defecto.
+      if (t.toString() == "char") {
+        var reg = getUnoccupiedRegister();
+        codeBuffer.append("li " + reg + ", 32\n");
         codeBuffer.append("sw " + reg + ", " + getDireccion(id.toString()) + "\n");
       }
     }
