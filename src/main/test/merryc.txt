@@ -1,4 +1,11 @@
 function int main(){
-    0.5 == 0.10|
-    0.5 == (0.3 + 0.2)| 
+
+    local int x <= 3|
+    if(x>1){
+        print("todo bien")|
+    }
+    if((1=>2) # (true ^ false)){
+        print("wtf!")|
+    }
+
 }

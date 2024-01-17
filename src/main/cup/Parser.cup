@@ -165,6 +165,7 @@ action code {:
 parser code {:
   Lexer lex;
   int literalId = 0;
+  int labelId = 0;
   String outputPath;
   private final String LIB_PATH = "src/main/asm/santalib.asm";
 
@@ -350,7 +351,7 @@ non terminal asignacion_adorno, expresion_regalo, elemento_arreglo_juguete, l_ar
 non terminal expr_ar_regaloprin, expr_rel_regalocomprado, expr_log_regalomanual;
 // no terminales para flujo de control
 non terminal retorno_carta_santa, llamada_func_pino, do_until_fabrica_juguetes;
-non terminal for_vispera, if_travieso, elif_ayudante_lista, elif_lista_santa, else_inocente;
+non terminal for_vispera, if_travieso, elif_ayudante_lista, elif_lista_santa, else_inocente, if_declaracion_lista;
 
 // Precedencia y asociatividad de operadores
 precedence left op_res_rodolfo, op_sum_cupido;
@@ -749,11 +750,40 @@ do_until_fabrica_juguetes ::=
 for_vispera ::=
   for_envuelve p_abre_cuento asignacion_existente_nieve fin_regalo expresion_regalo fin_regalo expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre; // for (a| b| c) {}
 
+
+if_declaracion_lista ::= if_elfo {:
+  // iniciar estructura IF 
+  tablasSimbolos.get(currentHash).controlStackPush("if" + labelId);
+  codeBuffer.append("if" + labelId + ":\n");
+  ++labelId;
+
+:} p_abre_cuento expresion_regalo:e p_cierra_cuento {:
+  // revisar tipado de la expresión
+  var expr = (Expresion)e;
+  var branchActual = tablasSimbolos.get(currentHash).controlStackTop();
+  if (expr.getTipo() != TipoExpresion.BOOL) {
+    System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una expresion booleana");
+    // saltar directamente al fin
+    codeBuffer.append("j " + branchActual + "_fin\n");
+  }
+  else {
+    // si no es cierta la expresión, saltar al fin
+    codeBuffer.append("beq " + expr.getDireccion() + ", $zero, " + branchActual + "_fin\n");
+  }
+
+:} bloque_codigo_casa_jengibre:b {:
+  System.out.println("if_declaracion_lista");
+  // terminar estructura IF
+  var branchActual = tablasSimbolos.get(currentHash).controlStackTop();
+  codeBuffer.append(branchActual + "_fin:\n");
+  tablasSimbolos.get(currentHash).controlStackPop();
+:};
+
 if_travieso ::=
-  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre| // if (a) {}
-  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre elif_ayudante_lista| // if (a) {} elif (b) {} elif ...
-  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre else_inocente| // if (a) {} else {}
-  if_elfo p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre elif_ayudante_lista else_inocente; // if (a) {} elif (b) {} elif ... else {}
+  if_declaracion_lista |
+  if_declaracion_lista elif_ayudante_lista| // if (a) {} elif (b) {} elif ...
+  if_declaracion_lista else_inocente| // if (a) {} else {}
+  if_declaracion_lista elif_ayudante_lista else_inocente; // if (a) {} elif (b) {} elif ... else {}
 
 elif_ayudante_lista ::=
   elif_lista_santa | elif_ayudante_lista elif_lista_santa;

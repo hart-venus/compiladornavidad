@@ -4,39 +4,47 @@ fzero: .float 0.0
 fone: .float 1.0
 ftwo: .float 2.0
 log2: .float 0.69314718055994
-float0: .float 0.5
-float1: .float 0.1
-float2: .float 0.5
-float3: .float 0.3
-float4: .float 0.2
+str0: .asciiz "todo bien"
+str1: .asciiz "wtf!"
 .text
 main:
-lw $t0, float0
-lw $t1, float1
-addi $sp, $sp, -4
-sw $ra, 0($sp)
-move $a0, $t0
-move $a1, $t1
-jal eqFloat
-move $t2, $v0
-lw $ra, 0($sp)
-addi $sp, $sp, 4
+li $t0, 3
+sw $t0, 0($sp)
 
-lw $t0, float2
-lw $t1, float3
-lw $t2, float4
-mtc1 $t1, $f0
-mtc1 $t2, $f2
-add.s $f0, $f0, $f2
-mfc1 $t3, $f0
-addi $sp, $sp, -4
-sw $ra, 0($sp)
-move $a0, $t0
-move $a1, $t3
-jal eqFloat
-move $t4, $v0
-lw $ra, 0($sp)
-addi $sp, $sp, 4
+if0:
+lw $t0, 0($sp)
+li $t1, 1
+slt $t2, $t1, $t0
+beq $t2, $zero, if0_fin
+la $t3, str0
+move $a0, $t3
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+if0_fin:
+
+if1:
+li $t0, 1
+li $t1, 2
+slt $t2, $t0, $t1
+xori $t2, $t2, 1
+li $t3, 1
+li $t4, 0
+and $t5, $t3, $t4
+or $t6, $t2, $t5
+beq $t6, $zero, if1_fin
+la $t7, str1
+move $a0, $t7
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+if1_fin:
 
 li $v0, 10
 syscall
