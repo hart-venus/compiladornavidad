@@ -774,7 +774,40 @@ do_until_fabrica_juguetes ::=
   ; // do {} until (a)|
 
 for_vispera ::=
-  for_envuelve p_abre_cuento asignacion_existente_nieve fin_regalo expresion_regalo fin_regalo expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre; // for (a| b| c) {}
+  for_envuelve p_abre_cuento asignacion_existente_nieve {:
+    // después del código de la asignación, se entra al for
+    // conseguir nuevo label
+    var label = "for" + labelId;
+    // agregar el label al stack de control
+    tablasSimbolos.get(currentHash).controlStackPush(label);
+    // agregar el label al codeBuffer
+    codeBuffer.append(label + ":\n");
+    ++labelId;
+  :}
+  fin_regalo expresion_regalo:e {:
+    // error semántico si la expresión no es booleana
+    var expr = (Expresion)e;
+    var label = tablasSimbolos.get(currentHash).controlStackTop();
+    if (expr.getTipo() != TipoExpresion.BOOL) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una expresion booleana");
+      codeBuffer.append("j " + label + "_fin\n");
+    }
+    else {
+      // si la expresión es falsa, saltar al fin del for
+      codeBuffer.append("beq " + expr.getDireccion() + ", $zero, " + label + "_fin\n");
+    }
+  :}
+  
+  fin_regalo expresion_regalo:inc p_cierra_cuento bloque_codigo_casa_jengibre
+  {:
+    // saltar al label del for (para revisar la condición)
+    var label = tablasSimbolos.get(currentHash).controlStackTop();
+    codeBuffer.append("j " + label + "\n");
+    // generar el fin
+    codeBuffer.append(label + "_fin:\n");
+    // sacar el label del stack de control
+    tablasSimbolos.get(currentHash).controlStackPop();
+  :}; // for (a| b| c) {}
 
 
 if_declaracion_lista ::= if_elfo {:

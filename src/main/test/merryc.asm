@@ -7,6 +7,7 @@ log2: .float 0.69314718055994
 str0: .asciiz "fizz"
 str1: .asciiz "buzz"
 str2: .asciiz "AAAAA"
+str3: .asciiz "nice"
 .text
 main:
 li $t0, 0
@@ -119,6 +120,49 @@ li $t1, 100
 slt $t2, $t1, $t0
 beq $t2, $zero, do0
 do0_fin:
+
+li $t0, 0
+sw $t0, 16($sp)
+
+li $t0, 0
+move $t1, $t0
+sw $t1, 16($sp)
+for5:
+lw $t2, 16($sp)
+li $t3, 100
+slt $t4, $t2, $t3
+beq $t4, $zero, for5_fin
+lw $t5, 16($sp)
+addi $t5, $t5, 1
+sw $t5, 16($sp)
+lw $t6, 16($sp)
+move $a0, $t6
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+if6:
+lw $t0, 16($sp)
+li $t1, 69
+sub $t2, $t0, $t1
+sltiu $t2, $t2, 1
+beq $t2, $zero, if6_false
+la $t3, str3
+move $a0, $t3
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if6_fin
+if6_false:
+if6_fin:
+
+j for5
+for5_fin:
 
 li $v0, 10
 syscall

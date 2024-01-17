@@ -5,3 +5,4 @@
 | main  | local       | fizz   | string   |
 | main  | local       | buzz   | string   |
 | main  | local       | b      | int      |
+| main  | local       | i      | int      |

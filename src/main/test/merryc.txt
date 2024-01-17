@@ -24,5 +24,13 @@ function int main(){
 
     } until (++a > 100)|
 
+    local int i <= 0|
+    for (i <= 0| i < 100| ++i){
+        print(i)|
+        if (i == 69){
+            print("nice")|
+        }
+    }
+
 
 }
