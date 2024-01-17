@@ -1491,6 +1491,8 @@ class CUP$parser$actions {
       functionActual().setRetornaValor(true);
       // mover el valor de la expresión al registro de retorno ($v0)
       codeBuffer.append("move $v0, " + ((Expresion)e).getDireccion() + "\n");
+      // restaurar la pila 
+      var size = tablasSimbolos.get(currentHash).getCurrentSize();
       codeBuffer.append("jr $ra\n");
     }
   
@@ -1639,18 +1641,22 @@ class CUP$parser$actions {
         codeBuffer.append("addi $sp, $sp, -" + (regs.size() * 4) + "\n");
         var i = 0;
         for (String reg : regs) {
-          codeBuffer.append("sw " + reg + ", " + i + "($sp)\n");
+          codeBuffer.append("sw " + reg + ", " + i*4 + "($sp)\n");
+          i++;
         }
         // mover mi stack pointer para no sobreescribir mis variables locales
-        codeBuffer.append("addi $sp, $sp, -" + (tablasSimbolos.get(currentHash).getCurrentSize() + 4) + "\n");
+        var size = tablasSimbolos.get(id.toString()).getCurrentSize() + 4;
+        codeBuffer.append("addi $sp, $sp, -" + size + "\n");
+        
         // llamar a la función
         codeBuffer.append("jal _" + id.toString() + "\n");
         // mover mi stack pointer para no sobreescribir mis variables locales
-        codeBuffer.append("addi $sp, $sp, " + (tablasSimbolos.get(currentHash).getCurrentSize() + 4) + "\n");
+        codeBuffer.append("addi $sp, $sp, " + size + "\n");
         // recuperar registros ocupados
         i = 0;
         for (String reg : regs) {
-          codeBuffer.append("lw " + reg + ", " + i + "($sp)\n");
+          codeBuffer.append("lw " + reg + ", " + i*4 + "($sp)\n");
+          i++;
         }
         codeBuffer.append("addi $sp, $sp, " + (regs.size() * 4) + "\n");
         // recuperar mi registro de retorno de la pila
@@ -1660,8 +1666,6 @@ class CUP$parser$actions {
         var reg = getUnoccupiedRegister();
         codeBuffer.append("move " + reg + ", $v0\n");
         RESULT = new Expresion("null", firma.getTipoRetorno(), reg);
-
-      
       }
     }
   

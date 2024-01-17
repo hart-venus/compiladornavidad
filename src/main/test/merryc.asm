@@ -7,6 +7,9 @@ log2: .float 0.69314718055994
 .text
 _dosPorTres:
 li $t0, 2
+sw $t0, 0($sp)
+
+li $t0, 2
 li $t1, 3
 li $t2, 0
 mul $t2, $t0, $t1
@@ -17,9 +20,9 @@ main:
 addi $sp, $sp, -4
 sw $ra, 0($sp)
 addi $sp, $sp, -0
-addi $sp, $sp, -4
+addi $sp, $sp, -8
 jal _dosPorTres
-addi $sp, $sp, 4
+addi $sp, $sp, 8
 addi $sp, $sp, 0
 lw $ra, 0($sp)
 addi $sp, $sp, 4
@@ -28,9 +31,9 @@ addi $sp, $sp, -4
 sw $ra, 0($sp)
 addi $sp, $sp, -4
 sw $t0, 0($sp)
-addi $sp, $sp, -4
+addi $sp, $sp, -8
 jal _dosPorTres
-addi $sp, $sp, 4
+addi $sp, $sp, 8
 lw $t0, 0($sp)
 addi $sp, $sp, 4
 lw $ra, 0($sp)
@@ -42,14 +45,14 @@ addi $sp, $sp, -4
 sw $ra, 0($sp)
 addi $sp, $sp, -12
 sw $t0, 0($sp)
-sw $t1, 0($sp)
-sw $t2, 0($sp)
-addi $sp, $sp, -4
+sw $t1, 4($sp)
+sw $t2, 8($sp)
+addi $sp, $sp, -8
 jal _dosPorTres
-addi $sp, $sp, 4
+addi $sp, $sp, 8
 lw $t0, 0($sp)
-lw $t1, 0($sp)
-lw $t2, 0($sp)
+lw $t1, 4($sp)
+lw $t2, 8($sp)
 addi $sp, $sp, 12
 lw $ra, 0($sp)
 addi $sp, $sp, 4
@@ -62,6 +65,82 @@ syscall
 la $a0, endl
 li $v0, 4
 syscall
+
+li $t0, 0
+la $t1, 0($sp)
+sw $t0, 0($t1)
+sw $t0, 4($t1)
+sw $t0, 8($t1)
+sw $t0, 12($t1)
+sw $t0, 16($t1)
+sw $t0, 20($t1)
+sw $t0, 24($t1)
+sw $t0, 28($t1)
+sw $t0, 32($t1)
+sw $t0, 36($t1)
+sw $t0, 40($t1)
+sw $t0, 44($t1)
+sw $t0, 48($t1)
+sw $t0, 52($t1)
+sw $t0, 56($t1)
+sw $t0, 60($t1)
+sw $t0, 64($t1)
+sw $t0, 68($t1)
+sw $t0, 72($t1)
+sw $t0, 76($t1)
+sw $t0, 80($t1)
+sw $t0, 84($t1)
+sw $t0, 88($t1)
+sw $t0, 92($t1)
+sw $t0, 96($t1)
+sw $t0, 100($t1)
+sw $t0, 104($t1)
+sw $t0, 108($t1)
+sw $t0, 112($t1)
+sw $t0, 116($t1)
+sw $t0, 120($t1)
+sw $t0, 124($t1)
+sw $t0, 128($t1)
+sw $t0, 132($t1)
+sw $t0, 136($t1)
+sw $t0, 140($t1)
+sw $t0, 144($t1)
+sw $t0, 148($t1)
+sw $t0, 152($t1)
+sw $t0, 156($t1)
+
+li $t0, 0
+sw $t0, 160($sp)
+
+li $t0, 0
+move $t1, $t0
+sw $t1, 160($sp)
+for0:
+lw $t2, 160($sp)
+li $t3, 40
+slt $t4, $t2, $t3
+beq $t4, $zero, for0_fin
+j incfor0_fin
+incfor0:
+lw $t5, 160($sp)
+addi $t5, $t5, 1
+sw $t5, 160($sp)
+j for0
+incfor0_fin:
+lw $t6, 160($sp)
+sll $t6, $t6, 2
+la $t7, 0($sp)
+add $t7, $t7, $t6
+lw $t6, 0($t7)
+move $a0, $t6
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j incfor0
+for0_fin:
 
 li $v0, 10
 syscall

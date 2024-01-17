@@ -1,4 +1,6 @@
 function int dosPorTres(){
+    local int x <= 2|
+    @local int y <= 4|
     return 2*3|
 }
 
@@ -6,4 +8,10 @@ function int dosPorTres(){
 function int main(){
 
     print(dosPorTres() * dosPorTres() + dosPorTres())|
+
+    local int a[40]|
+    local int i|
+    for (i <= 0| i < 40| ++i){
+        print(a[i])|
+    }
 }
