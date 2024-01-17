@@ -4,156 +4,64 @@ fzero: .float 0.0
 fone: .float 1.0
 ftwo: .float 2.0
 log2: .float 0.69314718055994
-str0: .asciiz "Inserte el indice a modificar: "
-str1: .asciiz "Indice fuera de rango"
-str2: .asciiz "Inserte el nuevo valor: "
 .text
-main:
-li $t0, 1
-li $t1, 2
-li $t2, 3
-li $t3, 4
-li $t4, 5
-li $t5, 6
-li $t6, 7
-li $t7, 8
-la $t8, 0($sp)
-sw $t0, 0($t8)
-sw $t1, 4($t8)
-sw $t2, 8($t8)
-sw $t3, 12($t8)
-sw $t4, 16($t8)
-sw $t5, 20($t8)
-sw $t6, 24($t8)
-sw $t7, 28($t8)
-
-li $t0, 0
-sw $t0, 32($sp)
-
-la $t0, str0
-move $a0, $t0
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-li $v0, 5
-syscall
-sw $v0, 32($sp)
-
-if0:
-lw $t0, 32($sp)
-li $t1, 0
-slt $t2, $t0, $t1
-lw $t3, 32($sp)
-li $t4, 7
-slt $t5, $t4, $t3
-or $t6, $t2, $t5
-beq $t6, $zero, if0_false
-la $t7, str1
-move $a0, $t7
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if0_fin
-if0_false:
-la $t0, str2
-move $a0, $t0
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-lw $t0, 32($sp)
-sll $t0, $t0, 2
-la $t1, 0($sp)
-add $t1, $t1, $t0
-lw $t0, 0($t1)
-li $v0, 5
-syscall
-sw $v0, 0($t1)
-
-if0_fin:
-
-li $t0, 0
-move $t1, $t0
-sw $t1, 32($sp)
-for1:
-lw $t2, 32($sp)
-li $t3, 8
-slt $t4, $t2, $t3
-beq $t4, $zero, for1_fin
-j incfor1_fin
-incfor1:
-lw $t5, 32($sp)
-addi $t5, $t5, 1
-sw $t5, 32($sp)
-j for1
-incfor1_fin:
-lw $t6, 32($sp)
-sll $t6, $t6, 2
-la $t7, 0($sp)
-add $t7, $t7, $t6
-lw $t6, 0($t7)
-lw $t8, 0($t7)
-addi $t8, $t8, 1
-sw $t8, 0($t7)
-move $a0, $t8
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j incfor1
-for1_fin:
-
-li $t0, 0
-move $t1, $t0
-sw $t1, 32($sp)
-for2:
-lw $t2, 32($sp)
-li $t3, 8
-slt $t4, $t2, $t3
-beq $t4, $zero, for2_fin
-j incfor2_fin
-incfor2:
-lw $t5, 32($sp)
-addi $t5, $t5, 1
-sw $t5, 32($sp)
-j for2
-incfor2_fin:
-lw $t6, 32($sp)
-sll $t6, $t6, 2
-la $t7, 0($sp)
-add $t7, $t7, $t6
-lw $t6, 0($t7)
-move $a0, $t6
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j incfor2
-for2_fin:
-
-li $t0, 'a'
-li $t1, 'b'
-la $t2, 36($sp)
-sw $t0, 0($t2)
-sw $t1, 4($t2)
-
-li $t0, 0
-sw $t0, 44($sp)
-
+_dosPorTres:
 li $t0, 2
-li $t1, 1
+li $t1, 3
+li $t2, 0
+mul $t2, $t0, $t1
+move $v0, $t2
+jr $ra
+
+main:
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+addi $sp, $sp, -0
+addi $sp, $sp, -4
+jal _dosPorTres
+addi $sp, $sp, 4
+addi $sp, $sp, 0
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+move $t0, $v0
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+addi $sp, $sp, -4
+sw $t0, 0($sp)
+addi $sp, $sp, -4
+jal _dosPorTres
+addi $sp, $sp, 4
+lw $t0, 0($sp)
+addi $sp, $sp, 4
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+move $t1, $v0
+li $t2, 0
+mul $t2, $t0, $t1
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+addi $sp, $sp, -12
+sw $t0, 0($sp)
+sw $t1, 0($sp)
+sw $t2, 0($sp)
+addi $sp, $sp, -4
+jal _dosPorTres
+addi $sp, $sp, 4
+lw $t0, 0($sp)
+lw $t1, 0($sp)
+lw $t2, 0($sp)
+addi $sp, $sp, 12
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+move $t3, $v0
+li $t4, 0
+add $t4, $t2, $t3
+move $a0, $t4
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
 
 li $v0, 10
 syscall
