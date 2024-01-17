@@ -1,11 +1,63 @@
 function int main(){
 
     local int x <= 3|
-    if(x>1){
-        print("todo bien")|
+
+    if ((x ~ 3) == 0){
+        print("fizz")|
     }
-    if((1=>2) # (true ^ false)){
-        print("wtf!")|
+    if ((x ~ 5) == 0){
+        print("buzz")|
     }
 
+    @ Ahora, un test con n elif 
+
+    x <= 4|
+
+    if ((x ~ 3) == 0){
+        print("A")|
+    } elif (x > 3){
+        print("B")|
+    } elif (x == 4){
+        print("C")|
+    } 
+
+    local bool b <= false|
+
+    if (b) {
+        print("b es true")|
+    } else {
+        print("b es false")|
+    }
+
+    local int input <= -1|
+
+    if (input == 0) {
+        print("Mi entrada es cero.")|
+    } elif (input == 1){
+        print("Mi entrada es uno.")|
+    } elif ((input == 2) # (input == 4)){
+        print("Mi entrada es dos, o cuatro.")|
+    } else {
+        print("Lo siento, no puedo leer tu entrada.")|
+    }
+
+    if (!(input > 4)){
+        print("Mi entrada es menor o igual a cuatro.")|
+
+        if (input == 1) {
+            print("mi entrada es uno.")|
+        } elif (input == 2){
+            print("mi entrada es dos.")|
+        } elif (input == 3){
+            print("mi entrada es tres.")|
+        } elif (input == 4){
+            print("mi entrada es cuatro.")|
+        } else {
+            print("mi entrada es menor a uno.")|
+        }
+
+
+    } else {
+        print("Mi entrada es mayor a cuatro.")|
+    }
 }

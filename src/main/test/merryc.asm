@@ -4,8 +4,24 @@ fzero: .float 0.0
 fone: .float 1.0
 ftwo: .float 2.0
 log2: .float 0.69314718055994
-str0: .asciiz "todo bien"
-str1: .asciiz "wtf!"
+str0: .asciiz "fizz"
+str1: .asciiz "buzz"
+str2: .asciiz "A"
+str3: .asciiz "B"
+str4: .asciiz "C"
+str5: .asciiz "b es true"
+str6: .asciiz "b es false"
+str7: .asciiz "Mi entrada es cero."
+str8: .asciiz "Mi entrada es uno."
+str9: .asciiz "Mi entrada es dos, o cuatro."
+str10: .asciiz "Lo siento, no puedo leer tu entrada."
+str11: .asciiz "Mi entrada es menor o igual a cuatro."
+str12: .asciiz "mi entrada es uno."
+str13: .asciiz "mi entrada es dos."
+str14: .asciiz "mi entrada es tres."
+str15: .asciiz "mi entrada es cuatro."
+str16: .asciiz "mi entrada es menor a uno."
+str17: .asciiz "Mi entrada es mayor a cuatro."
 .text
 main:
 li $t0, 3
@@ -13,10 +29,77 @@ sw $t0, 0($sp)
 
 if0:
 lw $t0, 0($sp)
-li $t1, 1
+li $t1, 3
+li $t2, 0
+div $t0, $t1
+mfhi $t2
+li $t3, 0
+sub $t4, $t2, $t3
+sltiu $t4, $t4, 1
+beq $t4, $zero, if0_false
+la $t5, str0
+move $a0, $t5
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if0_fin
+if0_false:
+if0_fin:
+
+if1:
+lw $t0, 0($sp)
+li $t1, 5
+li $t2, 0
+div $t0, $t1
+mfhi $t2
+li $t3, 0
+sub $t4, $t2, $t3
+sltiu $t4, $t4, 1
+beq $t4, $zero, if1_false
+la $t5, str1
+move $a0, $t5
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if1_fin
+if1_false:
+if1_fin:
+
+li $t0, 4
+move $t1, $t0
+sw $t1, 0($sp)
+
+if2:
+lw $t0, 0($sp)
+li $t1, 3
+li $t2, 0
+div $t0, $t1
+mfhi $t2
+li $t3, 0
+sub $t4, $t2, $t3
+sltiu $t4, $t4, 1
+beq $t4, $zero, if2_false
+la $t5, str2
+move $a0, $t5
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if2_fin
+if2_false:
+lw $t0, 0($sp)
+li $t1, 3
 slt $t2, $t1, $t0
-beq $t2, $zero, if0_fin
-la $t3, str0
+beq $t2, $zero, if2_elif3_fin
+la $t3, str3
 move $a0, $t3
 li $v0, 4
 syscall
@@ -24,19 +107,96 @@ la $a0, endl
 li $v0, 4
 syscall
 
-if0_fin:
+j if2_fin
+if2_elif3_fin:
+lw $t0, 0($sp)
+li $t1, 4
+sub $t2, $t0, $t1
+sltiu $t2, $t2, 1
+beq $t2, $zero, if2_elif4_fin
+la $t3, str4
+move $a0, $t3
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
 
-if1:
-li $t0, 1
+j if2_fin
+if2_elif4_fin:
+if2_fin:
+
+li $t0, 0
+sw $t0, 4($sp)
+
+if5:
+lw $t0, 4($sp)
+beq $t0, $zero, if5_false
+la $t1, str5
+move $a0, $t1
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if5_fin
+if5_false:
+la $t0, str6
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+if5_fin:
+
+li $t0, -1
+sw $t0, 8($sp)
+
+if6:
+lw $t0, 8($sp)
+li $t1, 0
+sub $t2, $t0, $t1
+sltiu $t2, $t2, 1
+beq $t2, $zero, if6_false
+la $t3, str7
+move $a0, $t3
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if6_fin
+if6_false:
+lw $t0, 8($sp)
+li $t1, 1
+sub $t2, $t0, $t1
+sltiu $t2, $t2, 1
+beq $t2, $zero, if6_elif7_fin
+la $t3, str8
+move $a0, $t3
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if6_fin
+if6_elif7_fin:
+lw $t0, 8($sp)
 li $t1, 2
-slt $t2, $t0, $t1
-xori $t2, $t2, 1
-li $t3, 1
-li $t4, 0
-and $t5, $t3, $t4
+sub $t2, $t0, $t1
+sltiu $t2, $t2, 1
+lw $t3, 8($sp)
+li $t4, 4
+sub $t5, $t3, $t4
+sltiu $t5, $t5, 1
 or $t6, $t2, $t5
-beq $t6, $zero, if1_fin
-la $t7, str1
+beq $t6, $zero, if6_elif8_fin
+la $t7, str9
 move $a0, $t7
 li $v0, 4
 syscall
@@ -44,7 +204,114 @@ la $a0, endl
 li $v0, 4
 syscall
 
-if1_fin:
+j if6_fin
+if6_elif8_fin:
+la $t0, str10
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+if6_fin:
+
+if9:
+lw $t0, 8($sp)
+li $t1, 4
+slt $t2, $t1, $t0
+xori $t3, $t2, 1
+beq $t3, $zero, if9_false
+la $t4, str11
+move $a0, $t4
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+if10:
+lw $t0, 8($sp)
+li $t1, 1
+sub $t2, $t0, $t1
+sltiu $t2, $t2, 1
+beq $t2, $zero, if10_false
+la $t3, str12
+move $a0, $t3
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if10_fin
+if10_false:
+lw $t0, 8($sp)
+li $t1, 2
+sub $t2, $t0, $t1
+sltiu $t2, $t2, 1
+beq $t2, $zero, if10_elif11_fin
+la $t3, str13
+move $a0, $t3
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if10_fin
+if10_elif11_fin:
+lw $t0, 8($sp)
+li $t1, 3
+sub $t2, $t0, $t1
+sltiu $t2, $t2, 1
+beq $t2, $zero, if10_elif12_fin
+la $t3, str14
+move $a0, $t3
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if10_fin
+if10_elif12_fin:
+lw $t0, 8($sp)
+li $t1, 4
+sub $t2, $t0, $t1
+sltiu $t2, $t2, 1
+beq $t2, $zero, if10_elif13_fin
+la $t3, str15
+move $a0, $t3
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if10_fin
+if10_elif13_fin:
+la $t0, str16
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+if10_fin:
+
+j if9_fin
+if9_false:
+la $t0, str17
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+if9_fin:
 
 li $v0, 10
 syscall

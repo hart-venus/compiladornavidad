@@ -768,28 +768,80 @@ if_declaracion_lista ::= if_elfo {:
   }
   else {
     // si no es cierta la expresión, saltar al fin
-    codeBuffer.append("beq " + expr.getDireccion() + ", $zero, " + branchActual + "_fin\n");
+    codeBuffer.append("beq " + expr.getDireccion() + ", $zero, " + branchActual + "_false\n");
   }
 
 :} bloque_codigo_casa_jengibre:b {:
-  System.out.println("if_declaracion_lista");
-  // terminar estructura IF
+  // se salta al fin para evitar caer encima de un else/elif
   var branchActual = tablasSimbolos.get(currentHash).controlStackTop();
-  codeBuffer.append(branchActual + "_fin:\n");
-  tablasSimbolos.get(currentHash).controlStackPop();
+  codeBuffer.append("j " + branchActual + "_fin\n");
+
+  // si nada del bloque se cumplio, recurrir al _false
+  codeBuffer.append(branchActual + "_false:\n");
+  // esto para igual aceptar un else y un elif.
+
 :};
 
 if_travieso ::=
-  if_declaracion_lista |
-  if_declaracion_lista elif_ayudante_lista| // if (a) {} elif (b) {} elif ...
-  if_declaracion_lista else_inocente| // if (a) {} else {}
-  if_declaracion_lista elif_ayudante_lista else_inocente; // if (a) {} elif (b) {} elif ... else {}
+  if_declaracion_lista {:
+    // terminar estructura IF 
+    var branchActual = tablasSimbolos.get(currentHash).controlStackTop();
+    codeBuffer.append(branchActual + "_fin:\n");
+    tablasSimbolos.get(currentHash).controlStackPop();
+  :}| // if (a) {}
+  if_declaracion_lista elif_ayudante_lista  {:
+    // terminar estructura IF
+    var branchActual = tablasSimbolos.get(currentHash).controlStackTop();
+    codeBuffer.append(branchActual + "_fin:\n");
+    tablasSimbolos.get(currentHash).controlStackPop();
+  :}| // if (a) {} elif (b) {} elif ...
+  if_declaracion_lista else_inocente {:
+    // esta branch funciona automáticamente, ya que en falso, saltamos a ifX_false 
+    // y entre ifX_false y ifX_fin está el código del else (previamente procesado)
+    var branchActual = tablasSimbolos.get(currentHash).controlStackTop();
+    codeBuffer.append(branchActual + "_fin:\n");
+    tablasSimbolos.get(currentHash).controlStackPop();
+  
+  :}| // if (a) {} else {}
+  if_declaracion_lista elif_ayudante_lista else_inocente {:
+    // igualmente, esta branch funciona automáticamente, ya que si ningun elif se cumple
+    // nunca se salta a ifX_end sino a ifX_elifY_fin, y entre ifX_elifY_fin e ifX_fin
+    // está el código del else (previamente procesado)
+    var branchActual = tablasSimbolos.get(currentHash).controlStackTop();
+    codeBuffer.append(branchActual + "_fin:\n");
+    tablasSimbolos.get(currentHash).controlStackPop();
+  
+  :}; // if (a) {} elif (b) {} elif ... else {}
 
 elif_ayudante_lista ::=
   elif_lista_santa | elif_ayudante_lista elif_lista_santa;
 
 elif_lista_santa ::=
-  elif_hada p_abre_cuento expresion_regalo p_cierra_cuento bloque_codigo_casa_jengibre;
+  elif_hada p_abre_cuento expresion_regalo:e p_cierra_cuento {:
+    // conseguir un nuevo label
+    var branchActual = tablasSimbolos.get(currentHash).controlStackTop();
+    var branchNuevo = branchActual + "_elif" + labelId;
+    // dar error si el tipo de la expresión no es booleano
+    var expr = (Expresion)e;
+    if (expr.getTipo() != TipoExpresion.BOOL) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una expresion booleana");
+      codeBuffer.append("j " + branchNuevo + "_fin\n");
+    }
+    else {
+      // si no es cierta la expresión, saltar al fin del elif (no del if, ya que puede haber más elifs)
+      codeBuffer.append("beq " + expr.getDireccion() + ", $zero, " + branchNuevo + "_fin\n");
+    }
+  :}
+  
+  bloque_codigo_casa_jengibre{:
+    // después del código, al cerrar esta rama se salta al fin del if
+    var branchActual = tablasSimbolos.get(currentHash).controlStackTop();
+    codeBuffer.append("j " + branchActual + "_fin\n");
+    // se crea el label del fin del elif
+    var branchNuevo = branchActual + "_elif" + labelId;
+    codeBuffer.append(branchNuevo + "_fin:\n");
+    ++labelId; 
+  :};
 
 else_inocente ::=
   else_duende bloque_codigo_casa_jengibre;
