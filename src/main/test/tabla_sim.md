@@ -1,7 +1,9 @@
 | Tabla      | TipoEntrada | Nombre     | TipoDato |
 | ---------- | ----------- | ---------- | -------- |
+| printer    | funcion     | printer    | int      |
+| printer    | parametro   | x          | int      |
+| factorial  | funcion     | factorial  | int      |
+| factorial  | parametro   | n          | int      |
 | dosPorTres | funcion     | dosPorTres | int      |
 | dosPorTres | local       | x          | int      |
 | main       | funcion     | main       | int      |
-| main       | local       | a          | int[]    |
-| main       | local       | i          | int      |

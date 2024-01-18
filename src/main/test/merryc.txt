@@ -4,14 +4,22 @@ function int dosPorTres(){
     return 2*3|
 }
 
+function int printer(int x){
+    print(x)|
+    return 0|
+}
+
+function int factorial(int n){
+    if (n =< 1){
+        return 1|
+    }
+    return n * factorial(n - 1)|
+}
+
 
 function int main(){
 
-    print(dosPorTres() * dosPorTres() + dosPorTres())|
+    print(factorial(5))| @ factorial(5) = 120
 
-    local int a[40]|
-    local int i|
-    for (i <= 0| i < 40| ++i){
-        print(a[i])|
-    }
+
 }

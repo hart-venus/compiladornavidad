@@ -16,131 +16,84 @@ mul $t2, $t0, $t1
 move $v0, $t2
 jr $ra
 
-main:
+_printer:
+lw $t0, 0($sp)
+move $a0, $t0
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+li $t0, 0
+move $v0, $t0
+jr $ra
+
+_factorial:
+if0:
+lw $t0, 0($sp)
+li $t1, 1
+slt $t2, $t1, $t0
+xori $t2, $t2, 1
+beq $t2, $zero, if0_false
+li $t3, 1
+move $v0, $t3
+jr $ra
+
+j if0_fin
+if0_false:
+if0_fin:
+
+lw $t0, 0($sp)
+lw $t1, 0($sp)
+li $t2, 1
+li $t3, 0
+sub $t3, $t1, $t2
 addi $sp, $sp, -4
 sw $ra, 0($sp)
-addi $sp, $sp, -0
+addi $sp, $sp, -16
+sw $t0, 0($sp)
+sw $t1, 4($sp)
+sw $t2, 8($sp)
+sw $t3, 12($sp)
 addi $sp, $sp, -8
-jal _dosPorTres
+sw $t3, 0($sp)
+jal _factorial
 addi $sp, $sp, 8
-addi $sp, $sp, 0
+lw $t0, 0($sp)
+lw $t1, 4($sp)
+lw $t2, 8($sp)
+lw $t3, 12($sp)
+addi $sp, $sp, 16
 lw $ra, 0($sp)
 addi $sp, $sp, 4
-move $t0, $v0
+move $t4, $v0
+li $t5, 0
+mul $t5, $t0, $t4
+move $v0, $t5
+jr $ra
+
+main:
+li $t0, 5
 addi $sp, $sp, -4
 sw $ra, 0($sp)
 addi $sp, $sp, -4
 sw $t0, 0($sp)
 addi $sp, $sp, -8
-jal _dosPorTres
+sw $t0, 0($sp)
+jal _factorial
 addi $sp, $sp, 8
 lw $t0, 0($sp)
 addi $sp, $sp, 4
 lw $ra, 0($sp)
 addi $sp, $sp, 4
 move $t1, $v0
-li $t2, 0
-mul $t2, $t0, $t1
-addi $sp, $sp, -4
-sw $ra, 0($sp)
-addi $sp, $sp, -12
-sw $t0, 0($sp)
-sw $t1, 4($sp)
-sw $t2, 8($sp)
-addi $sp, $sp, -8
-jal _dosPorTres
-addi $sp, $sp, 8
-lw $t0, 0($sp)
-lw $t1, 4($sp)
-lw $t2, 8($sp)
-addi $sp, $sp, 12
-lw $ra, 0($sp)
-addi $sp, $sp, 4
-move $t3, $v0
-li $t4, 0
-add $t4, $t2, $t3
-move $a0, $t4
+move $a0, $t1
 li $v0, 1
 syscall
 la $a0, endl
 li $v0, 4
 syscall
-
-li $t0, 0
-la $t1, 0($sp)
-sw $t0, 0($t1)
-sw $t0, 4($t1)
-sw $t0, 8($t1)
-sw $t0, 12($t1)
-sw $t0, 16($t1)
-sw $t0, 20($t1)
-sw $t0, 24($t1)
-sw $t0, 28($t1)
-sw $t0, 32($t1)
-sw $t0, 36($t1)
-sw $t0, 40($t1)
-sw $t0, 44($t1)
-sw $t0, 48($t1)
-sw $t0, 52($t1)
-sw $t0, 56($t1)
-sw $t0, 60($t1)
-sw $t0, 64($t1)
-sw $t0, 68($t1)
-sw $t0, 72($t1)
-sw $t0, 76($t1)
-sw $t0, 80($t1)
-sw $t0, 84($t1)
-sw $t0, 88($t1)
-sw $t0, 92($t1)
-sw $t0, 96($t1)
-sw $t0, 100($t1)
-sw $t0, 104($t1)
-sw $t0, 108($t1)
-sw $t0, 112($t1)
-sw $t0, 116($t1)
-sw $t0, 120($t1)
-sw $t0, 124($t1)
-sw $t0, 128($t1)
-sw $t0, 132($t1)
-sw $t0, 136($t1)
-sw $t0, 140($t1)
-sw $t0, 144($t1)
-sw $t0, 148($t1)
-sw $t0, 152($t1)
-sw $t0, 156($t1)
-
-li $t0, 0
-sw $t0, 160($sp)
-
-li $t0, 0
-move $t1, $t0
-sw $t1, 160($sp)
-for0:
-lw $t2, 160($sp)
-li $t3, 40
-slt $t4, $t2, $t3
-beq $t4, $zero, for0_fin
-j incfor0_fin
-incfor0:
-lw $t5, 160($sp)
-addi $t5, $t5, 1
-sw $t5, 160($sp)
-j for0
-incfor0_fin:
-lw $t6, 160($sp)
-sll $t6, $t6, 2
-la $t7, 0($sp)
-add $t7, $t7, $t6
-lw $t6, 0($t7)
-move $a0, $t6
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j incfor0
-for0_fin:
 
 li $v0, 10
 syscall

@@ -1678,7 +1678,83 @@ class CUP$parser$actions {
           case 41: // llamada_func_pino ::= id_persona p_abre_cuento args_santa p_cierra_cuento 
             {
               Object RESULT =null;
+		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
+		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+		int argsleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int argsright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Object args = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
+    RESULT = new Expresion("null", TipoExpresion.NULL);
+    // 1. asegurarme que la función exista
+    var firma = encontrarFuncion(id.toString());
+    if (firma == null){
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " no declarada todavía.");
+    } else {
+      // 2. asegurarme que la longitud y tipado de los argumentos sea correcto
+      var tiposArgs = firma.getTiposParametros();
+      var expr_args = (ArrayList<Expresion>)args;
+      var tiposCorrectos = true;
 
+      if (tiposArgs.length != expr_args.size()) {
+        tiposCorrectos = false;
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Numero de argumentos incorrecto para funcion " + id.toString());
+      }
+      else {
+        for (int i = 0; i < tiposArgs.length; i++) {
+          if (tiposArgs[i] != expr_args.get(i).getTipo()) {
+            tiposCorrectos = false;
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de argumento " + (i+1) + " incorrecto para funcion " + id.toString());
+            break;
+          }
+        }
+      }
+
+      if (tiposCorrectos) {
+        // guardar mi registro de retorno en la pila
+        codeBuffer.append("addi $sp, $sp, -4\n");
+        codeBuffer.append("sw $ra, 0($sp)\n");
+
+        // guardar registros ocupados
+        var regs = getOccupiedRegisters();
+        codeBuffer.append("addi $sp, $sp, -" + (regs.size() * 4) + "\n");
+        var i = 0;
+        for (String reg : regs) {
+          codeBuffer.append("sw " + reg + ", " + i*4 + "($sp)\n");
+          i++;
+        }
+        // mover mi stack pointer para no sobreescribir mis variables locales
+        var size = tablasSimbolos.get(id.toString()).getCurrentSize() + 4;
+        codeBuffer.append("addi $sp, $sp, -" + size + "\n");
+
+        // mover mis argumentos a 0(sp), 4(sp), 8(sp), ...
+        i = 0;
+        for (Expresion e : expr_args) {
+          codeBuffer.append("sw " + e.getDireccion() + ", " + i*4 + "($sp)\n");
+          i++;
+        }
+        // llama a la función
+        codeBuffer.append("jal _" + id.toString() + "\n");
+        // mover mi stack pointer para no sobreescribir mis variables locales
+        codeBuffer.append("addi $sp, $sp, " + size + "\n");
+        // recuperar registros ocupados
+        i = 0;
+        for (String reg : regs) {
+          codeBuffer.append("lw " + reg + ", " + i*4 + "($sp)\n");
+          i++;
+        }
+        codeBuffer.append("addi $sp, $sp, " + (regs.size() * 4) + "\n");
+        // recuperar mi registro de retorno de la pila
+        codeBuffer.append("lw $ra, 0($sp)\n");
+        codeBuffer.append("addi $sp, $sp, 4\n");
+        // mover el valor de retorno al registro de la expresión
+        var reg = getUnoccupiedRegister();
+        codeBuffer.append("move " + reg + ", $v0\n");
+        RESULT = new Expresion("null", firma.getTipoRetorno(), reg);
+      }
+    }
+  
+  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("llamada_func_pino",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
