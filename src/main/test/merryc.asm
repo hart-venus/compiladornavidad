@@ -4,31 +4,11 @@ fzero: .float 0.0
 fone: .float 1.0
 ftwo: .float 2.0
 log2: .float 0.69314718055994
+str0: .asciiz "factorial("
+str1: .asciiz ") = "
+str2: .asciiz "fibonacci("
+str3: .asciiz ") = "
 .text
-_dosPorTres:
-li $t0, 2
-sw $t0, 0($sp)
-
-li $t0, 2
-li $t1, 3
-li $t2, 0
-mul $t2, $t0, $t1
-move $v0, $t2
-jr $ra
-
-_printer:
-lw $t0, 0($sp)
-move $a0, $t0
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-li $t0, 0
-move $v0, $t0
-jr $ra
-
 _factorial:
 if0:
 lw $t0, 0($sp)
@@ -73,27 +53,187 @@ mul $t5, $t0, $t4
 move $v0, $t5
 jr $ra
 
-main:
-li $t0, 5
+_fibonacci:
+if1:
+lw $t0, 0($sp)
+li $t1, 1
+slt $t2, $t1, $t0
+xori $t2, $t2, 1
+beq $t2, $zero, if1_false
+li $t3, 1
+move $v0, $t3
+jr $ra
+
+j if1_fin
+if1_false:
+if1_fin:
+
+lw $t0, 0($sp)
+li $t1, 1
+li $t2, 0
+sub $t2, $t0, $t1
 addi $sp, $sp, -4
 sw $ra, 0($sp)
-addi $sp, $sp, -4
+addi $sp, $sp, -12
 sw $t0, 0($sp)
+sw $t1, 4($sp)
+sw $t2, 8($sp)
 addi $sp, $sp, -8
+sw $t2, 0($sp)
+jal _fibonacci
+addi $sp, $sp, 8
+lw $t0, 0($sp)
+lw $t1, 4($sp)
+lw $t2, 8($sp)
+addi $sp, $sp, 12
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+move $t3, $v0
+lw $t4, 0($sp)
+li $t5, 2
+li $t6, 0
+sub $t6, $t4, $t5
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+addi $sp, $sp, -28
 sw $t0, 0($sp)
+sw $t1, 4($sp)
+sw $t2, 8($sp)
+sw $t3, 12($sp)
+sw $t4, 16($sp)
+sw $t5, 20($sp)
+sw $t6, 24($sp)
+addi $sp, $sp, -8
+sw $t6, 0($sp)
+jal _fibonacci
+addi $sp, $sp, 8
+lw $t0, 0($sp)
+lw $t1, 4($sp)
+lw $t2, 8($sp)
+lw $t3, 12($sp)
+lw $t4, 16($sp)
+lw $t5, 20($sp)
+lw $t6, 24($sp)
+addi $sp, $sp, 28
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+move $t7, $v0
+li $t8, 0
+add $t8, $t3, $t7
+move $v0, $t8
+jr $ra
+
+main:
+li $t0, 0
+sw $t0, 0($sp)
+
+li $t0, 0
+move $t1, $t0
+sw $t1, 0($sp)
+for2:
+lw $t2, 0($sp)
+li $t3, 10
+slt $t4, $t2, $t3
+beq $t4, $zero, for2_fin
+j incfor2_fin
+incfor2:
+lw $t5, 0($sp)
+addi $t5, $t5, 1
+sw $t5, 0($sp)
+j for2
+incfor2_fin:
+la $t6, str0
+lw $t7, 0($sp)
+la $t8, str1
+lw $t9, 0($sp)
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+addi $sp, $sp, -40
+sw $t0, 0($sp)
+sw $t1, 4($sp)
+sw $t2, 8($sp)
+sw $t3, 12($sp)
+sw $t4, 16($sp)
+sw $t5, 20($sp)
+sw $t6, 24($sp)
+sw $t7, 28($sp)
+sw $t8, 32($sp)
+sw $t9, 36($sp)
+addi $sp, $sp, -8
+sw $t9, 0($sp)
 jal _factorial
 addi $sp, $sp, 8
 lw $t0, 0($sp)
-addi $sp, $sp, 4
+lw $t1, 4($sp)
+lw $t2, 8($sp)
+lw $t3, 12($sp)
+lw $t4, 16($sp)
+lw $t5, 20($sp)
+lw $t6, 24($sp)
+lw $t7, 28($sp)
+lw $t8, 32($sp)
+lw $t9, 36($sp)
+addi $sp, $sp, 40
 lw $ra, 0($sp)
 addi $sp, $sp, 4
-move $t1, $v0
-move $a0, $t1
+move $t0, $v0
+move $a0, $t6
+li $v0, 4
+syscall
+move $a0, $t7
+li $v0, 1
+syscall
+move $a0, $t8
+li $v0, 4
+syscall
+move $a0, $t0
 li $v0, 1
 syscall
 la $a0, endl
 li $v0, 4
 syscall
+
+la $t0, str2
+lw $t1, 0($sp)
+la $t2, str3
+lw $t3, 0($sp)
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+addi $sp, $sp, -16
+sw $t0, 0($sp)
+sw $t1, 4($sp)
+sw $t2, 8($sp)
+sw $t3, 12($sp)
+addi $sp, $sp, -8
+sw $t3, 0($sp)
+jal _fibonacci
+addi $sp, $sp, 8
+lw $t0, 0($sp)
+lw $t1, 4($sp)
+lw $t2, 8($sp)
+lw $t3, 12($sp)
+addi $sp, $sp, 16
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+move $t4, $v0
+move $a0, $t0
+li $v0, 4
+syscall
+move $a0, $t1
+li $v0, 1
+syscall
+move $a0, $t2
+li $v0, 4
+syscall
+move $a0, $t4
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j incfor2
+for2_fin:
 
 li $v0, 10
 syscall

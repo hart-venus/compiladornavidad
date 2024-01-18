@@ -1,14 +1,3 @@
-function int dosPorTres(){
-    local int x <= 2|
-    @local int y <= 4|
-    return 2*3|
-}
-
-function int printer(int x){
-    print(x)|
-    return 0|
-}
-
 function int factorial(int n){
     if (n =< 1){
         return 1|
@@ -16,10 +5,19 @@ function int factorial(int n){
     return n * factorial(n - 1)|
 }
 
+function int fibonacci(int n){
+    if (n =< 1){
+        return 1|
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2)|
+}
+
+function int hanoi
 
 function int main(){
-
-    print(factorial(5))| @ factorial(5) = 120
-
-
+    local int i <= 0|
+    for (i <= 0| i < 10| ++i){
+        print("factorial(", i, ") = ", factorial(i))|
+        print("fibonacci(", i, ") = ", fibonacci(i))|
+    }
 }

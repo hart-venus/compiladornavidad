@@ -1,9 +1,8 @@
-| Tabla      | TipoEntrada | Nombre     | TipoDato |
-| ---------- | ----------- | ---------- | -------- |
-| printer    | funcion     | printer    | int      |
-| printer    | parametro   | x          | int      |
-| factorial  | funcion     | factorial  | int      |
-| factorial  | parametro   | n          | int      |
-| dosPorTres | funcion     | dosPorTres | int      |
-| dosPorTres | local       | x          | int      |
-| main       | funcion     | main       | int      |
+| Tabla     | TipoEntrada | Nombre    | TipoDato |
+| --------- | ----------- | --------- | -------- |
+| fibonacci | funcion     | fibonacci | int      |
+| fibonacci | parametro   | n         | int      |
+| factorial | funcion     | factorial | int      |
+| factorial | parametro   | n         | int      |
+| main      | funcion     | main      | int      |
+| main      | local       | i         | int      |

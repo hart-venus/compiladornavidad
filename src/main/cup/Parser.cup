@@ -1972,9 +1972,7 @@ expr_rel_regalocomprado ::=
         RESULT = new Expresion("null", TipoExpresion.NULL);
         break;
     }
-  
   :}; // a != b
-
 expr_log_regalomanual ::=
   expresion_regalo:a op_and_melchor expresion_regalo:b {:
     var a_expr = (Expresion)a;
@@ -1991,7 +1989,6 @@ expr_log_regalomanual ::=
         RESULT = new Expresion("null", TipoExpresion.NULL);
         break;
     }
-  
   :}| // a ^ b
   expresion_regalo:a op_or_gaspar expresion_regalo:b {:
     var a_expr = (Expresion)a;
@@ -2024,5 +2021,4 @@ expr_log_regalomanual ::=
         break;
     }  
   :}; // !a
-
 /*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*/
