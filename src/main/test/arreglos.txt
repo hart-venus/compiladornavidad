@@ -22,6 +22,7 @@ function int main() {
     local char b[2] <= {'a', 'b'}| @ valido
 
     local char c[2] <= {'a', 'b', 'c'}| @ invalido, se le da un tamaño mayor al arreglo
+    local char c[1] <= {'a', 'c'}| @ lo mismo aca
     local char d[2] <= {'a'}| @ invalido, se le da un tamaño menor al arreglo
 
     local int e[3] <= {'a', 'b', 'c'}| @ invalido, se le asignan valores de tipo char a un arreglo de enteros
