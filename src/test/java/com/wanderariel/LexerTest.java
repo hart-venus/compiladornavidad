@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
  * Salida: ninguna.
  * 
  */
+
 public class LexerTest {
 
   @Test
