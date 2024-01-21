@@ -26,6 +26,13 @@ function int main(){
     print(x)|
     print(y)|
 
+    local int p1 <= 2 * (3 + 4) | @ 14
+    local int p2 <= (5 + 2) * 3 | @ 21
+    local int p3 <= (4 * 2) + 1 | @ 9
+    print(p1)|
+    print(p2)|
+    print(p3)|
+
     @ Probando modulo 
     local int z <= 15 ~ 4| @ 3
     print(z)|
