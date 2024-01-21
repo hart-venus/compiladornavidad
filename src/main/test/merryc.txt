@@ -1,43 +1,91 @@
-function int suma(int a, int b) {
-    local char c| 
-    return 3|
+ /_ esto es un comentario inicial _/
+
+function float func1(char x22,char y22){
+	@semantico borrar parametro check
+	local char z22 <= '!'| /_semantico x22 check _/
+	local char miChar<='!'|
+	@ local char miChar2<='!!'| sintactico check! 
+	local string str1<="Hola $%&/#$&) mundo"|
+	local float fl1|
+	@ local float fl1<=56.6| semantico fl1 check
+	@ local int in1<= false| semantico check! 
+	@ local char arr[lit] <= {'c','d'}| @sintatico lit check!
+
+	local int in1|
+	local char arr[3] <= {'c','d', 'e'}|
+	local int lit <= 2|
+	arr[lit] <= 'c'|
+
+	local bool mibool <= true|
+
+	@ local int in1<= (--fl1 ~ -14.0) / ++in1+7- 15 **  arr[67] * func1 (hola, true, "hola mundo", 4.5, 'a') | @semantico fl1, in1
+	@ mibool <= (3.7 * fl1 + (-45.6~76)) < 56 ^ true # mibool # !mibool  | @semantico literal 76 check
+
+	return -5.6|@cambio en retorno genera semantico check!
+
+} 
+
+function float miFunc(int dif,char otra,char otra2){	
+	local int i <= 0|
+	local int var <= 40|
+	local float var2 <= 40.0|
+	for(i <= 10 | i<30*2 | ++i)
+	{
+		do{
+			var <= var - 1| @semantico check 
+			return|@sintactico
+		}until(var2>12.2 # (34+33)>12)| @semantico check
+
+		if (var==0)
+		{
+			print("entra al if")|
+			break|
+		}
+		elif(true)
+		{
+			print(var)|
+		}
+		else
+		{
+			local int j <= 0|
+			local int k <= 0|		
+			for(j <= 10 | j<30*2 | ++j){
+				for(k <= 10 | k<30*2 |++k){
+					return 4.0| @semantico check
+				}
+			}
+		}
+		if (var==0){
+			break|
+		} elif(true) {
+			print(var)|
+		}
+	}
+	return 1.0| @semantico check
 }
 
-function float sumxa(float a, float b) {
-    return 3.14|
+function string func3(string b1){ @semantico string check 
+	return b1| @ check
 }
 
-function char suha(char a, char b) {
-    local int a| @ pica error ya que a ya esta declarada
-    @ pica error ya que nunca retorno un char 
+function int main(){ @function
+/_
+Comentario 1
+_/
+	
+@comentario 2
+	local bool b1|
+	local string s1|
+	read(s1)| @semantico check 
+	print(b1)| @semantico check 
+	print(true)| @semantico check 
+	print(-6.7)| @ :)
+	miFunc(miFunc(),'a')| @semantico miFunc, hola
+
+
+	local bool bl0 <= 6.7 != 8.9| @ok
+	local bool bl1 <= in1 => fl1 ^ false # !(func2(3,in1) > 56)| @semantico in1 >= fl1, func2
+	return 3| @semantico
 }
 
-function int main() {
 
-    print("xd")|
-    local float xd <= 3.14| @ no pica error, no estoy declarando una variable ya declarada
-    local int xd[2]| @ pica error ya que estoy declarando una variable ya declarada
-
-    print()| @ print endl 
-}
-
-
-@ Toda esta declaración pica error, ya que no se pueden definir dos funciones con el mismo nombre
-function int sumxa() {
-    print("hola mundo!")|
-}
-
-@ Como la function_actual no cambia, este trata de recuperarse asociando a 
-@ la ultima función definida (lo trata como parte de sumxa)
-
-function string x() {
-    return "hola mundo!"|
-}
-
-function int sentidoDeLaVidaElUniversoYTodoLoDemas() {
-    return 42|
-}
-
-function int multiplica(int a, int b) {
-    return a * b|
-}

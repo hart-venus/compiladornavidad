@@ -1,0 +1,43 @@
+function int suma(int a, int b) {
+    local char c| 
+    return 3|
+}
+
+function float sumxa(float a, float b) {
+    return 3.14|
+}
+
+function char suha(char a, char b) {
+    local int a| @ pica error ya que a ya esta declarada
+    @ pica error ya que nunca retorno un char 
+}
+
+function int main() {
+
+    print("xd")|
+    local float xd <= 3.14| @ no pica error, no estoy declarando una variable ya declarada
+    local int xd[2]| @ pica error ya que estoy declarando una variable ya declarada
+
+    print()| @ print endl 
+}
+
+
+@ Toda esta declaración pica error, ya que no se pueden definir dos funciones con el mismo nombre
+function int sumxa() {
+    print("hola mundo!")|
+}
+
+@ Como la function_actual no cambia, este trata de recuperarse asociando a 
+@ la ultima función definida (lo trata como parte de sumxa)
+
+function string x() {
+    return "hola mundo!"|
+}
+
+function int sentidoDeLaVidaElUniversoYTodoLoDemas() {
+    return 42|
+}
+
+function int multiplica(int a, int b) {
+    return a * b|
+}
