@@ -365,17 +365,19 @@ non terminal retorno_carta_santa, llamada_func_pino, do_until_fabrica_juguetes;
 non terminal for_vispera, if_travieso, elif_ayudante_lista, elif_lista_santa, else_inocente, if_declaracion_lista;
 
 // Precedencia y asociatividad de operadores
+
+precedence left op_or_gaspar;
+precedence left op_and_melchor;
+precedence left op_not_baltasar;
+
+precedence left op_eq_astuto, op_l_nevado, op_g_alegre, op_geq_feliz;
+precedence left op_leq_copito, op_neq_chispa;
+
 precedence left op_res_rodolfo, op_sum_cupido;
 precedence left op_div_bailarin, op_mul_cometa;
 precedence left op_mod_rayo, op_pow_travieso;
+
 precedence left op_inc_quien, op_dec_grinch;
-precedence left op_eq_astuto, op_l_nevado, op_g_alegre, op_geq_feliz;
-precedence left op_leq_copito, op_neq_chispa;
-precedence left op_and_melchor;
-precedence left op_or_gaspar;
-precedence left op_not_baltasar;
-
-
 
 start with navidad;
 
