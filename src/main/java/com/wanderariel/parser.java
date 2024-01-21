@@ -1401,16 +1401,21 @@ class CUP$parser$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		Object id = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-    addSymbol(new SymbolTableObject("parametro", t.toString(), id.toString()));
-    // Conseguir la función actual y meterle el parámetro
-    functionActual().addTipoParametro(Expresion.tipoFromString(t.toString()));
-    // Meterle al tamaño actual +4 y meterle la dirección al parámetro (getCurrentSize)
-    var size = tablasSimbolos.get(currentHash).getCurrentSize();
-    tablasSimbolos.get(currentHash).increaseSize(4);
-    
-    addDireccion(id.toString(), size + "($sp)");
-  
-  
+    // validación de que el parámetro no exista
+    if (getTipo(id.toString(), false) != TipoExpresion.NULL) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Parametro " + id.toString() + " ya declarado");
+    }
+    else {
+      addSymbol(new SymbolTableObject("parametro", t.toString(), id.toString()));
+      // Conseguir la función actual y meterle el parámetro
+      functionActual().addTipoParametro(Expresion.tipoFromString(t.toString()));
+      // Meterle al tamaño actual +4 y meterle la dirección al parámetro (getCurrentSize)
+      var size = tablasSimbolos.get(currentHash).getCurrentSize();
+      tablasSimbolos.get(currentHash).increaseSize(4);
+      
+      addDireccion(id.toString(), size + "($sp)");
+    }
+
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("parametro_funcion_reno",9, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1859,6 +1864,7 @@ class CUP$parser$actions {
         RESULT = new Expresion("null", TipoExpresion.NULL);
         break;
       default:
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para read");
         break;
     }
   
@@ -3523,7 +3529,6 @@ class CUP$parser$actions {
         break;
     }
   
-  
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_rel_regalocomprado",18, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -3553,7 +3558,6 @@ class CUP$parser$actions {
         RESULT = new Expresion("null", TipoExpresion.NULL);
         break;
     }
-  
   
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expr_log_regalomanual",19, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

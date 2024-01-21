@@ -602,16 +602,21 @@ parametros_funcion_renos ::= parametro_funcion_reno | parametros_funcion_renos s
 parametro_funcion_reno ::= 
   t_santa:t id_persona:id
   {:
-    addSymbol(new SymbolTableObject("parametro", t.toString(), id.toString()));
-    // Conseguir la función actual y meterle el parámetro
-    functionActual().addTipoParametro(Expresion.tipoFromString(t.toString()));
-    // Meterle al tamaño actual +4 y meterle la dirección al parámetro (getCurrentSize)
-    var size = tablasSimbolos.get(currentHash).getCurrentSize();
-    tablasSimbolos.get(currentHash).increaseSize(4);
-    
-    addDireccion(id.toString(), size + "($sp)");
-  
-  
+    // validación de que el parámetro no exista
+    if (getTipo(id.toString(), false) != TipoExpresion.NULL) {
+      System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Parametro " + id.toString() + " ya declarado");
+    }
+    else {
+      addSymbol(new SymbolTableObject("parametro", t.toString(), id.toString()));
+      // Conseguir la función actual y meterle el parámetro
+      functionActual().addTipoParametro(Expresion.tipoFromString(t.toString()));
+      // Meterle al tamaño actual +4 y meterle la dirección al parámetro (getCurrentSize)
+      var size = tablasSimbolos.get(currentHash).getCurrentSize();
+      tablasSimbolos.get(currentHash).increaseSize(4);
+      
+      addDireccion(id.toString(), size + "($sp)");
+    }
+
   :}
   ;
 elemento_arreglo_juguete ::= 
@@ -897,6 +902,7 @@ llamada_func_pino ::=
         RESULT = new Expresion("null", TipoExpresion.NULL);
         break;
       default:
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para read");
         break;
     }
   
