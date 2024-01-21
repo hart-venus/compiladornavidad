@@ -4,286 +4,69 @@ fzero: .float 0.0
 fone: .float 1.0
 ftwo: .float 2.0
 log2: .float 0.69314718055994
-str0: .asciiz "Hola $%&/#$&) mundo"
-float1: .float -5.6
-float2: .float 40.0
-float3: .float 12.2
-str4: .asciiz "entra al if"
-float5: .float 4.0
-float6: .float 1.0
-float7: .float -6.7
-float8: .float 6.7
-float9: .float 8.9
+float0: .float 3.14
+str1: .asciiz "xd"
+float2: .float 3.14
+str3: .asciiz "hola mundo!"
+str4: .asciiz "hola mundo!"
 .text
-_func1:
-li $t0, '!'
+_suma:
+li $t0, 32
 sw $t0, 8($sp)
-
-li $t0, '!'
-sw $t0, 12($sp)
-
-la $t0, str0
-move $t1, $t0
-sw $t1, 16($sp)
-
-lw $t0, fzero
-sw $t0, 20($sp)
-
-li $t0, 0
-sw $t0, 24($sp)
-
-li $t0, 'c'
-li $t1, 'd'
-li $t2, 'e'
-la $t3, 28($sp)
-sw $t0, 0($t3)
-sw $t1, 4($t3)
-sw $t2, 8($t3)
-
-li $t0, 2
-sw $t0, 40($sp)
-
-lw $t0, 40($sp)
-sll $t0, $t0, 2
-la $t1, 28($sp)
-add $t1, $t1, $t0
-lw $t0, 0($t1)
-li $t2, 'c'
-sw $t2, 0($t1)
-
-li $t0, 1
-sw $t0, 44($sp)
-
-lw $t0, float1
-move $v0, $t0
-jr $ra
-
-_miFunc:
-li $t0, 0
-sw $t0, 12($sp)
-
-li $t0, 40
-sw $t0, 16($sp)
-
-lw $t0, float2
-sw $t0, 20($sp)
-
-li $t0, 10
-move $t1, $t0
-sw $t1, 12($sp)
-for0:
-lw $t2, 12($sp)
-li $t3, 30
-li $t4, 2
-li $t5, 0
-mul $t5, $t3, $t4
-slt $t6, $t2, $t5
-beq $t6, $zero, for0_fin
-j incfor0_fin
-incfor0:
-lw $t7, 12($sp)
-addi $t7, $t7, 1
-sw $t7, 12($sp)
-j for0
-incfor0_fin:
-do1:
-lw $t8, 16($sp)
-li $t9, 1
-li $t0, 0
-sub $t0, $t8, $t9
-move $t1, $t0
-sw $t1, 16($sp)
-
-j do1_fin
-
-lw $t0, 20($sp)
-lw $t1, float3
-addi $sp, $sp, -4
-sw $ra, 0($sp)
-move $a1, $t0
-move $a0, $t1
-jal ltFloat
-move $t2, $v0
-lw $ra, 0($sp)
-addi $sp, $sp, 4
-li $t3, 34
-li $t4, 33
-li $t5, 0
-add $t5, $t3, $t4
-li $t6, 12
-slt $t7, $t6, $t5
-or $t8, $t2, $t7
-beq $t8, $zero, do1
-do1_fin:
-
-if2:
-lw $t0, 16($sp)
-li $t1, 0
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-beq $t2, $zero, if2_false
-la $t3, str4
-move $a0, $t3
-li $v0, 4
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j for0_fin
-
-j if2_fin
-if2_false:
-li $t0, 1
-beq $t0, $zero, if2_elif3_fin
-lw $t1, 16($sp)
-move $a0, $t1
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if2_fin
-if2_elif3_fin:
-li $t0, 0
-sw $t0, 24($sp)
-
-li $t0, 0
-sw $t0, 28($sp)
-
-li $t0, 10
-move $t1, $t0
-sw $t1, 24($sp)
-for4:
-lw $t2, 24($sp)
-li $t3, 30
-li $t4, 2
-li $t5, 0
-mul $t5, $t3, $t4
-slt $t6, $t2, $t5
-beq $t6, $zero, for4_fin
-j incfor4_fin
-incfor4:
-lw $t7, 24($sp)
-addi $t7, $t7, 1
-sw $t7, 24($sp)
-j for4
-incfor4_fin:
-li $t8, 10
-move $t9, $t8
-sw $t9, 28($sp)
-for5:
-lw $t0, 28($sp)
-li $t1, 30
-li $t2, 2
-li $t3, 0
-mul $t3, $t1, $t2
-slt $t4, $t0, $t3
-beq $t4, $zero, for5_fin
-j incfor5_fin
-incfor5:
-lw $t5, 28($sp)
-addi $t5, $t5, 1
-sw $t5, 28($sp)
-j for5
-incfor5_fin:
-lw $t6, float5
-move $v0, $t6
-jr $ra
-
-j incfor5
-for5_fin:
-
-j incfor4
-for4_fin:
-
-if2_fin:
-
-if6:
-lw $t0, 16($sp)
-li $t1, 0
-sub $t2, $t0, $t1
-sltiu $t2, $t2, 1
-beq $t2, $zero, if6_false
-j for0_fin
-
-j if6_fin
-if6_false:
-li $t0, 1
-beq $t0, $zero, if6_elif7_fin
-lw $t1, 16($sp)
-move $a0, $t1
-li $v0, 1
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-j if6_fin
-if6_elif7_fin:
-if6_fin:
-
-j incfor0
-for0_fin:
-
-lw $t0, float6
-move $v0, $t0
-jr $ra
-
-lw $t0, 32($sp)
-
-main:
-li $t0, 0
-sw $t0, 0($sp)
-
-la $t0, endl
-sw $t0, 4($sp)
-
-
-lw $t0, 0($sp)
-la $a0, endl
-li $v0, 4
-syscall
-
-li $t0, 1
-la $a0, endl
-li $v0, 4
-syscall
-
-lw $t0, float7
-mtc1 $t0, $f12
-li $v0, 2
-syscall
-la $a0, endl
-li $v0, 4
-syscall
-
-li $t0, 'a'
-
-lw $t0, float8
-lw $t1, float9
-addi $sp, $sp, -4
-sw $ra, 0($sp)
-move $a0, $t0
-move $a1, $t1
-jal eqFloat
-move $t2, $v0
-xori $t2, $t2, 1
-lw $ra, 0($sp)
-addi $sp, $sp, 4
-sw $t2, 8($sp)
-
-li $t1, 0
-li $t3, 3
-li $t4, 56
 
 li $t0, 3
 move $v0, $t0
 jr $ra
 
+_sumxa:
+lw $t0, float0
+move $v0, $t0
+jr $ra
+
+_suha:
+
+main:
+la $t0, str1
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+lw $t0, float2
+sw $t0, 0($sp)
+
+
+la $a0, endl
+li $v0, 4
+syscall
+
 li $v0, 10
 syscall
+la $t0, str3
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+la $t0, str4
+
+_sentidoDeLaVidaElUniversoYTodoLoDemas:
+li $t0, 42
+move $v0, $t0
+jr $ra
+
+_multiplica:
+lw $t0, 0($sp)
+lw $t1, 4($sp)
+li $t2, 0
+mul $t2, $t0, $t1
+move $v0, $t2
+jr $ra
+
 
 # Esta sección es añadida automáticamente por el compilador y contiene funciones usadas
 # Internamente.
