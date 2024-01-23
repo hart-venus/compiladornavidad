@@ -4,29 +4,42 @@ fzero: .float 0.0
 fone: .float 1.0
 ftwo: .float 2.0
 log2: .float 0.69314718055994
-float0: .float 3.14
-str1: .asciiz "xd"
-float2: .float 3.14
-str3: .asciiz "hola mundo!"
-str4: .asciiz "hola mundo!"
+str0: .asciiz "func1"
+float1: .float 1.2
+float2: .float 2.3
+float3: .float 2.4
+str4: .asciiz "Santa clos"
+float5: .float 2.1
+float6: .float 3.0
+str7: .asciiz "
+"
+str8: .asciiz "entra func 1"
+str9: .asciiz "Entra a func2"
+str10: .asciiz "Hola $%&/#$&) mundo"
+float11: .float 56.6
+str12: .asciiz "func2"
+float13: .float 3.7
+float14: .float -45.6
+float15: .float 7.6
+float16: .float 5.6
+float17: .float -5.6
+str18: .asciiz "miFunc"
+str19: .asciiz "do"
+str20: .asciiz "entra al if"
+str21: .asciiz "entra a elif"
+str22: .asciiz "entra al for anidado"
+float23: .float 0.1
+str24: .asciiz "entra al else"
+float25: .float 1.1
+float26: .float -6.7
+float27: .float 6.7
+float28: .float 8.9
+str29: .asciiz "final"
+float30: .float 3.0
+float31: .float -2.0
 .text
-_suma:
-li $t0, 32
-sw $t0, 8($sp)
-
-li $t0, 3
-move $v0, $t0
-jr $ra
-
-_sumxa:
-lw $t0, float0
-move $v0, $t0
-jr $ra
-
-_suha:
-
-main:
-la $t0, str1
+_func1:
+la $t0, str0
 move $a0, $t0
 li $v0, 4
 syscall
@@ -34,17 +47,59 @@ la $a0, endl
 li $v0, 4
 syscall
 
-lw $t0, float2
+lw $t0, fzero
 sw $t0, 0($sp)
 
+lw $t0, float1
+move $t1, $t0
+sw $t1, 0($sp)
 
+li $t0, 32
+sw $t0, 4($sp)
+
+li $t0, 'c'
+sw $t0, 8($sp)
+
+lw $t0, float2
+lw $t1, float3
+mtc1 $t0, $f0
+mtc1 $t1, $f2
+mul.s $f0, $f0, $f2
+mfc1 $t2, $f0
+sw $t2, 12($sp)
+
+lw $t0, 12($sp)
+mtc1 $t0, $f12
+li $v0, 2
+syscall
 la $a0, endl
 li $v0, 4
 syscall
 
-li $v0, 10
-syscall
-la $t0, str3
+li $t0, 5
+li $t1, 6
+li $t2, 0
+div $t0, $t1
+mfhi $t2
+sw $t2, 16($sp)
+
+la $t0, str4
+move $t1, $t0
+sw $t1, 20($sp)
+
+lw $t0, float5
+lw $t1, float6
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+move $a1, $t0
+move $a0, $t1
+jal ltFloat
+move $t2, $v0
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+sw $t2, 24($sp)
+
+lw $t0, 20($sp)
 move $a0, $t0
 li $v0, 4
 syscall
@@ -52,21 +107,523 @@ la $a0, endl
 li $v0, 4
 syscall
 
-la $t0, str4
+la $a0, endl
+li $v0, 4
+syscall
 
-_sentidoDeLaVidaElUniversoYTodoLoDemas:
-li $t0, 42
-move $v0, $t0
-jr $ra
+li $v0, 5
+syscall
+sw $v0, 16($sp)
 
-_multiplica:
-lw $t0, 0($sp)
-lw $t1, 4($sp)
+la $a0, endl
+li $v0, 4
+syscall
+
+lw $t0, 16($sp)
+move $a0, $t0
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+lw $t0, 12($sp)
+mtc1 $t0, $f12
+li $v0, 2
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+la $t0, str7
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+li $v0, 6
+syscall
+swc1 $f0, 12($sp)
+
+la $t0, str8
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+lw $t0, 16($sp)
+li $t1, 1
 li $t2, 0
-mul $t2, $t0, $t1
+add $t2, $t0, $t1
 move $v0, $t2
 jr $ra
 
+_func2:
+li $t0, '!'
+sw $t0, 8($sp)
+
+la $t0, str9
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+li $t0, '!'
+sw $t0, 12($sp)
+
+la $t0, str10
+move $t1, $t0
+sw $t1, 16($sp)
+
+lw $t0, float11
+sw $t0, 20($sp)
+
+li $t0, 1
+sw $t0, 24($sp)
+
+lw $t0, 24($sp)
+addi $t0, $t0, 1
+sw $t0, 24($sp)
+move $t1, $t0
+sw $t1, 24($sp)
+
+li $t0, 32
+la $t1, 28($sp)
+sw $t0, 0($t1)
+sw $t0, 4($t1)
+sw $t0, 8($t1)
+sw $t0, 12($t1)
+sw $t0, 16($t1)
+sw $t0, 20($t1)
+sw $t0, 24($t1)
+sw $t0, 28($t1)
+sw $t0, 32($t1)
+sw $t0, 36($t1)
+sw $t0, 40($t1)
+sw $t0, 44($t1)
+sw $t0, 48($t1)
+sw $t0, 52($t1)
+sw $t0, 56($t1)
+sw $t0, 60($t1)
+sw $t0, 64($t1)
+sw $t0, 68($t1)
+sw $t0, 72($t1)
+sw $t0, 76($t1)
+
+lw $t0, 24($sp)
+sll $t0, $t0, 2
+la $t1, 28($sp)
+add $t1, $t1, $t0
+lw $t0, 0($t1)
+li $t2, 'c'
+sw $t2, 0($t1)
+
+li $t0, 1
+li $t1, 2
+la $t2, 108($sp)
+sw $t0, 0($t2)
+sw $t1, 4($t2)
+
+li $t0, 1
+sw $t0, 116($sp)
+
+lw $t0, 24($sp)
+addi $t0, $t0, -1
+sw $t0, 24($sp)
+li $t1, -14
+lw $t2, 24($sp)
+addi $t2, $t2, 1
+sw $t2, 24($sp)
+li $t3, 0
+div $t1, $t2
+mflo $t3
+li $t4, 0
+add $t4, $t0, $t3
+li $t5, 7
+li $t6, 0
+add $t6, $t4, $t5
+li $t7, 15
+li $t8, 1
+sll $t8, $t8, 2
+la $t9, 108($sp)
+add $t9, $t9, $t8
+lw $t8, 0($t9)
+li $t0, 0
+mul $t0, $t7, $t8
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+addi $sp, $sp, -4
+sw $t0, 0($sp)
+addi $sp, $sp, -32
+jal _func1
+addi $sp, $sp, 32
+lw $t0, 0($sp)
+addi $sp, $sp, 4
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+move $t1, $v0
+li $t2, 0
+mul $t2, $t0, $t1
+li $t3, 0
+sub $t3, $t6, $t2
+sw $t3, 120($sp)
+
+la $t0, str12
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+lw $t0, float13
+lw $t1, 20($sp)
+mtc1 $t0, $f0
+mtc1 $t1, $f2
+mul.s $f0, $f0, $f2
+mfc1 $t2, $f0
+lw $t3, float14
+lw $t4, float15
+move $a0, $t3
+move $a1, $t4
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+jal moduloFloat
+move $t5, $v0
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+mtc1 $t2, $f3
+mtc1 $t5, $f4
+add.s $f3, $f3, $f4
+mfc1 $t6, $f3
+lw $t7, float16
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+move $a0, $t6
+move $a1, $t7
+jal ltFloat
+move $t8, $v0
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+li $t9, 1
+and $t0, $t8, $t9
+lw $t1, 116($sp)
+or $t2, $t0, $t1
+lw $t3, 116($sp)
+xori $t4, $t3, 1
+or $t5, $t2, $t4
+move $t6, $t5
+sw $t6, 116($sp)
+
+lw $t0, 120($sp)
+move $a0, $t0
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+lw $t0, float17
+move $v0, $t0
+jr $ra
+
+_miFunc:
+la $t0, str18
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+li $t0, 0
+sw $t0, 12($sp)
+
+li $t0, 0
+sw $t0, 16($sp)
+
+li $t0, 0
+sw $t0, 20($sp)
+
+li $t0, 0
+sw $t0, 24($sp)
+
+lw $t0, fzero
+sw $t0, 28($sp)
+
+li $t0, 10
+move $t1, $t0
+sw $t1, 12($sp)
+for0:
+lw $t2, 12($sp)
+li $t3, 10
+li $t4, 2
+li $t5, 0
+mul $t5, $t3, $t4
+slt $t6, $t2, $t5
+beq $t6, $zero, for0_fin
+j incfor0_fin
+incfor0:
+lw $t7, 12($sp)
+addi $t7, $t7, 1
+sw $t7, 12($sp)
+j for0
+incfor0_fin:
+li $t8, 10
+move $t9, $t8
+sw $t9, 24($sp)
+
+do1:
+lw $t0, 24($sp)
+li $t1, 1
+li $t2, 0
+add $t2, $t0, $t1
+move $t3, $t2
+sw $t3, 24($sp)
+
+la $t0, str19
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+lw $t0, 24($sp)
+li $t1, 15
+slt $t2, $t1, $t0
+li $t3, 34
+li $t4, 33
+li $t5, 0
+add $t5, $t3, $t4
+li $t6, 12
+slt $t7, $t6, $t5
+and $t8, $t2, $t7
+beq $t8, $zero, do1
+do1_fin:
+
+if2:
+lw $t0, 24($sp)
+li $t1, 0
+sub $t2, $t0, $t1
+sltiu $t2, $t2, 1
+beq $t2, $zero, if2_false
+la $t3, str20
+move $a0, $t3
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j for0_fin
+
+j if2_fin
+if2_false:
+li $t0, 1
+beq $t0, $zero, if2_elif3_fin
+la $t1, str21
+move $a0, $t1
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j if2_fin
+if2_elif3_fin:
+li $t0, 10
+move $t1, $t0
+sw $t1, 16($sp)
+for4:
+lw $t2, 16($sp)
+li $t3, 30
+li $t4, 2
+li $t5, 0
+mul $t5, $t3, $t4
+slt $t6, $t2, $t5
+beq $t6, $zero, for4_fin
+j incfor4_fin
+incfor4:
+lw $t7, 16($sp)
+addi $t7, $t7, 1
+sw $t7, 16($sp)
+j for4
+incfor4_fin:
+li $t8, 10
+move $t9, $t8
+sw $t9, 20($sp)
+for5:
+lw $t0, 20($sp)
+li $t1, 30
+li $t2, 2
+li $t3, 0
+mul $t3, $t1, $t2
+slt $t4, $t0, $t3
+beq $t4, $zero, for5_fin
+j incfor5_fin
+incfor5:
+lw $t5, 20($sp)
+addi $t5, $t5, 1
+sw $t5, 20($sp)
+j for5
+incfor5_fin:
+la $t6, str22
+move $a0, $t6
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+j incfor5
+for5_fin:
+
+j incfor4
+for4_fin:
+
+if2_fin:
+
+if6:
+lw $t0, 28($sp)
+lw $t1, float23
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+move $a0, $t0
+move $a1, $t1
+jal eqFloat
+move $t2, $v0
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+beq $t2, $zero, if6_false
+j for0_fin
+
+j if6_fin
+if6_false:
+la $t0, str24
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+if6_fin:
+
+j incfor0
+for0_fin:
+
+lw $t0, float25
+move $v0, $t0
+jr $ra
+
+_func3:
+lw $t0, 0($sp)
+move $v0, $t0
+jr $ra
+
+main:
+li $t0, 0
+sw $t0, 0($sp)
+
+lw $t0, fzero
+sw $t0, 4($sp)
+
+li $v0, 6
+syscall
+swc1 $f0, 4($sp)
+
+lw $t0, float26
+mtc1 $t0, $f12
+li $v0, 2
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+lw $t0, float27
+lw $t1, float28
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+move $a0, $t0
+move $a1, $t1
+jal eqFloat
+move $t2, $v0
+xori $t2, $t2, 1
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+sw $t2, 8($sp)
+
+la $t0, str29
+move $a0, $t0
+li $v0, 4
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+li $t0, 2
+li $t1, 4
+move $a0, $t0
+move $a1, $t1
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+jal expInt
+move $t2, $v0
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+li $t3, 2
+li $t4, 0
+div $t2, $t3
+mfhi $t4
+move $a0, $t4
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+li $t0, 10
+li $t1, 3
+li $t2, 0
+div $t0, $t1
+mfhi $t2
+move $a0, $t2
+li $v0, 1
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+lw $t0, float30
+lw $t1, float31
+move $a0, $t0
+move $a1, $t1
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+jal pow
+move $t2, $v0
+lw $ra, 0($sp)
+addi $sp, $sp, 4
+mtc1 $t2, $f12
+li $v0, 2
+syscall
+la $a0, endl
+li $v0, 4
+syscall
+
+li $t0, 1
+move $v0, $t0
+jr $ra
+
+li $v0, 10
+syscall
 
 # Esta sección es añadida automáticamente por el compilador y contiene funciones usadas
 # Internamente.
@@ -147,7 +704,7 @@ eqFloat:
     # si son iguales, $v0 = 1
     li $v0, 1
     # si no, $v0 = 0
-    bc1f eqFloat_end
+    bc1t eqFloat_end
     li $v0, 0
 
     eqFloat_end:

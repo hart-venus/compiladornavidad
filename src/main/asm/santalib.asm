@@ -78,7 +78,7 @@ eqFloat:
     # si son iguales, $v0 = 1
     li $v0, 1
     # si no, $v0 = 0
-    bc1f eqFloat_end
+    bc1t eqFloat_end
     li $v0, 0
 
     eqFloat_end:
